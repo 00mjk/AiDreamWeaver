@@ -180,14 +180,14 @@ function Create() {
     const getTshirt = async (shirtService, taskKey) => {
 
         await shirtService.getTShirt(taskKey)
-        .then((res) => {
-            console.log("1234");
-            if (res.code == 200 && res.result.status === "completed") {
-                console.log(res.result);
-                setMokeupImgs(res.result.mockups);
-            }
-        })
-        .catch(err => console.log(err))
+            .then((res) => {
+                console.log("1234");
+                if (res.code === 200 && res.result.status === "completed") {
+                    console.log(res.result);
+                    setMokeupImgs(res.result.mockups);
+                }
+            })
+            .catch(err => console.log(err))
     }
 
     /**
@@ -212,10 +212,10 @@ function Create() {
             console.log(createCode);
             console.log(taskKey);
 
-            if (createCode != 200)
+            if (createCode !== 200)
                 return;
 
-            setTimeout(() => getTshirt(shirtService, taskKey), 20000 )
+            setTimeout(() => getTshirt(shirtService, taskKey), 20000)
         } catch (err) {
             console.log(err);
         }
@@ -378,7 +378,7 @@ function Create() {
                                 <fieldset>
                                     <div className="image-to-image">
                                         {
-                                            initImg == "" ?
+                                            initImg === "" ?
                                                 <div className="file-upload flex flex-row justify-center">
                                                     <div className="mr-3">
                                                         <label>
@@ -523,7 +523,8 @@ function Create() {
                                         }
                                     </div>
                                     <div className="text-sm grey-100 mt-1">
-                                        <p>Buy a <a target="_blank" href="https://playgroundai.com/pricing" style={{ color: 'rgb(118, 173, 255)' }}>Pro plan</a> for any width or height up to 1536px</p>
+                                        <p>Buy a
+                                            <a target="_blank" href="https://playgroundai.com/pricing" style={{ color: 'rgb(118, 173, 255)' }} rel="noreferrer">Pro plan</a> for any width or height up to 1536px</p>
                                     </div>
                                 </fieldset>
                                 <fieldset className="create-fieldset">
@@ -539,7 +540,7 @@ function Create() {
                                             color="secondary"
                                             onChange={handleGuidanceChange}
                                         />
-                                        <input type="text" className="w-12 rounded-full bg-gray-90 text-xs text-center py-1 text-gray-200 " value={guidanceScale} onChange={(e) => setGuidanceScale(e.target.value)} />
+                                        {/* <input type="text" className="w-12 rounded-full bg-gray-90 text-xs text-center py-1 text-gray-200 " value={guidanceScale} onChange={(e) => setGuidanceScale(e.target.value)} /> */}
                                     </div>
                                 </fieldset>
                                 <fieldset className="create-fieldset">
@@ -555,7 +556,7 @@ function Create() {
                                             color="secondary"
                                             onChange={handleQualityChange}
                                         />
-                                        <input type="text" className="w-12 rounded-full bg-gray-90 text-xs text-center py-1 text-gray-200 " value={genVariants} onChange={(e) => setGenVariants(e.target.value)} />
+                                        {/* <input type="text" className="w-12 rounded-full bg-gray-90 text-xs text-center py-1 text-gray-200 " value={genVariants} onChange={(e) => setGenVariants(e.target.value)} /> */}
                                     </div>
                                 </fieldset>
                             </div>

@@ -7,10 +7,12 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.7",
+    "@react-oauth/google": "^0.6.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
     "axios": "^1.2.3",
+    "dotenv": "^16.0.3",
     "fs": "0.0.1-security",
     "image-downloader": "^4.3.0",
     "node-base64-image": "^2.0.4",
@@ -52,5 +54,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
   }
 }

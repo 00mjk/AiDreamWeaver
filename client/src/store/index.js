@@ -7,4 +7,11 @@ const composedEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware))
 
 const store = createStore(rootReducer, composedEnhancer);
 
+let currentState = store.getState();
+
+store.subscribe(() => {
+    let previousState = currentState;
+    currentState = store.getState();
+})
+
 export default store;

@@ -1,27 +1,61 @@
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from '../actions/config';
+import { USER_LOADED, SIGNIN_SUCCESS, SIGNIN_FAILED, SIGNUP_SUCCESS, SIGNUP_FAILED, SIGNOUT } from '../actions/config';
+import setAuthToken from '../utils/setAuthToken';
 
 const initialState = {
-    isAuth: false,
+    isAuthenticated: false,
+    token: localStorage.getItem('token'),
     user: null,
+    loading: true,
+    error: null
 };
 
-export default function authentication(state = initialState, action) {
+export default function authReducer(state = initialState, action) {
     switch (action.type) {
-        case LOGIN_REQUEST:
+        case USER_LOADED:
+        case SIGNIN_SUCCESS:
+            setAuthToken(action?.data?.token)
             return {
                 ...state,
-                isAuth: action.payload.isAuth,
-                user: action.payload.user
+                user: action?.data?.user,
+                loading: false,
+                isAuthenticated: true,
+                error: null
             };
-        case LOGIN_SUCCESS:
+        case SIGNIN_FAILED:
             return {
-                loggedIn: true,
-                user: action.user
-            };
-        case LOGIN_FAILURE:
-            return {};
-        case LOGOUT:
-            return {};
+                ...state,
+                isAuthenticated: false,
+                loading: false,
+                user: null,
+                error: action?.err
+            }
+        case SIGNUP_SUCCESS:
+            setAuthToken(action?.data?.token)
+            return {
+                ...state,
+                isAuthenticated: true,
+                loading: false,
+                user: action?.data?.user,
+                error: null,
+            }
+        case SIGNUP_FAILED:
+            return {
+                ...state,
+                isAuthenticated: false,
+                loading: false,
+                user: null,
+                error: action?.err
+            }
+        case SIGNOUT:
+            setAuthToken(null);
+            return {
+                ...state,
+                isAuthenticated: false,
+                loading: false,
+                user: null,
+                error: null,
+                token: null
+            }
         default:
             return state;
     }

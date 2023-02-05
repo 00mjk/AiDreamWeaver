@@ -2,9 +2,12 @@ import axios from 'axios'
 import querystring from 'querystring'
 import ShortUniqueId from 'short-unique-id'
 // import convertTo64 from './base64';
-import { SEARCH_URL, CREATE_URL, CREATE_READY_URL } from './constants';
 
-class PlaygroundAI {
+const SEARCH_URL = 'https://cors-anywhere.herokuapp.com/https://playgroundai.com/api/images/search?limit=100&cursor=1&query=';
+const CREATE_URL = 'https://cors-anywhere.herokuapp.com/https://playgroundai.com/api/models';
+const CREATE_READY_URL = 'https://cors-anywhere.herokuapp.com/https://playgroundai.com/api/images/batch?batchId=**BATCH_ID**&batchSize=**SIZE**';
+
+class PlayAiService {
   constructor(opts) {
     if (opts) {
       this.mode = opts.sessionToken && opts.sessionToken !== '' ? 'token' : 'login';
@@ -132,4 +135,4 @@ class PlaygroundAI {
   }
 }
 
-export default PlaygroundAI;
+export default PlayAiService;

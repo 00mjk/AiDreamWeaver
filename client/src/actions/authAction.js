@@ -1,59 +1,67 @@
-import {
-    LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT
-} from './config';
-import AuthService from '../services/authService';
+import authService from '../services/authService';
+import { USER_LOADED, SIGNIN_SUCCESS, SIGNIN_FAILED, SIGNUP_SUCCESS, SIGNUP_FAILED, SIGNOUT } from './config';
 
-// axios. then()
-export const login = (uid, pwd) => dispatch => {
-
-    const authService = new AuthService();
-
-    authService.signin(uid, pwd).then({
-        
-    });
-
-    dispatch({
-        type: LOGIN_REQUEST,
-        payload: {
-            isAuth: true,
-            user: {
-                name: "John"
-            }
-        }
-    })
-    // return;
-    // const service = new AuthService();
-
-    // return dispatch => {
-    //     dispatch({
-    //         type: LOGIN_REQUEST,
-    //         user: {
-    //             uid: uid
-    //         }
-    //     })
-
-    //     service.signin(uid, pwd).then(
-    //         user => {
-    //             dispatch({
-    //                 type: LOGIN_SUCCESS,
-    //                 user
-    //             })
-    //         },
-    //         err => {
-    //             dispatch({
-    //                 type: LOGIN_FAILURE,
-    //                 user
-    //             })
-    //         }
-    //     );
-    // };
+/**
+ * @description
+ *  Get user info with token from server.
+ */
+export const loadUser = () => async dispatch => {
+    await authService.loadUser()
+        .then((data) => {
+            dispatch({ type: USER_LOADED, data })
+        })
+        .catch((err) => {
+            dispatch({ type: SIGNOUT })
+        })
 }
 
-export function logout() {
-    // const service = new AuthService();
-    // service.logout().then(
-    //     dispatch({
-    //         type: LOGOUT
-    //     })
-    // );
+/**
+ * @description
+ *  Sign in the user
+ */
+export const signin = (formData) => dispatch => {
+    return new Promise((resolve, reject) => {
+        authService.signin(formData)
+            .then((data) => {
+                dispatch({ type: SIGNIN_SUCCESS, data });
+                resolve()
+            })
+            .catch((err) => {
+                err = err?.response?.data;
+                dispatch({ type: SIGNIN_FAILED, err });
+                reject()
+            })
+    })
+}
+
+/**
+ * @description
+ *  Sign up the user
+ */
+export const signup = (formData) => dispatch => {
+    return new Promise((resolve, reject) => {
+        authService.signup(formData)
+            .then((data) => {
+                console.log(data);
+                dispatch({ type: SIGNUP_SUCCESS, data })
+                resolve();
+            })
+            .catch((err) => {
+                err = err?.response?.data
+                console.log(err);
+                dispatch({ type: SIGNUP_FAILED, err });
+                reject();
+            })
+    })
+}
+
+/**
+ * @description
+ *  Sign out user
+ */
+export const signout = () => async dispatch => {
+    return new Promise((resolve, reject) => {
+        dispatch({ type: SIGNOUT });
+        resolve();
+    });
 }

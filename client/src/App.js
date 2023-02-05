@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Route, Routes, NavLink, Link } from 'react-router-dom';
 import './App.css';
 
@@ -14,8 +14,30 @@ import JobsPage from './pages/Jobs'
 
 import Header from './components/Header';
 
+import store from './store';
+import { SIGNOUT } from "./actions/config";
+import { loadUser } from "./actions/authAction";
+import setAuthToken from "./utils/setAuthToken";
+
 export default function App() {
-    const [dropDownListState, setDropDownList] = useState(false)
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        // Check for token in local storage when app first runs.
+        if (token) {
+            // If there is a token et axios header for all requests.
+            setAuthToken(token)
+        }
+
+        // Try to fetch a user, if no token or invalid token we will get a 401 response from our API.
+        store.dispatch(loadUser());
+
+        // Log out from all tabs if they log out in one tab.
+        window.addEventListener('storage', () => {
+            if (!localStorage.token)
+                store.dispatch({ type: SIGNOUT });
+        })
+    }, [])
 
     return (
         <div className='App'>
@@ -33,9 +55,6 @@ export default function App() {
                     <Route exact path="/edit" element={<EditPage />}></Route>
                 </Routes>
             </div>
-            <footer>
-
-            </footer>
         </div>
     );
 }

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function Homepage() {
     return <div id="__next">
         <div className="fixed top-14 w-full flex justify-center z-10 left-[50%] -translate-x-1/2">
@@ -30,7 +32,7 @@ export default function Homepage() {
                                         <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(1, minmax(0px, 1fr))' }}>
                                             <div id="image-cl9og8jge0azms601b035hrs4"
                                                 className="flex flex-col items-center rounded-lg select-none">
-                                                <a
+                                                {/* <Link
                                                     className="Image_image__0SSoU transition-all image-card-grid "
                                                     href="/post/cl9og8jge0azms601b035hrs4" style={{ transitionDelay: '0.130255s' }}>
                                                     <img
@@ -241,7 +243,7 @@ export default function Homepage() {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </a>
+                                                </Link> */}
                                             </div>
                                         </div>
                                     </div>
@@ -251,7 +253,8 @@ export default function Homepage() {
                                     }}>
                                         <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(1, minmax(0px, 1fr))' }}>
                                             <div id="image-clabgf1l93f26s601nu3avo50"
-                                                className="flex flex-col items-center rounded-lg select-none"><a
+                                                className="flex flex-col items-center rounded-lg select-none">
+                                                {/* <a
                                                     className="Image_image__0SSoU transition-all image-card-grid "
                                                     href="/post/clabgf1l93f26s601nu3avo50" style={{ transitionDelay: '0.182379s' }}><img
                                                         src="https://storage.googleapis.com/pai-images/832155f5aaae4531814f8e5bffe2020e.jpeg"
@@ -453,12 +456,12 @@ export default function Homepage() {
                                                                         intricate details, highly detailed, by greg rutkowski</p>
                                                                 </div>
                                                                 <div className="w-8 flex-none">
-                                                                    <div className="absolute bottom-3 right-3 flex items-center"><span className /></div>
+                                                                    <div className="absolute bottom-3 right-3 flex items-center"></div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </a>
+                                                </a> */}
 
                                             </div>
                                         </div>
@@ -469,7 +472,8 @@ export default function Homepage() {
                                     }}>
                                         <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(1, minmax(0px, 1fr))' }}>
                                             <div id="image-cl9un5fs10bo0s6015f1xkpg8"
-                                                className="flex flex-col items-center rounded-lg select-none"><a
+                                                className="flex flex-col items-center rounded-lg select-none">
+                                                {/* <a
                                                     className="Image_image__0SSoU transition-all image-card-grid "
                                                     href="/post/cl9un5fs10bo0s6015f1xkpg8" style={{ transitionDelay: '0.188342s' }}><img
                                                         src="https://storage.googleapis.com/pai-images/e2510cccc92543cd971324be9314d34d.jpeg"
@@ -668,12 +672,12 @@ export default function Homepage() {
                                                                     <p className="w-full text-white line-clamp-4">A bag of ice</p>
                                                                 </div>
                                                                 <div className="w-8 flex-none">
-                                                                    <div className="absolute bottom-3 right-3 flex items-center"><span className /></div>
+                                                                    <div className="absolute bottom-3 right-3 flex items-center"></div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </a>
+                                                </a> */}
 
                                             </div>
                                         </div>

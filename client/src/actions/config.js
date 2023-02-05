@@ -1,6 +1,6 @@
-export const proxy = "https://cors-anywhere.herokuapp.com/";
-
-export const LOGIN_REQUEST = "USERS_LOGIN_REQUEST";
-export const LOGIN_SUCCESS = "USERS_LOGIN_SUCCESS";
-export const LOGIN_FAILURE = "USERS_LOGIN_FAILURE";
-export const LOGOUT = "USERS_LOGOUT";
+export const USER_LOADED = "USERS_LOADED";
+export const SIGNIN_SUCCESS = "USERS_SIGNIN_SUCCESS";
+export const SIGNIN_FAILED = "USERS_SIGNIN_FAILED";
+export const SIGNUP_SUCCESS = "USERS_SIGNUP_SUCCESS";
+export const SIGNUP_FAILED = "USERS_SIGNUP_FAILED";
+export const SIGNOUT = "USERS_SIGNOUT";

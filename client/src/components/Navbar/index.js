@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { styled, alpha } from '@mui/material/styles';
-import { AppBar, Box, Toolbar, Badge, Typography, InputBase, MenuItem, Menu, Avatar } from '@mui/material';
+import { AppBar, Box, Toolbar, Badge, InputBase, MenuItem, Menu, Avatar } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -158,23 +158,7 @@ export default function PrimarySearchAppBar() {
             <AppBar position="static">
                 <Toolbar>
                     <BugReportIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="a"
-                        href="/"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'none', md: 'flex' },
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        <img alt="" src={`http://localhost:3000/assets/images/logo.png`} width="157px" height="32px" />
-                    </Typography>
+                    <Link to={`/`}><img alt="" src={`http://localhost:3000/assets/images/logo.png`} width="157px" height="32px" /></Link>
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon />

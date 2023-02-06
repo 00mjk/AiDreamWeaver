@@ -6,9 +6,11 @@ import { amber, grey } from '@mui/material/colors';
 
 import './App.css';
 
-import HomePage from './pages/Homepage'
 import SignIn from "./pages/SignIn";
-import CreatePage from './pages/Create'
+import SignUp from "./pages/SignUp";
+import HomePage from './pages/Homepage'
+import CreatePage from './pages/CreatePage'
+
 import EditPage from './pages/Edit'
 import PricingPage from './pages/Pricing'
 import PrivacyPage from './pages/Privacy'
@@ -22,7 +24,6 @@ import store from './store';
 import { SIGNOUT } from "./actions/config";
 import { loadUser } from "./actions/authAction";
 import setAuthToken from "./utils/setAuthToken";
-import SignUp from "./pages/SignUp";
 import { bgColor } from "./stylesheets/colors";
 
 const getDesignTokens = (mode) => ({

@@ -1,23 +1,60 @@
 import { useEffect } from "react";
-import { Route, Routes, NavLink, Link } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+import { amber, grey } from '@mui/material/colors';
+
 import './App.css';
 
-import HomePage from './pages/Home'
+import HomePage from './pages/Homepage'
+import SignIn from "./pages/SignIn";
 import CreatePage from './pages/Create'
 import EditPage from './pages/Edit'
-import LoginPage from './pages/Login'
 import PricingPage from './pages/Pricing'
 import PrivacyPage from './pages/Privacy'
 import RequestHelpPage from './pages/Request'
 import TermsPage from './pages/Terms'
 import JobsPage from './pages/Jobs'
 
-import Header from './components/Header';
+import Navbar from './components/Navbar';
 
 import store from './store';
 import { SIGNOUT } from "./actions/config";
 import { loadUser } from "./actions/authAction";
 import setAuthToken from "./utils/setAuthToken";
+import SignUp from "./pages/SignUp";
+import { bgColor } from "./stylesheets/colors";
+
+const getDesignTokens = (mode) => ({
+    palette: {
+        mode,
+        primary: {
+            ...amber,
+            ...(mode === 'dark' && {
+                main: amber[300],
+            }),
+        },
+        ...(mode === 'dark' && {
+            background: {
+                default: bgColor,
+                paper: bgColor,
+            },
+        }),
+        text: {
+            ...(mode === 'light'
+                ? {
+                    primary: grey[900],
+                    secondary: grey[800],
+                }
+                : {
+                    primary: '#fff',
+                    secondary: grey[500],
+                }),
+        },
+    },
+});
+
+const darkModeTheme = createTheme(getDesignTokens('dark'));
 
 export default function App() {
     useEffect(() => {
@@ -40,21 +77,25 @@ export default function App() {
     }, [])
 
     return (
-        <div className='App'>
-            <Header />
-            <div className='router'>
-                <Routes>
-                    <Route exact path="/" element={<HomePage />}></Route>
-                    <Route exact path="/login" element={<LoginPage />}></Route>
-                    <Route exact path="/privacy" element={<PrivacyPage />}></Route>
-                    <Route exact path="/pricing" element={<PricingPage />}></Route>
-                    <Route exact path="/requesthelp" element={<RequestHelpPage />}></Route>
-                    <Route exact path="/jobs" element={<JobsPage />}></Route>
-                    <Route exact path="/terms-of-service" element={<TermsPage />}></Route>
-                    <Route exact path="/create" element={<CreatePage />}></Route>
-                    <Route exact path="/edit" element={<EditPage />}></Route>
-                </Routes>
+        <ThemeProvider theme={darkModeTheme}>
+            <div className='App'>
+                <Navbar />
+                <div className='router'>
+                    <Routes>
+                        <Route exact path="/" element={<HomePage />}></Route>
+                        <Route exact path="/search/:q" element={<HomePage />}></Route>
+                        <Route exact path="/signin" element={<SignIn />}></Route>
+                        <Route exact path="/signup" element={<SignUp />}></Route>
+                        <Route exact path="/privacy" element={<PrivacyPage />}></Route>
+                        <Route exact path="/pricing" element={<PricingPage />}></Route>
+                        <Route exact path="/requesthelp" element={<RequestHelpPage />}></Route>
+                        <Route exact path="/jobs" element={<JobsPage />}></Route>
+                        <Route exact path="/terms-of-service" element={<TermsPage />}></Route>
+                        <Route exact path="/create" element={<CreatePage />}></Route>
+                        <Route exact path="/edit" element={<EditPage />}></Route>
+                    </Routes>
+                </div>
             </div>
-        </div>
+        </ThemeProvider>
     );
 }

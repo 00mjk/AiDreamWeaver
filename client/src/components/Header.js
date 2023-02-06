@@ -175,6 +175,7 @@ function Header() {
                 </div>
             </div>
         </header>
+
         <Modal
             open={modalOpened}
             onClose={() => setModalOpened(false)}

@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ImageList, ImageListItem, ImageListItemBar, IconButton } from '@mui/material';
 
 import InfoIcon from '@mui/icons-material/Info';
 
+import { searchImgsByKey } from "../../actions/imgAction";
 import ItemDetailModal from '../../components/ItemDetailModal';
 import styles from './homepage.module.css';
 
 export default function Homepage() {
     // Use Redux
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
+    const image = useSelector(state => state.img)
 
     // States
     const [detailModalOpen, setDetailModalOpen] = useState(false);
@@ -19,24 +22,31 @@ export default function Homepage() {
         setSelectedItem(imgItem);
     }
 
+    useEffect(() => {
+        dispatch(searchImgsByKey(image.imgSchKeyword)).then(() => {
+            // setFormData(initialState);
+            // navigate("/create");
+        });
+    })
+
     return (<>
         <ImageList variant="masonry" cols={5} gap={10} style={{ margin: '10px' }}>
-            {itemData.map((item, key) => (
+            {image.images.map((item, key) => (
                 <ImageListItem key={key} className={styles.imagelistitem} onClick={() => { handleImage(item) }}>
                     <img
-                        src={`${item.img}?w=248&fit=crop&auto=format`}
-                        srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                        alt={item.title}
+                        src={`${item.url}?w=248&fit=crop&auto=format`}
+                        srcSet={`${item.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                        alt={item.name}
                         loading="lazy"
                     />
                     <ImageListItemBar
-                        title={item.title}
-                        subtitle={item.author}
+                        title={item.user_name}
+                        subtitle={item.name}
                         className={styles.imgdesc}
                         actionIcon={
                             <IconButton
                                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                aria-label={`info about ${item.title}`}
+                                aria-label={`info about ${item.user_name}`}
                             >
                                 <InfoIcon />
                             </IconButton>

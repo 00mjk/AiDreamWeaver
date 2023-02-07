@@ -29,9 +29,26 @@ class ImgService {
      */
     searchImgsByKey = (keyword) => {
         return new Promise((resolve, reject) => {
-            this.service.post('/search', keyword)
+            this.service.post('/search', {
+                keyword: keyword
+            })
                 .then(res => {
                     resolve(res.data);
+                }).catch(err => {
+                    reject(err);
+                })
+        })
+    }
+
+    /**
+     * @description
+     *  Create image
+     */
+    createImg = (imgData) => {
+        return new Promise((resolve, reject) => {
+            this.service.post('/create', imgData)
+                .then(res => {
+                    resolve(res.data)
                 }).catch(err => {
                     reject(err);
                 })

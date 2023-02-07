@@ -14,7 +14,6 @@ const OptImgToImg = (props) => {
      *  Load init image.
      */
     const loadInitImg = () => {
-        window.alert("H");
         uploader.open({ maxFileCount: 1 }).then(
             files => {
                 const fileUrl = files.map(x => x.fileUrl).join("\n");

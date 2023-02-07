@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import ChevronLeftOutlinedIcon from '@mui/icons-material/ChevronLeftOutlined';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
 import BrushOutlinedIcon from '@mui/icons-material/BrushOutlined';
 import SendIcon from '@mui/icons-material/Send';
 
-import Slider from '@mui/material/Slider';
-import { Button } from '@mui/material';
+import { Button, Slider, CircularProgress, Alert, AlertTitle, Stack } from '@mui/material';
 
 import AiService from '../../services/aiService';
 import ShirtService from '../../services/shirtService';
@@ -25,7 +25,13 @@ import OptQualityDetails from '../../components/OptQualityDetails';
 import OptImgNum from '../../components/OptImgNum';
 // import OptPrivateSession from '../../components/OptPrivateSession';
 
+import { createImg } from '../../actions/imgAction';
+
 const CreatePage = () => {
+    // Use Redux
+    const dispatch = useDispatch();
+    const imgObj = useSelector(state => state.img)
+
     // Flags
     const [apiCallFlag, setApiCallFlag] = useState("pending");  // Generate Api call state (pending, loading, processing, created)
     const [rightSidebar, setRightSidebar] = useState(false);    // Rite sidebar state
@@ -48,8 +54,8 @@ const CreatePage = () => {
     // const [hide, setHide] = useState(0);
     // const [isPrivate, setIsPrivate] = useState(0);
     // const [modelType, setModelType] = useState(0);
-    // const [sampler, setSampler] = useState(0);
-    // const [seed, setSeed] = useState(0);
+    const [sampler, setSampler] = useState(0);
+    const [seed, setSeed] = useState(null);
     // const [steps, setSteps] = useState(0);
 
     // Generated Images
@@ -84,13 +90,33 @@ const CreatePage = () => {
                 "safety_checker": "no",
                 "enhance_prompt": "yes",
                 "strength": (strength / 100),
-                "seed": null,
+                "seed": seed,
                 "webhook": null,
                 "track_id": null
             })
                 .then((res) => {
                     if (res.status === 'success') {
                         setImages(res.output);
+
+                        // Save data in serer.
+                        const imgData = {
+                            images: res.output,
+                            prompt: prompt,
+                            negPrompt: negPrompt,
+                            initImgUrl: initImg,
+                            width: width,
+                            height: height,
+                            guidianceScale: guidanceScale,
+                            qualityDetails: genVariants,
+                            seed: seed,
+                            sampler: sampler,
+                        };
+                        dispatch(createImg(imgData)).then(() => {
+
+                            // setFormData(initialState);
+                            // navigate("/create");
+                        });
+
                         setApiCallFlag("created");
                         return;
                     } else if (res.status === "error") {
@@ -106,7 +132,6 @@ const CreatePage = () => {
                     console.log(err);
                 });
         } catch (err) {
-            console.log(err);
             setApiCallFlag("pending");
         }
     }
@@ -161,18 +186,25 @@ const CreatePage = () => {
      */
     const getCreatedImages = () => {
         if (apiCallFlag === "pending") {
-            return <div>
-                Pending
-            </div>
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }} >
+                    <Alert severity="warning">
+                        <AlertTitle>Pending</AlertTitle>
+                        Please generate a new image — <strong>Click the Generate button!</strong>
+                    </Alert>
+                </Stack>
+            </>
         } else if (apiCallFlag === "loading") {
-            return <div>
-                Loading
-            </div>
+            return <CircularProgress color='secondary' size={80} disableShrink={true} sx={{ marginTop: '5%' }} />
         } else if (apiCallFlag === "processing") {
-            return <div>
-                Processing.<br />
-                Try Again.
-            </div>
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        Processing — <strong>Try it again!</strong>
+                    </Alert>
+                </Stack>
+            </>
         } else if (apiCallFlag === "created") {
             return <div id="scroll-container" className="p-10 pt-5 ">
                 <div style={{ display: 'flex', flexDirection: 'row', placeContent: 'stretch center', boxSizing: 'border-box', width: '100%', gap: '16px' }}>

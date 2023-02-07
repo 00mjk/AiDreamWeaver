@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -22,6 +22,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import BugReportIcon from '@mui/icons-material/BugReport';
 
 import { signout } from "../../actions/authAction";
+import { searchImgsByKey } from "../../actions/imgAction";
 import StartBtn from './StartBtn.js';
 
 const Search = styled('div')(({ theme }) => ({
@@ -102,6 +103,7 @@ export default function PrimarySearchAppBar() {
     const img = useSelector(state => state.img)
 
     // Standard
+    const [searchKey, setSearchKey] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
@@ -112,6 +114,13 @@ export default function PrimarySearchAppBar() {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
+
+    const searchImages = () => {
+        dispatch(searchImgsByKey(searchKey)).then(() => {
+            // setFormData(initialState);
+            // navigate("/create");
+        });
+    }
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -153,6 +162,10 @@ export default function PrimarySearchAppBar() {
         </Menu >
     );
 
+    useEffect(() => {
+        // setSearchKey(img.imgSchKeyword);
+    })
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -166,7 +179,9 @@ export default function PrimarySearchAppBar() {
                         <StyledInputBase
                             placeholder="Search…"
                             inputProps={{ 'aria-label': 'search' }}
-                            value={img.imgSchKeyword}
+                            value={searchKey}
+                            onChange={(e) => setSearchKey(e.target.value)}
+                            onKeyDown={(e) => { e.key === 'Enter' && searchImages(searchKey) }}
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
@@ -177,7 +192,7 @@ export default function PrimarySearchAppBar() {
                             variant="dot"
                             onClick={handleProfileMenuOpen} sx={{ p: 0 }}
                         >
-                            <Avatar alt="" src={`./testAvatar.png`} />
+                            <Avatar alt="" src={`http://localhost:3000/testAvatar.png`} />
                         </StyledBadge>
                     </Box>
                     {

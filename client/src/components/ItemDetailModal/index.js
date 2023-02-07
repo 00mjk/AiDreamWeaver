@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux'
+import FileSaver from 'file-saver';
 
 import { Modal, Backdrop, Box, Fade } from '@mui/material';
 
@@ -12,7 +13,8 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import CommentBankOutlinedIcon from '@mui/icons-material/CommentBankOutlined';
 
-import { searchImgsByKey } from '../../actions/searchAction.js';
+import { searchImgsByKey } from '../../actions/imgAction';
+import download from '../../utils/downloadfile';
 import styles from './styles.module.css';
 
 function ItemDetailModal(props) {
@@ -45,7 +47,7 @@ function ItemDetailModal(props) {
                             <div className="flex flex-col gap-4 flex-none md:max-w-[min(60vw)]">
                                 <div>
                                     <img data-testid="image-post-image"
-                                        src={props?.item?.img}
+                                        src={props?.item?.url}
                                         alt={`Prompt: ${props?.item?.prompt}`}
                                         className="rounded-lg mx-auto" data-xblocker="passed"
                                         style={{ aspectRatio: '1 / 1', maxWidth: '512px', visibility: 'visible' }} />
@@ -64,7 +66,8 @@ function ItemDetailModal(props) {
                                     </div>
                                     <div className="flex items-center gap-x-2">
                                         <button
-                                            className="playground-button subtle md:flex gap-2 hidden">
+                                            className="playground-button subtle md:flex gap-2 hidden"
+                                            onClick={() => download(props?.item?.url)}>
                                             <FileDownloadOutlinedIcon fontSize='small' />
                                             <span>Download</span>
                                         </button>
@@ -99,7 +102,7 @@ function ItemDetailModal(props) {
                                                     src="https://lh3.googleusercontent.com/a/ALm5wu30nE_WLSzLrZRj67GI-cF5CaueolzIQXCOSD74vg=s96-c"
                                                     alt="Kyle Werty avatar" width="28px" height="28px" />
                                                 <span
-                                                    className="color-white text-[14px] textba">Kyle Werty</span>
+                                                    className="color-white text-[14px] textba">{props?.item?.user_name}</span>
                                             </a>
                                                 <button type="button"
                                                     className="follow-button base short blue group w-[76px] flex-none">
@@ -115,8 +118,12 @@ function ItemDetailModal(props) {
                                             <div className="space-y-1">
                                                 <label className="color-secondary text-[14px] font-[590]">Prompt</label>
                                                 <div className="mr-0 ">
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("ice cube")}>ice cube</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("melting")}>melting</span>,&nbsp;</p>
+                                                    {
+                                                        props?.item?.prompt.split(",").map((item, key) => (
+                                                            <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg(item)}>{item}</span>,&nbsp;</p>
+                                                        ))
+                                                    }
+                                                    {/* <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("melting")}>melting</span>,&nbsp;</p>
                                                     <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("blue")}>blue</span>,&nbsp;</p>
                                                     <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("cartoony")}>cartoony</span>,&nbsp;</p>
                                                     <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("fun")}>fun</span>,&nbsp;</p>
@@ -125,7 +132,7 @@ function ItemDetailModal(props) {
                                                     <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("studio photo")}>studio photo</span>,&nbsp;</p>
                                                     <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("intricate details")}>intricate details</span>,&nbsp;</p>
                                                     <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("highly detailed")}>highly detailed</span>,&nbsp;</p>
-                                                    <p className="!leading-[20px] inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("by greg rutkowski")}>by greg rutkowski</span></p>
+                                                    <p className="!leading-[20px] inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("by greg rutkowski")}>by greg rutkowski</span></p> */}
                                                 </div>
                                             </div>
                                             <div className="flex flex-wrap text-sm my-4 gap-4">
@@ -140,17 +147,20 @@ function ItemDetailModal(props) {
                                             </div>
                                             <hr className="!my-6 border-low" />
                                             <ul className="list-none grid grid-cols-2 gap-y-4 gap-x-2">
-                                                <div className="space-y-0.5 text-sm">
-                                                    <dt className="color-secondary font-[590]">Seed</dt>
-                                                    <dl className="text-gray-200">997946462</dl>
-                                                </div>
+                                                {
+                                                    props?.item?.seed &&
+                                                    <div className="space-y-0.5 text-sm">
+                                                        <dt className="color-secondary font-[590]">Seed</dt>
+                                                        <dl className="text-gray-200">{ }</dl>
+                                                    </div>
+                                                }
                                                 <div className="space-y-0.5 text-sm">
                                                     <dt className="color-secondary font-[590]">Guidance Scale</dt>
-                                                    <dl className="text-gray-200">7</dl>
+                                                    <dl className="text-gray-200">{props?.item?.guidance_scale}</dl>
                                                 </div>
                                                 <div className="space-y-0.5 text-sm">
                                                     <dt className="color-secondary font-[590]">Sampler</dt>
-                                                    <dl className="text-gray-200">plms</dl>
+                                                    <dl className="text-gray-200">{props?.item?.sampler}</dl>
                                                 </div>
                                                 <div className="space-y-0.5 text-sm">
                                                     <dt className="color-secondary font-[590]">Model</dt>
@@ -159,7 +169,7 @@ function ItemDetailModal(props) {
                                                 </div>
                                                 <div className="space-y-0.5 text-sm">
                                                     <dt className="color-secondary font-[590]">Created</dt>
-                                                    <dl className="text-gray-200">11/4/2022 1:13:08 PM</dl>
+                                                    <dl className="text-gray-200">{props?.item?.created_at}</dl>
                                                 </div>
                                                 <div className="space-y-0.5 text-sm">
                                                     <dt className="color-secondary font-[590]">Additional Credit</dt>

@@ -64,11 +64,11 @@ export default function SignIn() {
                             autoComplete="email"
                             onChange={handleChange}
                             value={formData.email}
-                            error={(auth.error && auth.error.email)}
+                            error={(auth.error && auth.error?.email)}
                             autoFocus
                         />
                         {
-                            (auth.error && auth.error.email) &&
+                            (auth.error && auth.error?.email) &&
                             <FormHelperText id="component-error-text" sx={{ color: 'red' }}>{auth.error.email}</FormHelperText>
                         }
                         <TextField

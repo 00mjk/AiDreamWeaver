@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HomePage from './pages/Homepage'
 import CreatePage from './pages/CreatePage'
+import MockupPage from './pages/MockupPage'
 
 import EditPage from './pages/Edit'
 import PricingPage from './pages/Pricing'
@@ -87,12 +88,14 @@ export default function App() {
                         <Route exact path="/search/:q" element={<HomePage />}></Route>
                         <Route exact path="/signin" element={<SignIn />}></Route>
                         <Route exact path="/signup" element={<SignUp />}></Route>
+                        <Route exact path="/create" element={<CreatePage />}></Route>
+                        <Route exact path="/mockup" element={<MockupPage />}></Route>
+
                         <Route exact path="/privacy" element={<PrivacyPage />}></Route>
                         <Route exact path="/pricing" element={<PricingPage />}></Route>
                         <Route exact path="/requesthelp" element={<RequestHelpPage />}></Route>
                         <Route exact path="/jobs" element={<JobsPage />}></Route>
                         <Route exact path="/terms-of-service" element={<TermsPage />}></Route>
-                        <Route exact path="/create" element={<CreatePage />}></Route>
                         <Route exact path="/edit" element={<EditPage />}></Route>
                     </Routes>
                 </div>

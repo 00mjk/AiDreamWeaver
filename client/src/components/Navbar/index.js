@@ -108,6 +108,12 @@ export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
+    useEffect(() => {
+        setSearchKey(img.imgSchKeyword);
+    }, [img])
+
+    console.log(window.location.href);
+
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -160,9 +166,36 @@ export default function PrimarySearchAppBar() {
         </Menu >
     );
 
-    useEffect(() => {
-        setSearchKey(img.imgSchKeyword);
-    }, [img])
+    /**
+     * @description
+     *  Make navigation button
+     */
+    const genNavBtn = () => {
+        if (!auth.isAuthenticated) {
+            return (
+                <Link to='/signin'>
+                    <StartBtn btnName="Get Started" />
+                </Link>
+            )
+        } else {
+            const url = document.location.href;
+            console.log(url);
+            console.log(url.includes('/create'));
+            if (url.includes('/create')) {
+                return (
+                    <Link to='/mockup'>
+                        <StartBtn btnName="Mockup" />
+                    </Link>
+                )
+            } else {
+                return (
+                    <Link to='/create'>
+                        <StartBtn btnName="Create" />
+                    </Link>
+                )
+            }
+        }
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -193,11 +226,7 @@ export default function PrimarySearchAppBar() {
                             <Avatar alt="" src={`http://localhost:3000/testAvatar.png`} />
                         </StyledBadge>
                     </Box>
-                    {
-                        <Link to={auth.isAuthenticated ? '/create' : '/signin'}>
-                            <StartBtn btnName={auth.isAuthenticated ? "Create" : "Get Started"} />
-                        </Link>
-                    }
+                    {genNavBtn()}
                 </Toolbar>
             </AppBar>
             {renderMenu}

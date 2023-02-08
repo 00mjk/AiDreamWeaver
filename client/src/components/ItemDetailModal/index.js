@@ -18,6 +18,7 @@ import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 
 import { searchImgsByKey, addFavourite, followImgAuthor } from '../../actions/imgAction';
+import { remixPrompt, editItem } from '../../actions/toCreateAction';
 
 import download from '../../utils/downloadfile';
 import styles from './styles.module.css';
@@ -117,10 +118,8 @@ function ItemDetailModal(props) {
      */
     const handleRemix = () => {
         if (auth.isAuthenticated) {
-            dispatch(followImgAuthor({
-                authorId: props?.item?.user_id,
-                isFollow: isFollow
-            }));
+            dispatch(remixPrompt(props?.item?.prompt));
+            navigate('/create');
         } else {
             navigate('/signin');
         }
@@ -132,6 +131,8 @@ function ItemDetailModal(props) {
      */
     const handleEdit = () => {
         if (auth.isAuthenticated) {
+            dispatch(editItem(props?.item?.url));
+            navigate('/create');
         } else {
             navigate('/signin');
         }

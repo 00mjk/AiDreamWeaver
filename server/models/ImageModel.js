@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const ImageSchema = Schema({
+const imageSchema = Schema({
     url: {
         type: String,
         required: true
@@ -53,6 +53,6 @@ const ImageSchema = Schema({
     }
 })
 
-const ImageModel = mongoose.model('Image', ImageSchema);
+const ImageModel = mongoose.model('Image', imageSchema);
 
 export default ImageModel;

@@ -1,7 +1,9 @@
-import { useDispatch } from 'react-redux'
-import FileSaver from 'file-saver';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
+import moment from "moment";
 
-import { Modal, Backdrop, Box, Fade } from '@mui/material';
+import { Modal, Backdrop, Box, Fade, IconButton, Badge, Button, Popover } from '@mui/material';
 
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
@@ -12,19 +14,134 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import CommentBankOutlinedIcon from '@mui/icons-material/CommentBankOutlined';
+import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
+import CheckIcon from '@mui/icons-material/Check';
 
-import { searchImgsByKey } from '../../actions/imgAction';
+import { searchImgsByKey, addFavourite, followImgAuthor } from '../../actions/imgAction';
+
 import download from '../../utils/downloadfile';
 import styles from './styles.module.css';
+import { useEffect } from 'react';
 
 function ItemDetailModal(props) {
-    // Use Redux
-    const dispatch = useDispatch()
+    // Redirect Module
+    const navigate = useNavigate()
 
+    // Use Redux
+    const dispatch = useDispatch();
+    const auth = useSelector(state => state.auth);
+    const img = useSelector(state => state.img);
+
+    // States
+    const [isFav, setIsFav] = useState(false);
+    const [favCnt, setFavCnt] = useState(0);
+    const [isFollow, setIsFollow] = useState(false);
+    const [copyLink, setCopyLink] = useState("");
+    const [copyPrompt, setCopyPrompt] = useState(false);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const popOverOpen = Boolean(anchorEl);
+
+    /**
+     * @description
+     *  Search images by selected prompt. 
+     */
     const searchImg = (keyword) => {
         dispatch(searchImgsByKey(keyword));
         props.onClose();
     }
+
+    /**
+     * @description
+     *  Add or remove fav option to image.
+     */
+    const handleFavImg = () => {
+        if (auth.isAuthenticated) {
+            dispatch(addFavourite({ imageId: props?.item?._id }));
+        } else {
+            navigate('/signin');
+        }
+    }
+
+    /**
+     * @description
+     *  Copy link
+     */
+    const handleCopyLink = () => {
+        setCopyLink("hello");
+    }
+
+    /**
+     * @description
+     *  Follow or unfollow user.
+     */
+    const handleIsFollow = (isFollow) => {
+        if (auth.isAuthenticated) {
+            dispatch(followImgAuthor({
+                authorId: props?.item?.user_id,
+                isFollow: isFollow
+            }));
+        } else {
+            navigate('/signin');
+        }
+    }
+
+    const handlePopOverClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopOverClose = () => {
+        setAnchorEl(null);
+    };
+
+    /**
+     * @description
+     *  Copy text to clipboard.
+     */
+    const handleCopyPrompt = () => {
+        navigator.clipboard.writeText(props?.item?.prompt).then(
+            () => {
+                setCopyPrompt(true);
+                setInterval(() => {
+                    setCopyPrompt(false);
+                }, 2000);
+            },
+            () => {
+            }
+        );
+    }
+
+    /**
+     * @description
+     *  Remix the prompt (txt to img)
+     */
+    const handleRemix = () => {
+        if (auth.isAuthenticated) {
+            dispatch(followImgAuthor({
+                authorId: props?.item?.user_id,
+                isFollow: isFollow
+            }));
+        } else {
+            navigate('/signin');
+        }
+    }
+
+    /**
+     * @description
+     *  Edit the prompt (img to img)
+     */
+    const handleEdit = () => {
+        if (auth.isAuthenticated) {
+        } else {
+            navigate('/signin');
+        }
+    }
+
+    useEffect(() => {
+        setIsFav(img.imageIsFav);
+        setFavCnt(img.imageFavCnt);
+        setIsFollow(img.imageIsFollow);
+    }, [img]);
 
     return (
         <Modal
@@ -54,40 +171,44 @@ function ItemDetailModal(props) {
                                 </div>
                                 <div className="flex flex-col md:flex-row justify-between gap-x-8 gap-y-2">
                                     <div className="flex">
-                                        <div
-                                            className="LikeButton_like_button__z_ico    flex gap-x-1.5 items-center  LikeButton_pill__ivJOa  leading-[20px]"
-                                            aria-label="Toggle like">
-                                            <div className="relative scale-75">
-                                                <span className="transition-all overflow-visible ">
-                                                    <FavoriteBorderOutlinedIcon fontSize='small' />
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <IconButton color="error" onClick={() => handleFavImg()} size="small">
+                                            <Badge color="secondary" badgeContent={favCnt}>
+                                                <FavoriteBorderOutlinedIcon />
+                                            </Badge>
+                                        </IconButton>
                                     </div>
                                     <div className="flex items-center gap-x-2">
-                                        <button
-                                            className="playground-button subtle md:flex gap-2 hidden"
-                                            onClick={() => download(props?.item?.url)}>
-                                            <FileDownloadOutlinedIcon fontSize='small' />
-                                            <span>Download</span>
-                                        </button>
-                                        <button className="playground-button subtle">
-                                            <AddLinkIcon fontSize='small' />
-                                            <span className="hidden md:flex gap-x-0.5">Copy link</span>
-                                        </button>
-                                        <div className="relative ">
-                                            <button className=" playground-button subtle !py-[7.5px] !pl-[10px]">
-                                                <MoreHorizIcon fontSize='small' />
-                                            </button>
-                                            <div className="absolute right-0 bottom-10 transition-all opacity-0 translate-y-2 pointer-events-none">
-                                                <div
-                                                    className="p-1 right-0 w-40 bg-[#1B1824] backdrop-blur-lg border-[0.5px] border-high [&>*]:rounded rounded-md overflow-hidden flex flex-col shadow-lg">
-                                                    <button className="ImagePost_playground-overflow-button__WA_gb ImagePost_danger__7gxDz">
-                                                        <CommentBankOutlinedIcon fontSize="string" />Report image
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <Button variant="outlined" startIcon={<FileDownloadOutlinedIcon fontSize='string' />} size='string' onClick={() => download(props?.item?.url)}>
+                                            <span className={styles.smlBtnFont}>Download</span>
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            size='string'
+                                            onClick={() => handleCopyLink()}
+                                            startIcon={copyLink === "" ? <AddLinkIcon fontSize='string' /> : <CheckIcon fontSize='string' />}
+                                            disabled={copyLink === "" ? false : true}
+                                            disableFocusRipple={copyLink === "" ? false : true}
+                                            disableRipple={copyLink === "" ? false : true}>
+                                            <span className={styles.smlBtnFont}>Copy link</span>
+                                        </Button>
+
+                                        <IconButton size="small" onClick={handlePopOverClick}>
+                                            <MoreHorizIcon fontSize="small" />
+                                        </IconButton>
+                                        <Popover
+                                            id={popOverOpen ? 'simple-popover' : undefined}
+                                            open={popOverOpen}
+                                            anchorEl={anchorEl}
+                                            onClose={handlePopOverClose}
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'left',
+                                            }}
+                                        >
+                                            <Button variant="outlined" size='small'>
+                                                <CommentBankOutlinedIcon fontSize="string" />&nbsp;<span className={styles.smlBtnFont}>Report image</span>
+                                            </Button>
+                                        </Popover>
                                     </div>
                                 </div>
                             </div>
@@ -104,13 +225,16 @@ function ItemDetailModal(props) {
                                                 <span
                                                     className="color-white text-[14px] textba">{props?.item?.user_name}</span>
                                             </a>
-                                                <button type="button"
-                                                    className="follow-button base short blue group w-[76px] flex-none">
-                                                    <p className="flex items-center justify-center gap-x-1 -ml-0.5">
-                                                        <AddOutlinedIcon fontSize='string' />
-                                                        <span>Follow</span>
-                                                    </p>
-                                                </button>
+
+                                                {!isFollow ?
+                                                    <Button variant="outlined" startIcon={<AddOutlinedIcon fontSize='string' />} size='string' onClick={() => handleIsFollow(true)}>
+                                                        <span className={styles.smlBtnFont}>Follow</span>
+                                                    </Button>
+                                                    :
+                                                    <Button variant="outlined" startIcon={<RemoveOutlinedIcon fontSize='string' />} size='string' color='error' onClick={() => handleIsFollow(false)}>
+                                                        <span className={styles.smlBtnFont}>Unfollow</span>
+                                                    </Button>
+                                                }
                                             </div>
                                         </div>
                                         <h1 className="InputTitle_title__FTFOb my-4 border-b-2 border-transparent">Ice cube</h1>
@@ -120,30 +244,25 @@ function ItemDetailModal(props) {
                                                 <div className="mr-0 ">
                                                     {
                                                         props?.item?.prompt.split(",").map((item, key) => (
-                                                            <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg(item)}>{item}</span>,&nbsp;</p>
+                                                            <p className="inline" key={key}><span className="tokenized-text-view-tag" onClick={() => searchImg(item)}>{item}</span>,&nbsp;</p>
                                                         ))
                                                     }
-                                                    {/* <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("melting")}>melting</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("blue")}>blue</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("cartoony")}>cartoony</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("fun")}>fun</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("trending on artstation")}>trending on artstation</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("sharp focus")}>sharp focus</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("studio photo")}>studio photo</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("intricate details")}>intricate details</span>,&nbsp;</p>
-                                                    <p className="inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("highly detailed")}>highly detailed</span>,&nbsp;</p>
-                                                    <p className="!leading-[20px] inline"><span className="tokenized-text-view-tag" onClick={() => searchImg("by greg rutkowski")}>by greg rutkowski</span></p> */}
                                                 </div>
                                             </div>
                                             <div className="flex flex-wrap text-sm my-4 gap-4">
-                                                <button className=" playground-button"><ContentCopyIcon fontSize='string' />&nbsp;Copy Prompt</button>
-                                                <button className="text-gray-400 playground-button">
-                                                    <AutorenewIcon fontSize='string' />&nbsp;Remix</button>
-                                                <button className="text-gray-400 playground-button">
-                                                    <div className="scale-[0.5]">
-                                                        <BorderColorIcon fontSize='string' />&nbsp;
-                                                    </div>Edit
-                                                </button>
+                                                <Button
+                                                    variant="outlined"
+                                                    startIcon={!copyPrompt ? <ContentCopyIcon fontSize='string' /> : <CheckIcon fontSize='string' />}
+                                                    size='string'
+                                                    onClick={() => handleCopyPrompt()}>
+                                                    <span className={styles.smlBtnFont}>&nbsp;Copy Prompt</span>
+                                                </Button>
+                                                <Button variant="outlined" startIcon={<AutorenewIcon fontSize='string' />} size='string' onClick={() => handleRemix()}>
+                                                    <span className={styles.smlBtnFont}>&nbsp;Remix</span>
+                                                </Button>
+                                                <Button variant="outlined" startIcon={<BorderColorIcon fontSize='string' />} size='string' onClick={() => handleEdit()}>
+                                                    <span className={styles.smlBtnFont}>&nbsp;Edit</span>
+                                                </Button>
                                             </div>
                                             <hr className="!my-6 border-low" />
                                             <ul className="list-none grid grid-cols-2 gap-y-4 gap-x-2">
@@ -169,7 +288,7 @@ function ItemDetailModal(props) {
                                                 </div>
                                                 <div className="space-y-0.5 text-sm">
                                                     <dt className="color-secondary font-[590]">Created</dt>
-                                                    <dl className="text-gray-200">{props?.item?.created_at}</dl>
+                                                    <dl className="text-gray-200">{moment(props?.item?.created_at).utc().format('YYYY-MM-DD hh:mm:ss')}</dl>
                                                 </div>
                                                 <div className="space-y-0.5 text-sm">
                                                     <dt className="color-secondary font-[590]">Additional Credit</dt>
@@ -188,7 +307,7 @@ function ItemDetailModal(props) {
                     </div>
                 </Box>
             </Fade>
-        </Modal>
+        </Modal >
     );
 }
 

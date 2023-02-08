@@ -55,6 +55,54 @@ class ImgService {
         })
     }
 
+    /**
+     * @description
+     *  Add or remove favourite from image.
+     */
+    addFavourite = (data) => {
+        return new Promise((resolve, reject) => {
+            this.service.post('/fav', data)
+                .then(res => {
+                    resolve(res.data);
+                })
+                .catch(err => {
+                    reject(err);
+                })
+        })
+    }
+
+    /**
+     * @description
+     *  Add or remove favourite from image.
+     */
+    getImageById = (data) => {
+        return new Promise((resolve, reject) => {
+            this.service.post('/get_image_by_id', data)
+                .then(res => {
+                    resolve(res.data);
+                })
+                .catch(err => {
+                    reject(err);
+                })
+        })
+    }
+
+    /**
+     * @description
+     *  Follow or unfollow the image author.
+     */
+    followImgAuthor = (data) => {
+        return new Promise((resolve, reject) => {
+            this.service.post('/follow_img_author', data)
+                .then(res => {
+                    resolve(res.data);
+                })
+                .catch(err => {
+                    reject(err);
+                })
+        })
+    }
+
     setTokenInHeader = (token) => {
         this.service.defaults.headers.common['x-auth-token'] = token;
     }

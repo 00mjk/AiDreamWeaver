@@ -4,7 +4,7 @@ import { ImageList, ImageListItem, ImageListItemBar, IconButton } from '@mui/mat
 
 import InfoIcon from '@mui/icons-material/Info';
 
-import { searchImgsByKey } from "../../actions/imgAction";
+import { searchImgsByKey, getImageById } from "../../actions/imgAction";
 import ItemDetailModal from '../../components/ItemDetailModal';
 import styles from './homepage.module.css';
 
@@ -20,18 +20,17 @@ export default function Homepage() {
     const handleImage = (imgItem) => {
         setDetailModalOpen(true);
         setSelectedItem(imgItem);
+
+        dispatch(getImageById({ imageId: imgItem._id }));
     }
 
     useEffect(() => {
-        dispatch(searchImgsByKey(image.imgSchKeyword)).then(() => {
-            // setFormData(initialState);
-            // navigate("/create");
-        });
-    })
+        dispatch(searchImgsByKey(image.imgSchKeyword));
+    }, [])
 
     return (<>
         <ImageList variant="masonry" cols={5} gap={10} style={{ margin: '10px' }}>
-            {image.images.map((item, key) => (
+            {image?.images?.map((item, key) => (
                 <ImageListItem key={key} className={styles.imagelistitem} onClick={() => { handleImage(item) }}>
                     <img
                         src={`${item.url}?w=248&fit=crop&auto=format`}

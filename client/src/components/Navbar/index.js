@@ -95,12 +95,13 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-
+    // Redirect Module
     const navigate = useNavigate()
 
+    // Use Redux
     const dispatch = useDispatch()
     const auth = useSelector(state => state.auth)
-    const img = useSelector(state => state.img)
+    const img = useSelector(state => state.img);
 
     // Standard
     const [searchKey, setSearchKey] = useState("");
@@ -116,10 +117,7 @@ export default function PrimarySearchAppBar() {
     };
 
     const searchImages = () => {
-        dispatch(searchImgsByKey(searchKey)).then(() => {
-            // setFormData(initialState);
-            // navigate("/create");
-        });
+        dispatch(searchImgsByKey(searchKey));
     }
 
     const menuId = 'primary-search-account-menu';
@@ -163,8 +161,8 @@ export default function PrimarySearchAppBar() {
     );
 
     useEffect(() => {
-        // setSearchKey(img.imgSchKeyword);
-    })
+        setSearchKey(img.imgSchKeyword);
+    }, [img])
 
     return (
         <Box sx={{ flexGrow: 1 }}>

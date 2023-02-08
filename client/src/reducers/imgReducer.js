@@ -1,40 +1,80 @@
-import { SEARCH_IMG_SUCCESS, SEARCH_IMG_FAILED, CREATE_IMG_SUCCESS, CREATE_IMG_FAILED } from "../actions/config";
+import {
+    IMG_SEARCH_SUCCESS,
+    IMG_SEARCH_FAILED,
+    IMG_CREATE_SUCCESS,
+    IMG_CREATE_FAILED,
+    IMG_FAV_SUCCESS,
+    IMG_GET_BY_ID_SUCCESS,
+    IMG_FOLLOW_AUTHOR
+} from "../actions/config";
 
 const initialState = {
     loading: false,
-    imgSchKeyword: "",
-    images: [],
-    recentImages: [],
+    imgSchKeyword: "",      // Search keyword
+    recentImages: [],       // Generate results
+    images: [],             // Search results
+    image: null,            // Chosen image
+    imageIsFav: false,      // Chosen image favourite state.
+    imageFavCnt: 0,         // Chosen image favourite count.
+    imageIsFollow: false,    // Chosen image author is my follower?
     error: null
 };
 
 export default function imgReducer(state = initialState, action) {
     switch (action.type) {
-        case SEARCH_IMG_SUCCESS:
+        case IMG_SEARCH_SUCCESS:
             console.log(action?.data?.images)
             return {
                 ...state,
                 loading: false,
                 error: null,
                 images: action?.data?.images,
+                img: null,
                 imgSchKeyword: action?.data?.keyword
             }
-        case SEARCH_IMG_FAILED:
+        case IMG_SEARCH_FAILED:
             return {
                 ...state,
                 loading: false,
+                images: null,
                 error: action?.data?.error
             };
-        case CREATE_IMG_SUCCESS:
+        case IMG_CREATE_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 error: null,
                 recentImages: action?.data?.images
             }
-        case CREATE_IMG_FAILED:
+        case IMG_CREATE_FAILED:
             return {
                 ...state
+            }
+        case IMG_GET_BY_ID_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                image: action?.data?.image,
+                imageIsFav: action?.data?.isFav,
+                imageFavCnt: action?.data?.image?.fav_count,
+                imageIsFollow: action?.data?.isFollow
+            }
+        case IMG_FAV_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                image: action?.data?.image,
+                imageIsFav: action?.data?.isFav,
+                imageFavCnt: action?.data?.image?.fav_count
+            }
+        case IMG_FOLLOW_AUTHOR:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                imageIsFollow: action?.data?.isFollow
             }
         default:
             return state;

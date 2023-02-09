@@ -58,10 +58,12 @@ const CreatePage = () => {
     const [trackId, setTrackerId] = useState(null);
 
     useEffect(() => {
-        setImages(aiObj?.results?.output);
         setPrompt(aiObj?.settings?.prompt);
         setLoading(aiObj?.loading);
-        setStatus(aiObj?.results?.status);
+        if (aiObj?.results !== null) {
+            setImages(aiObj?.results?.output);
+            setStatus(aiObj?.results?.status);
+        }
     }, [aiObj])
 
     useEffect(() => {
@@ -125,8 +127,7 @@ const CreatePage = () => {
     const getCreatedImages = () => {
         if (loading)
             return <CircularProgress color='secondary' size={80} disableShrink={true} sx={{ marginTop: '5%' }} />
-
-        if (status === "init") {
+        if (status === undefined || status === null || status === "init") {
             return <>
                 <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }} >
                     <Alert severity="warning">
@@ -236,11 +237,11 @@ const CreatePage = () => {
                             <OptQualityDetails value={genVariants} onChange={(val) => setGenVariants(val)} />
                         </div>
                         {/* <div className="flex flex-col gap-y-4 py-8 ">
-                                <OptSeed />
-                            </div>
-                            <div className="flex flex-col gap-y-4">
-                                <OptAdvOption />
-                            </div> */}
+                            <OptSeed />
+                        </div>
+                        <div className="flex flex-col gap-y-4">
+                            <OptAdvOption />
+                        </div> */}
                         <OptImgNum onChange={val => setImgNum(val)} />
                         {/* <div className="flex flex-col gap-y-4 py-8">
                                 <OptPrivateSession />

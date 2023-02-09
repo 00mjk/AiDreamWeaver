@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Button, Slider, Grid } from '@mui/material';
+import { Button, Slider, Grid, CircularProgress, Stack, Alert, AlertTitle } from '@mui/material';
 import BrushOutlinedIcon from '@mui/icons-material/BrushOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 
-import MockupService from '../../services/mockupService';
-import { setMockupChosenImgUrl } from '../../actions/mockupAction';
+import { MOCKUP_IMG_INITIAL, MOCKUP_IMG_START, MOCKUP_IMG_SUCCESS, MOCKUP_IMG_FAILED_GET, MOCKUP_IMG_FAILED_MAKE } from '../../actions/config';
+import { setMockupChosenImgUrl, mockupImage } from '../../actions/mockupAction';
 
 import MockupImgItem from '../../components/MockupImgItem';
 import ImgRadioButton from '../../components/ImgRadioButton';
@@ -18,16 +18,14 @@ const MockupPage = () => {
 
     // Use Redux
     const dispatch = useDispatch();
-    // const toCreate = useSelector(state => state.toCreate)
-    // const img = useSelector(state => state.img)
     const aiObj = useSelector(state => state.aiObj)
     const mockupObj = useSelector(state => state.mockupObj)
 
     // Flags
-    const [loading, setLoading] = useState(false);
     const [columns, setColumns] = useState(1);                  // Colum count to show image.
     const [initImg, setInitImg] = useState("");                 // Init image to mockup
     const [mockupTypeIdx, setMockupTypeIdx] = useState(0);            // MockupType Index
+    const [mockupState, setMockupState] = useState(MOCKUP_IMG_INITIAL);
 
     // Generated Images
     const [aiImages, setAiImages] = useState([]);
@@ -46,31 +44,17 @@ const MockupPage = () => {
     }, [aiObj]);
 
     useEffect(() => {
-        // Set mockup init image selected by user
         setInitImg(mockupObj?.initImgUrl);
+        setMokeupImgs(mockupObj?.mockups);
+        setMockupState(mockupObj?.state);
     }, [mockupObj]);
 
     /**
      * @description
-     *  Get Image of t-shirt using api
+     *  Mock up image using mockup Type and give image.
      */
-    const handleGetTshirt = async (mockupService, taskKey) => {
-        await mockupService.getTShirt(taskKey)
-            .then((res) => {
-                if (res.code === 200 && res.result.status === "completed") {
-                    console.log(res.result);
-                    setMokeupImgs(res.result.mockups);
-                }
-            })
-            .catch(err => console.log(err))
-    }
-
-    /**
-     * @description
-     *  Print Image in t-shirt using api
-     */
-    const handlePrintShirt = async () => {
-        console.log('--- handlePrintShirt ---', mockupTypeIdx);
+    const mockupImageByType = () => {
+        console.log('--- mockupImageByType ---', mockupTypeIdx);
         if (initImg === "") {
             snapbarRef.current.showSnackbar({
                 show: true,
@@ -81,22 +65,7 @@ const MockupPage = () => {
         }
 
         try {
-            const mockupService = new MockupService();
-            let taskKey = "";
-            let createCode = 400;
-            console.log(mockupTypes[mockupTypeIdx]);
-
-            await mockupService.createTShirt(mockupTypes[mockupTypeIdx], initImg).then((res) => {
-                createCode = res.code;
-                if (createCode === 200) {
-                    taskKey = res.result.task_key;
-                }
-            }).catch(err => console.log(err));
-
-            if (createCode !== 200)
-                return;
-
-            setTimeout(() => handleGetTshirt(mockupService, taskKey), 20000)
+            dispatch(mockupImage(mockupTypes[mockupTypeIdx], initImg));
         } catch (err) {
             console.log(err);
         }
@@ -107,17 +76,49 @@ const MockupPage = () => {
      *  Generate and display mockup image items.
      */
     const getMockupImages = () => {
-        return <div id="scroll-container" className="p-10 pt-5 ">
-            <div style={{ display: 'flex', flexDirection: 'row', placeContent: 'stretch center', boxSizing: 'border-box', width: '100%', gap: '16px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', placeContent: 'stretch flex-start', flex: '1 1 0%', width: '0px', gap: '16px' }}>
-                    <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))` }}>
-                        {
-                            mokeupImgs.map((item, key) => <MockupImgItem key={key} item={item} />)
-                        }
+
+        if (mockupState === undefined || mockupState === null || mockupState === MOCKUP_IMG_INITIAL) {
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }} >
+                    <Alert severity="warning">
+                        <AlertTitle>Pending</AlertTitle>
+                        Please mockup a new image — <strong>Click the Mockup button!</strong>
+                    </Alert>
+                </Stack>
+            </>
+        } else if (mockupState === MOCKUP_IMG_START) {
+            return <CircularProgress color='secondary' size={80} disableShrink={true} sx={{ marginTop: '5%' }} />
+        } else if (mockupState === MOCKUP_IMG_SUCCESS) {
+            return <div id="scroll-container" className="p-10 pt-5 ">
+                <div style={{ display: 'flex', flexDirection: 'row', placeContent: 'stretch center', boxSizing: 'border-box', width: '100%', gap: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', placeContent: 'stretch flex-start', flex: '1 1 0%', width: '0px', gap: '16px' }}>
+                        <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))` }}>
+                            {
+                                mokeupImgs?.map((item, key) => <MockupImgItem key={key} item={item} />)
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        } else if (mockupState === MOCKUP_IMG_FAILED_MAKE) {
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        Mockup image is failed. — <strong>Try it again!</strong>
+                    </Alert>
+                </Stack>
+            </>
+        } else if (mockupState === MOCKUP_IMG_FAILED_GET) {
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        Getting mockup image is failed. — <strong>Try it again!</strong>
+                    </Alert>
+                </Stack>
+            </>
+        }
     }
 
     return <>
@@ -149,7 +150,7 @@ const MockupPage = () => {
                         </fieldset>
                     </div>
                     <div className="px-6 sticky z-10 pt-4 pb-2 space-y-4 bottom-0 bg-[#05020E]">
-                        <Button variant="outlined" endIcon={<BrushOutlinedIcon />} onClick={handlePrintShirt}>Mock up</Button>
+                        <Button variant="outlined" endIcon={<BrushOutlinedIcon />} onClick={() => mockupImageByType()}>Mock up</Button>
                     </div>
                 </aside>
                 <main className="xl:col-span-4 lg:col-span-3 lg:overflow-y-auto lg:overflow-x-hidden border-x border-white/10 relative">
@@ -166,7 +167,7 @@ const MockupPage = () => {
                                             color="secondary"
                                             value={columns}
                                             min={1}
-                                            max={10}
+                                            max={6}
                                             onChange={(e) => setColumns(e.target.value)}
                                         />
                                     </div>

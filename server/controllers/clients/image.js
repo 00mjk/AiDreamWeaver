@@ -13,7 +13,7 @@ const router = express.Router();
  *  Create image (prompt, url, negPrompt ...)
  */
 export const createImage = async (req, res) => {
-    const { images, prompt, negPrompt, initImgUrl, width, height, guidianceScale, qualityDetails, seed, sampler } = req.body;
+    const { images, settings } = req.body;
 
     try {
         // Get User
@@ -27,16 +27,22 @@ export const createImage = async (req, res) => {
                 user_id: req.userId,
                 user_avatar: user?.avatar,
                 user_name: user.name,
-                name: prompt,
-                prompt: prompt,
-                negative_prompt: negPrompt,
-                init_img_url: initImgUrl,
-                width: width,
-                height: height,
-                guidance_scale: guidianceScale,
-                quality_details: qualityDetails,
-                seed: seed,
-                sampler: sampler,
+                name: settings.prompt,
+                prompt: settings.prompt,
+                model_id: settings.model_id,
+                samples: settings.samples,
+                negative_prompt: settings.negative_prompt,
+                init_image: settings.init_image,
+                mask_image: settings.mask_image,
+                width: settings.width,
+                height: settings.height,
+                prompt_strength: settings.prompt_strength,
+                num_inference_steps: settings.num_inference_steps,
+                guidance_scale: settings.guidance_scale,
+                enhance_prompt: settings.enhance_prompt,
+                seed: settings.seed,
+                webhook: settings.webhook,
+                track_id: settings.track_id
             });
             await newImage.save();
             console.log(newImage);

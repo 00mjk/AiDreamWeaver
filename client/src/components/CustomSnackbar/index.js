@@ -39,7 +39,7 @@ const CustomSnackbar = React.forwardRef((props, ref) => {
             autoHideDuration={4000}
             onClose={handleClose}
         >
-            <Alert onClose={handleClose} severity={snackbarOption.type} sx={{ width: '100%' }}>
+            <Alert onClose={handleClose} severity={snackbarOption.type} sx={{ width: '100%'}}>
              {snackbarOption.message}
             </Alert>
         </Snackbar>

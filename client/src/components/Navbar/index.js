@@ -112,8 +112,6 @@ export default function PrimarySearchAppBar() {
         setSearchKey(img.imgSchKeyword);
     }, [img])
 
-    console.log(window.location.href);
-
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -179,8 +177,6 @@ export default function PrimarySearchAppBar() {
             )
         } else {
             const url = document.location.href;
-            console.log(url);
-            console.log(url.includes('/create'));
             if (url.includes('/create')) {
                 return (
                     <Link to='/mockup'>

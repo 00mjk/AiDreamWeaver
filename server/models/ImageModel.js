@@ -22,9 +22,26 @@ const imageSchema = Schema({
         type: String,
         required: true
     },
-    prompt: String,
-    negative_prompt: String,
-    init_img_url: String,
+    prompt: {
+        type: String
+    },
+    model_id: {
+        type: String,
+        required: true
+    },
+    samples: {
+        type: Number,
+        required: true
+    },
+    negative_prompt: {
+        type: String
+    },
+    init_image: {
+        type: String
+    },
+    mask_image: {
+        type: Number
+    },
     width: {
         type: Number,
         required: true
@@ -33,16 +50,20 @@ const imageSchema = Schema({
         type: Number,
         required: true
     },
-    seed: Object,
-    sampler: Number,
+    prompt_strength: {
+        type: Schema.Types.Decimal128
+    },
+    num_inference_steps: {
+        type: Number
+    },
     guidance_scale: {
-        type: Number,
-        required: true
+        type: Number
     },
-    quality_details: {
-        type: Number,
-        required: true
+    enhance_prompt: {
+        type: String
     },
+    seed: Object,
+    track_id: Object,
     fav_count: {
         type: Number,
         default: 0

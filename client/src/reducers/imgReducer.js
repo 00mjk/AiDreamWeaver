@@ -17,7 +17,8 @@ const initialState = {
     imageIsFav: false,      // Chosen image favourite state.
     imageFavCnt: 0,         // Chosen image favourite count.
     imageIsFollow: false,    // Chosen image author is my follower?
-    error: null
+    error: null,
+    mockupInitImg: ""       // Init image for mockup
 };
 
 export default function imgReducer(state = initialState, action) {
@@ -44,7 +45,7 @@ export default function imgReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 error: null,
-                recentImages: action?.data?.images
+                recentImages: action?.images
             }
         case IMG_CREATE_FAILED:
             return {

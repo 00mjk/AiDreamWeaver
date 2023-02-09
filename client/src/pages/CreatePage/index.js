@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import ChevronLeftOutlinedIcon from '@mui/icons-material/ChevronLeftOutlined';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
-import BrushOutlinedIcon from '@mui/icons-material/BrushOutlined';
 import SendIcon from '@mui/icons-material/Send';
 
 import { Button, Slider, CircularProgress, Alert, AlertTitle, Stack } from '@mui/material';
 
-import AiService from '../../services/aiService';
-import ShirtService from '../../services/shirtService';
+import { createImg } from '../../actions/imgAction';
+import { makeAiImage } from '../../actions/aiAction';
+
 import GenImgItem from '../../components/GenImgItem';
 import MockupImgItem from '../../components/MockupImgItem';
 import OptPrompt from '../../components/OptPrompt';
@@ -24,162 +24,97 @@ import OptQualityDetails from '../../components/OptQualityDetails';
 // import OptAdvOption from '../../components/OptAdvOption';
 import OptImgNum from '../../components/OptImgNum';
 // import OptPrivateSession from '../../components/OptPrivateSession';
+import OptSuperResolution from '../../components/OptSuperResolution';
 
-import { createImg } from '../../actions/imgAction';
 
 const CreatePage = () => {
     // Use Redux
     const dispatch = useDispatch();
     const toCreate = useSelector(state => state.toCreate)
+    const aiObj = useSelector(state => state.aiObj)
 
     // Flags
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState("init");
     const [apiCallFlag, setApiCallFlag] = useState("pending");  // Generate Api call state (pending, loading, processing, created)
-    const [rightSidebar, setRightSidebar] = useState(false);    // Rite sidebar state
+    const [rightSidebar, setRightSidebar] = useState(false);    // Right sidebar state
     const [columns, setColumns] = useState(1);                  // Colum count to show image.
 
-    // Api Params
-    // const [batchId, setBatchId] = useState(0);
+    const [images, setImages] = useState([]);                   // Generated Images
+    const [modelId, setModelId] = useState("stable-diffu");     // Model Id
     const [prompt, setPrompt] = useState("");                   // Prompt
     const [negPrompt, setNegPrompt] = useState("");             // Remove From Image
     const [initImg, setInitImg] = useState("");                 // Init Image (Link of initial image)
-    // const [maskImg, setMaskImg] = useState("");                  // Mask Image (Link of mask image for inpainting)
-    const [strength, setStrength] = useState(70);                // Prompt Strength (Prompt strength when using init image)
+    const [superRes, setSuperRes] = useState(0);                // Super Resolution
+    const [maskImg, setMaskImg] = useState(0);                  // Mask Image (Link of mask image for inpainting)
+    const [strength, setStrength] = useState(70);               // Prompt Strength (Prompt strength when using init image)
     const [width, setWidth] = useState(512);                    // Image Dimensions - Width
     const [height, setHeight] = useState(512);                  // Image Dimensions - Height
     const [genVariants, setGenVariants] = useState(25);         // Quality & Details
     const [guidanceScale, setGuidanceScale] = useState(9);      // Prmpt Guidance
     const [imgNum, setImgNum] = useState(1);                    // Number of Images
-    // const [cfgScale, setCfgScale] = useState(0);
-    // const [dreamBoothModel, setDreamBoothModel] = useState(0);
-    // const [hide, setHide] = useState(0);
-    // const [isPrivate, setIsPrivate] = useState(0);
-    // const [modelType, setModelType] = useState(0);
-    const [sampler, setSampler] = useState(0);
     const [seed, setSeed] = useState(null);
-    // const [steps, setSteps] = useState(0);
-
-    // Generated Images
-    const [images, setImages] = useState([]);
-    const [mokeupImgs, setMokeupImgs] = useState([]);
+    const [webhook, setWebhook] = useState(null);
+    const [trackId, setTrackerId] = useState(null);
 
     useEffect(() => {
-        if (toCreate.isTxtToImg)
-            setPrompt(toCreate.prompt);
-        else
-            setInitImg(toCreate.initImg);
-    }, [toCreate]);
+        setImages(aiObj?.results?.output);
+        setPrompt(aiObj?.settings?.prompt);
+        setLoading(aiObj?.loading);
+        setStatus(aiObj?.results?.status);
+    }, [aiObj])
 
-    const handleColumnChange = (event, newValue) => {
-        setColumns(newValue);
-    }
+    useEffect(() => {
+        if (toCreate.isTxtToImg) {
+            if (toCreate.prompt !== "")
+                setPrompt(toCreate.prompt, "toCreate");
+        } else {
+            if (toCreate.initImg != "")
+                setInitImg(toCreate.initImg);
+        }
+    }, [toCreate]);
 
     /**
      * @description
      *  Generate image using api (prompt, batchId, width, height ...)
      */
-    const handleGenerateImg = async () => {
+    const handleGenerateImg = () => {
         console.log("--- handleGenerateImg --- ", prompt);
 
         try {
-            setApiCallFlag('loading');
-
-            const aiService = new AiService();
-            aiService.makeImg({
+            const settings = {
                 "key": "iIjvdXCYHvVOuemfFgGH9JXSsVwl3grN7ZPtGGGAxY1g32kayxq1SVB3s08A",
                 "prompt": prompt,
+                "model_id": modelId,
+                "samples": imgNum,
                 "negative_prompt": negPrompt,
                 "init_image": initImg,
+                "mask_image": maskImg,
                 "width": width,
                 "height": height,
-                "samples": imgNum,
-                "guidance_scale": guidanceScale,
+                "prompt_strength": (strength / 100),
                 "num_inference_steps": genVariants,
-                "safety_checker": "no",
+                "guidance_scale": guidanceScale,
                 "enhance_prompt": "yes",
-                "strength": (strength / 100),
                 "seed": seed,
-                "webhook": null,
-                "track_id": null
-            })
-                .then((res) => {
-                    if (res.status === 'success') {
-                        setImages(res.output);
+                "webhook": webhook,
+                "track_id": trackId
+            };
 
-                        // Save data in serer.
-                        const imgData = {
-                            images: res.output,
-                            prompt: prompt,
-                            negPrompt: negPrompt,
-                            initImgUrl: initImg,
-                            width: width,
-                            height: height,
-                            guidianceScale: guidanceScale,
-                            qualityDetails: genVariants,
-                            seed: seed,
-                            sampler: sampler,
-                        };
-                        dispatch(createImg(imgData)).then(() => {
-                            setApiCallFlag("created");
-                        });
-                        return;
-                    } else if (res.status === "error") {
-                        window.alert(res.messege.samples[0]);
-                    } else if (res.status === "processing") {
-                        setApiCallFlag("processing");
-                        return;
-                    }
-
-                    setApiCallFlag("pending");
-                })
-                .catch(err => {
-                    console.log(err);
+            dispatch(makeAiImage(settings)).then(res => {
+                // Save data in serer.
+                const imgData = {
+                    images: res.output,
+                    settings: settings
+                };
+                dispatch(createImg(imgData)).then(() => {
+                    console.log("Image created in db.");
                 });
+            }).catch(err => {
+                console.log("handleGenerateImg - Error");
+            });
         } catch (err) {
-            setApiCallFlag("pending");
-        }
-    }
-
-    /**
-     * @description
-     *  Get Image of t-shirt using api
-     */
-    const handleGetTshirt = async (shirtService, taskKey) => {
-        await shirtService.getTShirt(taskKey)
-            .then((res) => {
-                console.log("1234");
-                if (res.code === 200 && res.result.status === "completed") {
-                    console.log(res.result);
-                    setMokeupImgs(res.result.mockups);
-                }
-            })
-            .catch(err => console.log(err))
-    }
-
-    /**
-     * @description
-     *  Print Image in t-shirt using api
-     */
-    const handlePrintShirt = async () => {
-        console.log('--- handlePrintShirt ---');
-
-        try {
-            const shirtService = new ShirtService();
-            let taskKey = "";
-            let createCode = 400;
-
-            await shirtService.createTShirt(71, images).then((res) => {
-                createCode = res.code;
-                if (createCode === 200) {
-                    taskKey = res.result.task_key;
-                }
-            }).catch(err => console.log(err));
-
-            if (createCode !== 200)
-                return;
-
-            setTimeout(() => handleGetTshirt(shirtService, taskKey), 20000)
-        } catch (err) {
-            console.log(err);
+            console.log("handleGeneratedImg - Err");
         }
     }
 
@@ -188,7 +123,10 @@ const CreatePage = () => {
      *  Generate and display image items which are created by api.
      */
     const getCreatedImages = () => {
-        if (apiCallFlag === "pending") {
+        if (loading)
+            return <CircularProgress color='secondary' size={80} disableShrink={true} sx={{ marginTop: '5%' }} />
+
+        if (status === "init") {
             return <>
                 <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }} >
                     <Alert severity="warning">
@@ -197,18 +135,7 @@ const CreatePage = () => {
                     </Alert>
                 </Stack>
             </>
-        } else if (apiCallFlag === "loading") {
-            return <CircularProgress color='secondary' size={80} disableShrink={true} sx={{ marginTop: '5%' }} />
-        } else if (apiCallFlag === "processing") {
-            return <>
-                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
-                    <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
-                        Processing — <strong>Try it again!</strong>
-                    </Alert>
-                </Stack>
-            </>
-        } else if (apiCallFlag === "created") {
+        } else if (status === "success") {
             return <div id="scroll-container" className="p-10 pt-5 ">
                 <div style={{ display: 'flex', flexDirection: 'row', placeContent: 'stretch center', boxSizing: 'border-box', width: '100%', gap: '16px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', placeContent: 'stretch flex-start', flex: '1 1 0%', width: '0px', gap: '16px' }}>
@@ -220,25 +147,25 @@ const CreatePage = () => {
                     </div>
                 </div>
             </div>
+        } else if (status === "error") {
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        {aiObj?.results?.messege?.prompt[0]} — <strong>Try it again!</strong>
+                    </Alert>
+                </Stack>
+            </>
+        } else {
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        Failed — <strong>Try it again!</strong>
+                    </Alert>
+                </Stack>
+            </>
         }
-    }
-
-    /**
-     * @description
-     *  Generate and display mockup image items.
-     */
-    const getMockupImages = () => {
-        return <div id="scroll-container" className="p-10 pt-5 ">
-            <div style={{ display: 'flex', flexDirection: 'row', placeContent: 'stretch center', boxSizing: 'border-box', width: '100%', gap: '16px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', placeContent: 'stretch flex-start', flex: '1 1 0%', width: '0px', gap: '16px' }}>
-                    <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))` }}>
-                        {
-                            mokeupImgs.map((item, key) => <MockupImgItem key={key} item={item} />)
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
     }
 
     return <>
@@ -249,6 +176,7 @@ const CreatePage = () => {
                         <OptPrompt value={prompt} onChange={(value) => setPrompt(value)} />
                         <OptNegPrompt value={negPrompt} onChange={(value) => setNegPrompt(value)} />
                         <OptFilter />
+                        <OptSuperResolution onChange={(value => setSuperRes(value))} />
                         <OptImgToImg
                             img={initImg}
                             strength={strength}
@@ -259,12 +187,12 @@ const CreatePage = () => {
                     <div className="px-6 sticky z-10 pt-4 pb-2 space-y-4 bottom-0 bg-[#05020E]">
                         <Button variant="outlined" endIcon={<SendIcon />} onClick={handleGenerateImg}>Generate</Button>
                     </div>
-                    {
+                    {/* {
                         images.length > 0 &&
                         <div className="px-6 sticky z-10 pt-4 pb-2 space-y-4 bottom-0 bg-[#05020E]">
                             <Button variant="outlined" endIcon={<BrushOutlinedIcon />} onClick={handlePrintShirt}>Print on T-Shirt</Button>
                         </div>
-                    }
+                    } */}
                 </aside>
                 <main className={`${!rightSidebar ? "xl:col-span-3 lg:col-span-2" : "xl:col-span-4 lg:col-span-3"} lg:overflow-y-auto lg:overflow-x-hidden border-x border-white/10 relative`}>
                     <button aria-label="Toggle sidebar" className="absolute hidden lg:flex items-center justify-center -right-4 top-20 z-30 bg-gray-95 rounded-l-full w-10 h-12 pr-2 border-l border-white/10 "
@@ -290,19 +218,18 @@ const CreatePage = () => {
                                             value={columns}
                                             min={1}
                                             max={6}
-                                            onChange={handleColumnChange}
+                                            onChange={(e) => setColumns(e.target.value)}
                                         />
                                     </div>
                                 </fieldset>
                             </div>
                         </div>
                         {getCreatedImages()}
-                        {getMockupImages()}
                     </div>
                 </main>
                 <aside className={`lg:overflow-y-auto relative z-20 transition-all ${!rightSidebar ? '' : 'hidden'} `}>
                     <div className="px-6 divide-y divide-white/10">
-                        <OptModel />
+                        <OptModel onChange={(modelId) => setModelId(modelId)} />
                         <div className="flex flex-col gap-y-8 py-8">
                             <OptImgDimen onChgWidth={val => setWidth(val)} onChgHeight={val => setHeight(val)} />
                             <OptPromptGuidance value={guidanceScale} onChange={(val) => setGuidanceScale(val)} />

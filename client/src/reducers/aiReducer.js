@@ -1,7 +1,8 @@
 import {
     AI_MAKE_IMG_START,
     AI_MAKE_IMG_SUCCESS,
-    AI_MAKE_IMG_FAILED
+    AI_MAKE_IMG_FAILED,
+    AI_MAKE_IMG_ERROR
 } from "../actions/config";
 
 const initialState = {
@@ -33,6 +34,11 @@ export default function aiReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 results: action?.data?.res
+            }
+        case AI_MAKE_IMG_ERROR:
+            return {
+                ...state,
+                loading: false
             }
         default:
             return state;

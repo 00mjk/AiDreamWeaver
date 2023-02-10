@@ -23,6 +23,7 @@ import BugReportIcon from '@mui/icons-material/BugReport';
 
 import { signout } from "../../actions/authAction";
 import { searchImgsByKey } from "../../actions/imgAction";
+import styles from './styles.module.css';
 import StartBtn from './StartBtn.js';
 
 const Search = styled('div')(({ theme }) => ({
@@ -128,36 +129,36 @@ export default function PrimarySearchAppBar() {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}
             id={menuId}
             keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right', }}
+            transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             open={isMenuOpen}
             onClose={handleMenuClose}
             sx={{
             }}
         >
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><PersonOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Profile</MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><SettingsOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Settings</MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><ChatBubbleOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Join Discord</MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><NotificationsNoneOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Notifications</MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><TwitterIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Twitter</MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><QuizIcon fontSize='string' />&nbsp;&nbsp;&nbsp;FAQ</MenuItem>}
-            <MenuItem onClick={handleMenuClose}><ShieldOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Privacy Policy</MenuItem>
-            <MenuItem onClick={handleMenuClose}><HelpIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Request Help</MenuItem>
-            <MenuItem onClick={handleMenuClose}><DescriptionOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Terms of Service</MenuItem>
-            <MenuItem onClick={handleMenuClose}><WorkOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Jobs</MenuItem>
-            <MenuItem onClick={handleMenuClose}><MoneyIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Pricing</MenuItem>
+            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><PersonOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Profile</span></MenuItem>}
+            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><SettingsOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Settings</span></MenuItem>}
+            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><ChatBubbleOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Join Discord</span></MenuItem>}
+            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><NotificationsNoneOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Notifications</span></MenuItem>}
+            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><TwitterIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Twitter</span></MenuItem>}
+            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><QuizIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>FAQ</span></MenuItem>}
+            <MenuItem onClick={handleMenuClose}><ShieldOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Privacy Policy</span></MenuItem>
+            <MenuItem onClick={handleMenuClose}><HelpIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Request Help</span></MenuItem>
+            <MenuItem onClick={handleMenuClose}><DescriptionOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Terms of Service</span></MenuItem>
+            <MenuItem onClick={handleMenuClose}><WorkOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Jobs</span></MenuItem>
+            <MenuItem onClick={handleMenuClose}><MoneyIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Pricing</span></MenuItem>
             {auth.isAuthenticated &&
                 <MenuItem onClick={() => {
                     handleMenuClose();
                     dispatch(signout()).then(() => navigate('/'))
-                }}><LogoutOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Log out</MenuItem>}
+                }}><LogoutOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Log out</span></MenuItem>}
             {
                 !auth.isAuthenticated &&
                 <MenuItem onClick={handleMenuClose}>
                     <Link to={`/signin`}>
-                        <LogoutOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;Log In
+                        <LogoutOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Log In</span>
                     </Link>
                 </MenuItem>
             }

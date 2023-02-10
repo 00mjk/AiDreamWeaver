@@ -3,7 +3,8 @@ import AiService from '../services/aiService';
 import {
     AI_MAKE_IMG_FAILED,
     AI_MAKE_IMG_START,
-    AI_MAKE_IMG_SUCCESS
+    AI_MAKE_IMG_SUCCESS,
+    AI_MAKE_IMG_ERROR
 } from './config.js';
 
 export const makeAiImage = (settings) => dispatch => {
@@ -35,10 +36,9 @@ export const makeAiImage = (settings) => dispatch => {
             })
             reject(res);
         }).catch(err => {
-            // dispatch({
-            //     type: AI_MAKE_IMG_ERROR,
-            //     data: { errors: err }
-            // });
+            dispatch({
+                type: AI_MAKE_IMG_ERROR
+            });
             reject(err);
         });
     });

@@ -24,7 +24,6 @@ const initialState = {
 export default function imgReducer(state = initialState, action) {
     switch (action.type) {
         case IMG_SEARCH_SUCCESS:
-            console.log(action?.data?.images)
             return {
                 ...state,
                 loading: false,

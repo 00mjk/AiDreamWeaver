@@ -32,7 +32,7 @@ const OptImgNum = (props) => {
     return <>
         <fieldset className="create-fieldset py-8">
             <label>Number of Images</label>
-            <p>Select the number of images you would like to generate.</p>
+            {/* <p>Select the number of images you would like to generate.</p> */}
             <div className="flex gap-x-2">
                 {
                     imgNums.map((imgNum, key) => <OptImgNumItem key={key} item={imgNum} onClick={() => handleimgNumChange(key)} />)

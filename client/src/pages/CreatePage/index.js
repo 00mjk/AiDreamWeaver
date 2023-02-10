@@ -11,7 +11,6 @@ import { createImg } from '../../actions/imgAction';
 import { makeAiImage } from '../../actions/aiAction';
 
 import GenImgItem from '../../components/GenImgItem';
-import MockupImgItem from '../../components/MockupImgItem';
 import OptPrompt from '../../components/OptPrompt';
 import OptNegPrompt from '../../components/OptNegPrompt';
 import OptFilter from '../../components/OptFilter';
@@ -153,7 +152,7 @@ const CreatePage = () => {
                 <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
                     <Alert severity="error">
                         <AlertTitle>Error</AlertTitle>
-                        {aiObj?.results?.messege?.prompt[0]} — <strong>Try it again!</strong>
+                        Failed — <strong>Try it again!</strong>
                     </Alert>
                 </Stack>
             </>
@@ -177,13 +176,13 @@ const CreatePage = () => {
                         <OptPrompt value={prompt} onChange={(value) => setPrompt(value)} />
                         <OptNegPrompt value={negPrompt} onChange={(value) => setNegPrompt(value)} />
                         <OptFilter />
-                        <OptSuperResolution onChange={(value => setSuperRes(value))} />
                         <OptImgToImg
                             img={initImg}
                             strength={strength}
                             onSetStrength={(value) => setStrength(value)}
                             onSetInitImg={(value) => setInitImg(value)}
                         />
+                        <OptSuperResolution onChange={(value => setSuperRes(value))} />
                     </div>
                     <div className="px-6 sticky z-10 pt-4 pb-2 space-y-4 bottom-0 bg-[#05020E]">
                         <Button variant="outlined" endIcon={<SendIcon />} onClick={handleGenerateImg}>Generate</Button>

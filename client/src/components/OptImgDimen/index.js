@@ -44,7 +44,7 @@ const OptImgDimen = (props) => {
     return <>
         <fieldset className="create-fieldset">
             <label>Image Dimensions</label>
-            <p>Width × Height of the finished image.</p>
+            {/* <p>Width × Height of the finished image.</p> */}
             <div className="flex flex-row flex-wrap gap-x-2 gap-y-2">
                 {
                     dimens.map((dimen, key) =>
@@ -52,9 +52,9 @@ const OptImgDimen = (props) => {
                     )
                 }
             </div>
-            <div className="text-sm grey-100 mt-1">
+            {/* <div className="text-sm grey-100 mt-1">
                 <p>Buy a <a target="_blank" href="https://playgroundai.com/pricing" style={{ color: 'rgb(118, 173, 255)' }} rel="noreferrer">Pro plan</a> for any width or height up to 1536px</p>
-            </div>
+            </div> */}
         </fieldset>
     </>
 }

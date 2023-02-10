@@ -1,0 +1,4 @@
+.filterItem:hover {
+    border-color: hsla(0, 0%, 100%, .12);
+    display: none;
+}

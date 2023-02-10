@@ -9,6 +9,7 @@ const initialState = {
     loading: false,
     settings: null,
     results: null,
+    error: "",
 };
 
 export default function aiReducer(state = initialState, action) {
@@ -33,7 +34,8 @@ export default function aiReducer(state = initialState, action) {
             return {
                 ...state,
                 loading: false,
-                results: action?.data?.res
+                results: action?.data?.res,
+                error: action?.err
             }
         case AI_MAKE_IMG_ERROR:
             return {

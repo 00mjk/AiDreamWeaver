@@ -1,13 +1,13 @@
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
-const MockupImgItem = (props) => {
+const ResultImgItem = (props) => {
     return <>
         <div
             data-testid="create-image-card"
             className="relative select-none flex justify-center items-center object-contain mx-auto rounded-md lg:mb-0 mb-10 image-card-grid"
             id="image-cldlz0azh00kks6015x6l8kz7">
             <img
-                src={props.item.mockup_url}
+                src={props.url}
                 alt=""
                 style={{ maxWidth: 'min(512px, 100%)' }} />
             <button
@@ -19,4 +19,4 @@ const MockupImgItem = (props) => {
     </>
 }
 
-export default MockupImgItem;
+export default ResultImgItem;

@@ -12,13 +12,13 @@ const OptSlider = (props) => {
                     max={props.max}
                     min={props.min}
                     color={props.color}
-                    value={props.scale}
+                    value={props.value}
                     onChange={(e) => props.onChange(e.target.value)}
                 />
                 <input
                     type="number"
                     className="w-12 rounded-full bg-gray-90 text-xs text-center py-1 text-gray-200 "
-                    value={props.scale}
+                    value={props.value}
                     max={props.max}
                     min={props.min}
                     onChange={(e) => {

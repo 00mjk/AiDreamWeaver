@@ -1,13 +1,8 @@
-import { useSelector } from 'react-redux';
-
 import Grid from '@mui/material/Grid';
 
 import styles from './styles.module.css';
 
 const ImgRadioButton = (props) => {
-    // Use Redux
-    const mockupObj = useSelector(state => state.mockupObj)
-
     return <>
         <Grid item xs={6}>
             <label >
@@ -15,7 +10,7 @@ const ImgRadioButton = (props) => {
                     type="radio"
                     className={styles.inputRadio}
                     defaultChecked
-                    checked={mockupObj.initImgUrl === props?.url ? true : false}
+                    checked={props.checked}
                     onChange={() => { }} />
                 <img
                     src={props?.url}

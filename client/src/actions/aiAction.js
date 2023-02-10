@@ -36,46 +36,16 @@ export const makeAiImage = (settings) => dispatch => {
 
             dispatch({
                 type: AI_MAKE_IMG_FAILED,
-                data: { res: res }
+                data: {
+                    res: res,
+                    err: res?.messege
+                }
             })
             reject(res);
         }).catch(err => {
             dispatch({
-                type: AI_MAKE_IMG_ERROR
-            });
-            reject(err);
-        });
-    });
-}
-
-/**
- * @description
- *  Call aiService to make super resolution image. 
- */
-export const makeSuperResolution = (settings) => dispatch => {
-    return new Promise((resolve, reject) => {
-        const aiService = new AiService();
-        aiService.makeImg(settings).then((res) => {
-            if (res.status === 'success') {
-                dispatch({
-                    type: AI_MAKE_IMG_SUCCESS,
-                    data: {
-                        res: res,
-                        settings: settings
-                    }
-                });
-                resolve(res);
-                return;
-            }
-
-            dispatch({
-                type: AI_MAKE_IMG_FAILED,
-                data: { res: res }
-            })
-            reject(res);
-        }).catch(err => {
-            dispatch({
-                type: AI_MAKE_IMG_ERROR
+                type: AI_MAKE_IMG_ERROR,
+                err: err
             });
             reject(err);
         });

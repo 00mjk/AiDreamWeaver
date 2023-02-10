@@ -5,23 +5,23 @@ import ChevronLeftOutlinedIcon from '@mui/icons-material/ChevronLeftOutlined';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
 import SendIcon from '@mui/icons-material/Send';
 
-import { Button, Slider, CircularProgress, Alert, AlertTitle, Stack } from '@mui/material';
+import { Button, CircularProgress, Alert, AlertTitle, Stack } from '@mui/material';
 
 import { createImg } from '../../actions/imgAction';
 import { makeAiImage } from '../../actions/aiAction';
 
-import GenImgItem from '../../components/GenImgItem';
 import OptPrompt from '../../components/OptPrompt';
 import OptNegPrompt from '../../components/OptNegPrompt';
 import OptFilter from '../../components/OptFilter';
 import OptImgToImg from '../../components/OptImgToImg';
 import OptModel from '../../components/OptModel';
 import OptImgDimen from '../../components/OptImgDimen';
-import OptPromptGuidance from '../../components/OptPromptGuidance';
-import OptQualityDetails from '../../components/OptQualityDetails';
 // import OptSeed from '../../components/OptSeed';
 // import OptAdvOption from '../../components/OptAdvOption';
 import OptImgNum from '../../components/OptImgNum';
+import ResultImgItem from '../../components/ResultImgItem';
+import OptSlider from '../../components/OptSlider';
+import VerSlider from '../../components/VerSlider';
 // import OptPrivateSession from '../../components/OptPrivateSession';
 
 
@@ -139,7 +139,7 @@ const CreatePage = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', placeContent: 'stretch flex-start', flex: '1 1 0%', width: '0px', gap: '16px' }}>
                         <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))` }}>
                             {
-                                images.map((url, key) => <GenImgItem key={key} url={url} />)
+                                images.map((url, key) => <ResultImgItem key={key} url={url} />)
                             }
                         </div>
                     </div>
@@ -204,21 +204,7 @@ const CreatePage = () => {
                                 <input type="file" name="import" id="import" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/bmp, image/gif" className="opacity-0 pointer-events-none w-0 h-0" />
                             </div>
                             <div className="w-1/4 min-w-[250px] content-right ml-auto mr-10">
-                                <fieldset className="create-fieldset">
-                                    <div id="slider-Columns" className="flex items-center gap-x-4 slider-container">
-                                        <label htmlFor="range-slider-Columns" className="text-sm text-gray-400">Columns</label>
-                                        <Slider
-                                            size="small"
-                                            aria-label="Small"
-                                            valueLabelDisplay="auto"
-                                            color="secondary"
-                                            value={columns}
-                                            min={1}
-                                            max={6}
-                                            onChange={(e) => setColumns(e.target.value)}
-                                        />
-                                    </div>
-                                </fieldset>
+                                <VerSlider color={`primary`} label={`Columns`} value={columns} min={1} max={6} onChange={val => setColumns(val)} />
                             </div>
                         </div>
                         {getCreatedImages()}
@@ -229,8 +215,8 @@ const CreatePage = () => {
                         <OptModel onChange={(modelId) => setModelId(modelId)} />
                         <div className="flex flex-col gap-y-8 py-8">
                             <OptImgDimen onChgWidth={val => setWidth(val)} onChgHeight={val => setHeight(val)} />
-                            <OptPromptGuidance value={guidanceScale} onChange={(val) => setGuidanceScale(val)} />
-                            <OptQualityDetails value={genVariants} onChange={(val) => setGenVariants(val)} />
+                            <OptSlider min={1} max={30} label={`Prompt Guidance`} value={guidanceScale} color={`primary`} onChange={(val) => setGuidanceScale(val)} />
+                            <OptSlider min={1} max={200} label={`Quality & Details`} value={genVariants} color={`primary`} onChange={(val) => setGenVariants(val)} />
                         </div>
                         {/* <div className="flex flex-col gap-y-4 py-8 ">
                             <OptSeed />

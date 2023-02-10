@@ -14,7 +14,7 @@ const initialState = {
     state: MOCKUP_IMG_INITIAL
 };
 
-export default function imgReducer(state = initialState, action) {
+export default function mockupReducer(state = initialState, action) {
     switch (action.type) {
         case MOCKUP_INITIMG_SELECTED:
             return {

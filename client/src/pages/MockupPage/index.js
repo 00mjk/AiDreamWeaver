@@ -1,14 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Button, Slider, Grid, CircularProgress, Stack, Alert, AlertTitle, Divider } from '@mui/material';
+import { Button, Grid, CircularProgress, Stack, Alert, AlertTitle, Divider } from '@mui/material';
 import BrushOutlinedIcon from '@mui/icons-material/BrushOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 
 import { MOCKUP_IMG_INITIAL, MOCKUP_IMG_START, MOCKUP_IMG_SUCCESS, MOCKUP_IMG_FAILED_GET, MOCKUP_IMG_FAILED_MAKE } from '../../actions/config';
 import { setMockupChosenImgUrl, mockupImage } from '../../actions/mockupAction';
 
-import MockupImgItem from '../../components/MockupImgItem';
+import VerSlider from '../../components/VerSlider';
+import ResultImgItem from '../../components/ResultImgItem';
 import ImgRadioButton from '../../components/ImgRadioButton';
 import CustomSnackbar from '../../components/CustomSnackbar';
 
@@ -58,7 +59,7 @@ const MockupPage = () => {
         if (initImg === "") {
             snapbarRef.current.showSnackbar({
                 show: true,
-                type: 'success',
+                type: 'error',
                 message: 'Please select image to mockup.'
             });
             return;
@@ -76,7 +77,6 @@ const MockupPage = () => {
      *  Generate and display mockup image items.
      */
     const getMockupImages = () => {
-
         if (mockupState === undefined || mockupState === null || mockupState === MOCKUP_IMG_INITIAL) {
             return <>
                 <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }} >
@@ -94,7 +94,7 @@ const MockupPage = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', placeContent: 'stretch flex-start', flex: '1 1 0%', width: '0px', gap: '16px' }}>
                         <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))` }}>
                             {
-                                mokeupImgs?.map((item, key) => <MockupImgItem key={key} item={item} />)
+                                mokeupImgs?.map((item, key) => <ResultImgItem key={key} url={item.mockup_url} />)
                             }
                         </div>
                     </div>
@@ -130,7 +130,7 @@ const MockupPage = () => {
                             <label >Mockup Images</label>
                             <Grid container spacing={2}>
                                 {
-                                    aiImages.map((image, key) => <ImgRadioButton url={image} key={key} onChange={url => dispatch(setMockupChosenImgUrl(url))} />)
+                                    aiImages.map((image, key) => <ImgRadioButton url={image} key={key} checked={mockupObj.initImgUrl === image ? true : false} onChange={url => dispatch(setMockupChosenImgUrl(url))} />)
                                 }
                             </Grid>
                         </fieldset>
@@ -159,21 +159,7 @@ const MockupPage = () => {
                     <div className="relative w-full h-full" id="draggable-bounds">
                         <div className="sticky m-0 px-0 py-5 flex items-center justify-center top-0 z-[5] bg-[#05020E] border-b border-white/10 pl-4">
                             <div className="w-1/4 min-w-[250px] content-right ml-auto mr-10">
-                                <fieldset className="create-fieldset">
-                                    <div id="slider-Columns" className="flex items-center gap-x-4 slider-container">
-                                        <label htmlFor="range-slider-Columns" className="text-sm text-gray-400">Columns</label>
-                                        <Slider
-                                            size="small"
-                                            aria-label="Small"
-                                            valueLabelDisplay="auto"
-                                            color="secondary"
-                                            value={columns}
-                                            min={1}
-                                            max={6}
-                                            onChange={(e) => setColumns(e.target.value)}
-                                        />
-                                    </div>
-                                </fieldset>
+                                <VerSlider color={`primary`} label={`Columns`} value={columns} min={1} max={6} onChange={val => setColumns(val)} />
                             </div>
                         </div>
                         {getMockupImages()}

@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Button, Slider, Grid, CircularProgress, Stack, Alert, AlertTitle, Divider } from '@mui/material';
+import { Button, Grid, CircularProgress, Stack, Alert, AlertTitle, Divider } from '@mui/material';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
 
-import { MOCKUP_IMG_INITIAL, MOCKUP_IMG_START, MOCKUP_IMG_SUCCESS, MOCKUP_IMG_FAILED_GET, MOCKUP_IMG_FAILED_MAKE } from '../../actions/config';
-import { setMockupChosenImgUrl, mockupImage } from '../../actions/mockupAction';
-import { makeSuperResolution } from '../../actions/aiAction';
+import { SUP_RESOLUTION_IMG_INITIAL, SUP_RESOLUTION_IMG_START, SUP_RESOLUTION_IMG_SUCCESS, SUP_RESOLUTION_IMG_FAILED } from '../../actions/config';
+import { setSuperResInitImg, makeSuperResolution } from '../../actions/superResAction';
 
+import VerSlider from '../../components/VerSlider';
+import ResultImgItem from '../../components/ResultImgItem';
 import ImgRadioButton from '../../components/ImgRadioButton';
 import CustomSnackbar from '../../components/CustomSnackbar';
 import OptSlider from '../../components/OptSlider';
@@ -19,15 +20,15 @@ const SuperResolutionPage = () => {
     // Use Redux
     const dispatch = useDispatch();
     const aiObj = useSelector(state => state.aiObj)
+    const superResObj = useSelector(state => state.superResObj)
 
-    // Flags
+    // States
     const [columns, setColumns] = useState(1);                  // Colum count to show image.
+    const [aiImages, setAiImages] = useState([]);
     const [initImg, setInitImg] = useState("");                 // Initial image to make super resolution
     const [scale, setScale] = useState(1);                      // Scale
-
-    // Generated Images
-    const [aiImages, setAiImages] = useState([]);
-    const [mokeupImgs, setMokeupImgs] = useState([]);
+    const [supResState, setSupResState] = useState(SUP_RESOLUTION_IMG_INITIAL);
+    const [resultImg, setResultImg] = useState("");
 
     useEffect(() => {
         // Set images to mockup
@@ -41,12 +42,11 @@ const SuperResolutionPage = () => {
         }
     }, [aiObj]);
 
-    // useEffect(() => {
-    //     setInitImg(mockupObj?.initImgUrl);
-    //     setMokeupImgs(mockupObj?.mockups);
-    //     setMockupState(mockupObj?.state);
-    // }, [mockupObj]);
-
+    useEffect(() => {
+        setInitImg(superResObj?.initImgUrl);
+        setSupResState(superResObj?.state);
+        setResultImg(superResObj?.result);
+    }, [superResObj]);
 
     /**
      * @description
@@ -57,8 +57,8 @@ const SuperResolutionPage = () => {
         if (initImg === "") {
             snapbarRef.current.showSnackbar({
                 show: true,
-                type: 'success',
-                message: 'Please select image to mockup.'
+                type: 'error',
+                message: 'Please select image for super resolution.'
             });
             return;
         }
@@ -73,7 +73,7 @@ const SuperResolutionPage = () => {
             };
 
             dispatch(makeSuperResolution(settings)).then(res => {
-
+                console.log("makeSuperResolution - Success", res);
             }).catch(err => {
                 console.log("makeSuperResolution - Err", err);
             });
@@ -86,50 +86,41 @@ const SuperResolutionPage = () => {
      * @description
      *  Generate and display mockup image items.
      */
-    const getMockupImages = () => {
-
-        // if (mockupState === undefined || mockupState === null || mockupState === MOCKUP_IMG_INITIAL) {
-        //     return <>
-        //         <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }} >
-        //             <Alert severity="warning">
-        //                 <AlertTitle>Pending</AlertTitle>
-        //                 Please mockup a new image — <strong>Click the Mockup button!</strong>
-        //             </Alert>
-        //         </Stack>
-        //     </>
-        // } else if (mockupState === MOCKUP_IMG_START) {
-        //     return <CircularProgress color='secondary' size={80} disableShrink={true} sx={{ marginTop: '5%' }} />
-        // } else if (mockupState === MOCKUP_IMG_SUCCESS) {
-        //     return <div id="scroll-container" className="p-10 pt-5 ">
-        //         <div style={{ display: 'flex', flexDirection: 'row', placeContent: 'stretch center', boxSizing: 'border-box', width: '100%', gap: '16px' }}>
-        //             <div style={{ display: 'flex', flexDirection: 'column', placeContent: 'stretch flex-start', flex: '1 1 0%', width: '0px', gap: '16px' }}>
-        //                 <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))` }}>
-        //                     {
-        //                         mokeupImgs?.map((item, key) => <MockupImgItem key={key} item={item} />)
-        //                     }
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // } else if (mockupState === MOCKUP_IMG_FAILED_MAKE) {
-        //     return <>
-        //         <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
-        //             <Alert severity="error">
-        //                 <AlertTitle>Error</AlertTitle>
-        //                 Mockup image is failed. — <strong>Try it again!</strong>
-        //             </Alert>
-        //         </Stack>
-        //     </>
-        // } else if (mockupState === MOCKUP_IMG_FAILED_GET) {
-        //     return <>
-        //         <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
-        //             <Alert severity="error">
-        //                 <AlertTitle>Error</AlertTitle>
-        //                 Getting mockup image is failed. — <strong>Try it again!</strong>
-        //             </Alert>
-        //         </Stack>
-        //     </>
-        // }
+    const showSupResolutionImage = () => {
+        console.log(supResState, "supResState");
+        console.log(resultImg, "resultImg");
+        console.log(columns, "columns");
+        if (supResState === undefined || supResState === null || supResState === SUP_RESOLUTION_IMG_INITIAL) {
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }} >
+                    <Alert severity="warning">
+                        <AlertTitle>Pending</AlertTitle>
+                        Please generate a new super resolution image — <strong>Click the <GavelOutlinedIcon fontSize='string' /> button!</strong>
+                    </Alert>
+                </Stack>
+            </>
+        } else if (supResState === SUP_RESOLUTION_IMG_START) {
+            return <CircularProgress color='secondary' size={80} disableShrink={true} sx={{ marginTop: '5%' }} />
+        } else if (supResState === SUP_RESOLUTION_IMG_SUCCESS) {
+            return <div id="scroll-container" className="p-10 pt-5 ">
+                <div style={{ display: 'flex', flexDirection: 'row', placeContent: 'stretch center', boxSizing: 'border-box', width: '100%', gap: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', placeContent: 'stretch flex-start', flex: '1 1 0%', width: '0px', gap: '16px' }}>
+                        <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))` }}>
+                            <ResultImgItem url={resultImg} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        } else if (supResState === SUP_RESOLUTION_IMG_FAILED) {
+            return <>
+                <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        Making super resolution image is failed. — <strong>Try it again!</strong>
+                    </Alert>
+                </Stack>
+            </>
+        }
     }
 
     return <>
@@ -141,12 +132,12 @@ const SuperResolutionPage = () => {
                             <label >Images</label>
                             <Grid container spacing={2}>
                                 {
-                                    aiImages.map((image, key) => <ImgRadioButton url={image} key={key} onChange={url => dispatch(setMockupChosenImgUrl(url))} />)
+                                    aiImages.map((image, key) => <ImgRadioButton url={image} key={key} checked={superResObj.initImgUrl === image ? true : false} onChange={url => dispatch(setSuperResInitImg(url))} />)
                                 }
                             </Grid>
                         </fieldset>
                         <Divider light />
-                        <OptSlider min={1} max={6} label={`Image Scale`} scale={scale} color={`primary`} onChange={(val) => setScale(val)} />
+                        <OptSlider min={1} max={6} label={`Image Scale`} value={scale} color={`primary`} onChange={(val) => setScale(val)} />
                     </div>
                     <div className="px-6 sticky z-10 pt-4 pb-2 space-y-4 bottom-0 bg-[#05020E]">
                         <Button variant="outlined" endIcon={<GavelOutlinedIcon />} onClick={handleSupResolution}>Super Resolution</Button>
@@ -156,24 +147,10 @@ const SuperResolutionPage = () => {
                     <div className="relative w-full h-full" id="draggable-bounds">
                         <div className="sticky m-0 px-0 py-5 flex items-center justify-center top-0 z-[5] bg-[#05020E] border-b border-white/10 pl-4">
                             <div className="w-1/4 min-w-[250px] content-right ml-auto mr-10">
-                                <fieldset className="create-fieldset">
-                                    <div id="slider-Columns" className="flex items-center gap-x-4 slider-container">
-                                        <label htmlFor="range-slider-Columns" className="text-sm text-gray-400">Columns</label>
-                                        <Slider
-                                            size="small"
-                                            aria-label="Small"
-                                            valueLabelDisplay="auto"
-                                            color="secondary"
-                                            value={columns}
-                                            min={1}
-                                            max={6}
-                                            onChange={(e) => setColumns(e.target.value)}
-                                        />
-                                    </div>
-                                </fieldset>
+                                <VerSlider color={`primary`} label={`Columns`} value={columns} min={1} max={6} onChange={val => setColumns(val)} />
                             </div>
                         </div>
-                        {getMockupImages()}
+                        {showSupResolutionImage()}
                     </div>
                 </main>
             </div>

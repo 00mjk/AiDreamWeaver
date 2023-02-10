@@ -23,7 +23,6 @@ import OptQualityDetails from '../../components/OptQualityDetails';
 // import OptAdvOption from '../../components/OptAdvOption';
 import OptImgNum from '../../components/OptImgNum';
 // import OptPrivateSession from '../../components/OptPrivateSession';
-import OptSuperResolution from '../../components/OptSuperResolution';
 
 
 const CreatePage = () => {
@@ -35,7 +34,6 @@ const CreatePage = () => {
     // Flags
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState("init");
-    const [apiCallFlag, setApiCallFlag] = useState("pending");  // Generate Api call state (pending, loading, processing, created)
     const [rightSidebar, setRightSidebar] = useState(false);    // Right sidebar state
     const [columns, setColumns] = useState(1);                  // Colum count to show image.
 
@@ -112,10 +110,10 @@ const CreatePage = () => {
                     console.log("Image created in db.");
                 });
             }).catch(err => {
-                console.log("handleGenerateImg - Error");
+                console.log("makeAiImage - Error", err);
             });
         } catch (err) {
-            console.log("handleGeneratedImg - Err");
+            console.log("handleGeneratedImg - Err", err);
         }
     }
 
@@ -182,7 +180,6 @@ const CreatePage = () => {
                             onSetStrength={(value) => setStrength(value)}
                             onSetInitImg={(value) => setInitImg(value)}
                         />
-                        <OptSuperResolution onChange={(value => setSuperRes(value))} />
                     </div>
                     <div className="px-6 sticky z-10 pt-4 pb-2 space-y-4 bottom-0 bg-[#05020E]">
                         <Button variant="outlined" endIcon={<SendIcon />} onClick={handleGenerateImg}>Generate</Button>

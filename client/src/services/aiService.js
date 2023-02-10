@@ -15,40 +15,48 @@ export default class AiService {
         });
     }
 
+    /**
+     * @description
+     *  Generate image by ai (both txt2txt and img2txt)
+     */
     makeImg = (settings) => {
         return new Promise((resolve, reject) => {
             console.log("IMG_A");
             if (typeof settings.init_image === 'string' && settings.init_image === "") {
-                this.txtService.post('', settings)
-                    .then(res => {
-                        console.log("IMG_CREATED");
-                        resolve(res.data)
-                    })
-                    .catch(err => {
-                        console.log("IMG_FAILED");
-                        reject(err)
-                    });
+                this.txtService.post('', settings).then(res => {
+                    console.log("IMG_CREATED");
+                    resolve(res.data)
+                }).catch(err => {
+                    console.log("IMG_FAILED");
+                    reject(err)
+                });
             } else {
-                this.imgService.post('', settings)
-                    .then(res => {
-                        resolve(res.data)
-                    })
-                    .catch(err => {
-                        reject(err)
-                    });
+                this.imgService.post('', settings).then(res => {
+                    resolve(res.data)
+                }).catch(err => {
+                    reject(err)
+                });
             }
         })
     }
 
+    /**
+     * @description
+     *  Make super resolution image. 
+     * @params
+     *  key : Your API Key
+     *  url : Image Url you want you want to super resolution for
+     *  scale : Scale number
+     *  webhook : webhook to call when image generation is completed
+     *  face_enhance : boolean (true/false) for face enhancement feature
+     */
     superResolution = (params) => {
         return new Promise((resolve, reject) => {
-            this.supResSvc.post('', params)
-                .then(res => {
-                    resolve(res.data)
-                })
-                .catch(err => {
-                    reject(err)
-                })
+            this.supResSvc.post('', params).then(res => {
+                resolve(res.data)
+            }).catch(err => {
+                reject(err)
+            })
         })
     }
 }

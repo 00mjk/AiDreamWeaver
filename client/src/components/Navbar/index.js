@@ -3,10 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { styled, alpha } from '@mui/material/styles';
-import { AppBar, Box, Toolbar, Badge, InputBase, MenuItem, Menu, Avatar } from '@mui/material';
+import { AppBar, Box, Toolbar, Badge, InputBase, MenuItem, Menu, Avatar, IconButton, Tooltip } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
-
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
@@ -20,6 +19,9 @@ import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import BrushIcon from '@mui/icons-material/Brush';
+import TagFacesIcon from '@mui/icons-material/TagFaces';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import { signout } from "../../actions/authAction";
 import { searchImgsByKey } from "../../actions/imgAction";
@@ -180,14 +182,31 @@ export default function PrimarySearchAppBar() {
             const url = document.location.href;
             if (url.includes('/create')) {
                 return (
-                    <Link to='/mockup'>
-                        <StartBtn btnName="Mockup" />
-                    </Link>
+                    <>
+                        <Link to='/mockup'>
+                            <Tooltip title="Mockup">
+                                <IconButton>
+                                    <BrushIcon fontSize="inherit" />
+                                </IconButton>
+                            </Tooltip>
+                        </Link>
+                        <Link to='/super_resolution'>
+                            <Tooltip title="Super Resolution">
+                                <IconButton>
+                                    <TagFacesIcon fontSize="inherit" />
+                                </IconButton>
+                            </Tooltip>
+                        </Link>
+                    </>
                 )
             } else {
                 return (
                     <Link to='/create'>
-                        <StartBtn btnName="Create" />
+                        <Tooltip title="Create">
+                            <IconButton>
+                                <AddCircleOutlineIcon fontSize="inherit" />
+                            </IconButton>
+                        </Tooltip>
                     </Link>
                 )
             }

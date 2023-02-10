@@ -11,13 +11,7 @@ import SignUp from "./pages/SignUp";
 import HomePage from './pages/Homepage'
 import CreatePage from './pages/CreatePage'
 import MockupPage from './pages/MockupPage'
-
-import EditPage from './pages/Edit'
-import PricingPage from './pages/Pricing'
-import PrivacyPage from './pages/Privacy'
-import RequestHelpPage from './pages/Request'
-import TermsPage from './pages/Terms'
-import JobsPage from './pages/Jobs'
+import SuperResPage from './pages/SuperResPage'
 
 import Navbar from './components/Navbar';
 
@@ -90,13 +84,7 @@ export default function App() {
                         <Route exact path="/signup" element={<SignUp />}></Route>
                         <Route exact path="/create" element={<CreatePage />}></Route>
                         <Route exact path="/mockup" element={<MockupPage />}></Route>
-
-                        <Route exact path="/privacy" element={<PrivacyPage />}></Route>
-                        <Route exact path="/pricing" element={<PricingPage />}></Route>
-                        <Route exact path="/requesthelp" element={<RequestHelpPage />}></Route>
-                        <Route exact path="/jobs" element={<JobsPage />}></Route>
-                        <Route exact path="/terms-of-service" element={<TermsPage />}></Route>
-                        <Route exact path="/edit" element={<EditPage />}></Route>
+                        <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
                     </Routes>
                 </div>
             </div>

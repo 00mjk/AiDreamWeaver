@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Button, Slider, Grid, CircularProgress, Stack, Alert, AlertTitle } from '@mui/material';
+import { Button, Slider, Grid, CircularProgress, Stack, Alert, AlertTitle, Divider } from '@mui/material';
 import BrushOutlinedIcon from '@mui/icons-material/BrushOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 
@@ -126,14 +126,16 @@ const MockupPage = () => {
             <div className={`grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 text-white bg-[#05020E] h-[calc(100vh-62px)] border-t border-white/10 2xl:border-t-0 mx-auto 2xl:border-r`}>
                 <aside id="left-sidebar" className="flex flex-col divide-y divide-white/10 pt-6 space-y-6 lg:overflow-y-auto">
                     <div className="px-6 space-y-6">
-                        <Grid container spacing={2}>
-                            {
-                                aiImages.map((image, key) => <ImgRadioButton url={image} key={key} onChange={url => dispatch(setMockupChosenImgUrl(url))} />)
-                            }
-                        </Grid>
-                    </div>
-                    <div className="px-6 space-y-6">
-                        <fieldset className="create-fieldset py-8">
+                        <fieldset className="create-fieldset">
+                            <label >Mockup Images</label>
+                            <Grid container spacing={2}>
+                                {
+                                    aiImages.map((image, key) => <ImgRadioButton url={image} key={key} onChange={url => dispatch(setMockupChosenImgUrl(url))} />)
+                                }
+                            </Grid>
+                        </fieldset>
+                        <Divider />
+                        <fieldset className="create-fieldset">
                             <label htmlFor="mockup-type">Mockup Type</label>
                             <div className="select">
                                 <select name="mockup-type" id="mockup-type" onChange={(e) => {

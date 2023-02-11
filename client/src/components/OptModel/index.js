@@ -13,7 +13,7 @@ const OptModel = (props) => {
                 <select name="model-type" id="model-type" onChange={e => props?.onChange(e.target.value)}>
                     <option value="stable-diffu">Stable Diffusion v1.5</option>
                     {
-                        (authObj?.user?.role == 1 || authObj?.user?.role == 2) &&
+                        (authObj?.user?.role_idx == 1 || authObj?.user?.role_idx == 2) &&
                         <>
                             <option value="stable-diffu">Stable Diffusion v2</option>
                             <option value="stable-diffu">Stable Diffusion v3</option>

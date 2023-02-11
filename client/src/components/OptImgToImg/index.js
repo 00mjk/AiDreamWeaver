@@ -38,7 +38,7 @@ const OptImgToImg = (props) => {
                                 <div className="mr-3">
                                     <label>
                                         {/* <input className="hidden" type="file" accept="image/*" /> */}
-                                        <AddCircleOutlineIcon onClick={() => {loadInitImg()}} />
+                                        <AddCircleOutlineIcon onClick={() => { loadInitImg() }} />
                                     </label>
                                 </div>
                                 {/* <div className="h-1/4 w-px bg-zinc-400" /> */}

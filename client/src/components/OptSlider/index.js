@@ -13,6 +13,7 @@ const OptSlider = (props) => {
                     min={props.min}
                     color={props.color}
                     value={props.value}
+                    disabled={!props.disabled ? false : true}
                     onChange={(e) => props.onChange(e.target.value)}
                 />
                 <input
@@ -21,6 +22,7 @@ const OptSlider = (props) => {
                     value={props.value}
                     max={props.max}
                     min={props.min}
+                    disabled={!props.disabled ? false : true}
                     onChange={(e) => {
                         if (e.target.value > props.max || e.target.value < props.min)
                             return;

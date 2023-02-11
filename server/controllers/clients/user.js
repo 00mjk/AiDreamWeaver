@@ -71,7 +71,8 @@ export const signup = async (req, res) => {
     }
 }
 
-export const signinGoogle = async (req, res) => {    const { sub, name, given_name, family_name, picture, email, email_verified, locate } = req.body;
+export const signinGoogle = async (req, res) => {
+    const { sub, name, given_name, family_name, picture, email, email_verified, locate } = req.body;
     try {
         var existingUser = await User.findOne({ email })
         if (!existingUser) {

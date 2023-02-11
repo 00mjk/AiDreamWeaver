@@ -48,10 +48,6 @@ export default function SignIn() {
 
     const loginWithGoogle = useGoogleLogin({
         onSuccess: tokenResponse => {
-            console.log("tokenResponse", tokenResponse);
-            const token = tokenResponse.token_type + tokenResponse.access_token;
-            console.log("token", token);
-
             googleService.getUserInfo(tokenResponse.access_token).then((res) => {
                 const data = res.data;
 
@@ -64,13 +60,6 @@ export default function SignIn() {
             }).catch((err) => {
                 console.log(err);
             })
-            // dispatch(signinGoogle(tokenResponse)).then((res) => {
-            //     console.log("signinGoogle-then", res);
-            // }).catch(err => {
-            //     console.log("signinGoogle-catch", err)
-            // });
-            // setAuthToken(token);
-            // navigate("/create");
         },
     });
 

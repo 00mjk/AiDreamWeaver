@@ -30,6 +30,7 @@ const CreatePage = () => {
     const dispatch = useDispatch();
     const toCreate = useSelector(state => state.toCreate)
     const aiObj = useSelector(state => state.aiObj)
+    const auth = useSelector(state => state.auth)
 
     // Flags
     const [loading, setLoading] = useState(false);
@@ -215,8 +216,8 @@ const CreatePage = () => {
                         <OptModel onChange={(modelId) => setModelId(modelId)} />
                         <div className="flex flex-col gap-y-8 py-8">
                             <OptImgDimen onChgWidth={val => setWidth(val)} onChgHeight={val => setHeight(val)} />
-                            <OptSlider min={1} max={30} label={`Prompt Guidance`} value={guidanceScale} color={`primary`} onChange={(val) => setGuidanceScale(val)} />
-                            <OptSlider min={1} max={200} label={`Quality & Details`} value={genVariants} color={`primary`} onChange={(val) => setGenVariants(val)} />
+                            <OptSlider min={1} max={30} label={`Prompt Guidance`} value={guidanceScale} color={`primary`} disabled={(auth?.user?.role_idx == 1 || auth?.user?.role_idx == 2) ? false : true} onChange={(val) => setGuidanceScale(val)} />
+                            <OptSlider min={1} max={200} label={`Quality & Details`} value={genVariants} color={`primary`} disabled={(auth?.user?.role_idx == 1 || auth?.user?.role_idx == 2) ? false : true} onChange={(val) => setGenVariants(val)} />
                         </div>
                         {/* <div className="flex flex-col gap-y-4 py-8 ">
                             <OptSeed />

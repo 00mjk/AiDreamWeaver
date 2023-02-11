@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { Route, Routes } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { amber, grey } from '@mui/material/colors';
 
 import './App.css';
@@ -74,22 +75,24 @@ export default function App() {
     }, [])
 
     return (
-        <ThemeProvider theme={darkModeTheme}>
-            <div className='App'>
-                <Navbar />
-                <div className='router'>
-                    <Routes>
-                        <Route exact path="/" element={<HomePage />}></Route>
-                        <Route exact path="/search/:q" element={<HomePage />}></Route>
-                        <Route exact path="/signin" element={<SignIn />}></Route>
-                        <Route exact path="/signup" element={<SignUp />}></Route>
-                        <Route exact path="/create" element={<CreatePage />}></Route>
-                        <Route exact path="/mockup" element={<MockupPage />}></Route>
-                        <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
-                        <Route exact path="/pricing" element={<PricingPage />}></Route>
-                    </Routes>
+        <GoogleOAuthProvider clientId="679986983043-3c6ac9rv5c2quhqvhumqq351dc48un0u.apps.googleusercontent.com">
+            <ThemeProvider theme={darkModeTheme}>
+                <div className='App'>
+                    <Navbar />
+                    <div className='router'>
+                        <Routes>
+                            <Route exact path="/" element={<HomePage />}></Route>
+                            <Route exact path="/search/:q" element={<HomePage />}></Route>
+                            <Route exact path="/signin" element={<SignIn />}></Route>
+                            <Route exact path="/signup" element={<SignUp />}></Route>
+                            <Route exact path="/create" element={<CreatePage />}></Route>
+                            <Route exact path="/mockup" element={<MockupPage />}></Route>
+                            <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
+                            <Route exact path="/pricing" element={<PricingPage />}></Route>
+                        </Routes>
+                    </div>
                 </div>
-            </div>
-        </ThemeProvider>
+            </ThemeProvider>
+        </GoogleOAuthProvider>
     );
 }

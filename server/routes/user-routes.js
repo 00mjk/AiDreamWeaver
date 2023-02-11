@@ -3,6 +3,7 @@ import {
     getUser,
     signin,
     signup,
+    signinGoogle,
     forgotPassword,
     resetPassword
 } from '../controllers/clients/user.js'
@@ -20,6 +21,7 @@ const router = express.Router()
 router.get('/users/', clientAuthMiddleware, getUser)
 router.post('/users/signin', signin)
 router.post('/users/signup', signup)
+router.post('/users/signin_google', signinGoogle);
 router.post('/users/forgot', forgotPassword);
 router.post('/users/reset', resetPassword);
 

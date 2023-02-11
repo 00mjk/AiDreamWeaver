@@ -9,7 +9,6 @@ const ImgRadioButton = (props) => {
                 <input
                     type="radio"
                     className={styles.inputRadio}
-                    defaultChecked
                     checked={props.checked}
                     onChange={() => { }} />
                 <img

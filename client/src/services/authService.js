@@ -24,45 +24,51 @@ class AuthService {
 
     loadUser = () => {
         return new Promise((resolve, reject) => {
-            this.service.get('/')
-                .then(res => {
-                    resolve(res.data)
-                }).catch(err => {
-                    reject(err)
-                })
+            this.service.get('/').then(res => {
+                resolve(res.data)
+            }).catch(err => {
+                reject(err)
+            })
         })
     }
 
     signin = (formData) => {
         return new Promise((resolve, reject) => {
-            this.service.post('/signin', formData)
-                .then(res => {
-                    resolve(res.data);
-                }).catch(err => {
-                    reject(err);
-                })
+            this.service.post('/signin', formData).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err);
+            })
         })
     }
 
     signup = (formData) => {
         return new Promise((resolve, reject) => {
-            this.service.post('/signup', formData)
-                .then(res => {
-                    resolve(res.data)
-                }).catch(err => {
-                    reject(err);
-                })
+            this.service.post('/signup', formData).then(res => {
+                resolve(res.data)
+            }).catch(err => {
+                reject(err);
+            })
         })
+    }
+
+    signinGoogle = (data) => {
+        return new Promise((resolve, reject) => {
+            this.service.post('/signin_google', data).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err);
+            });
+        });
     }
 
     signout = () => {
         return new Promise((resolve, reject) => {
-            this.service.post('/signout')
-                .then(res => {
-                    resolve(res.data)
-                }).catch(err => {
-                    reject(err);
-                })
+            this.service.post('/signout').then(res => {
+                resolve(res.data)
+            }).catch(err => {
+                reject(err);
+            })
         })
     }
 

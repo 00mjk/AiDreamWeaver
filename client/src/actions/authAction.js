@@ -1,4 +1,5 @@
 import authService from '../services/authService';
+import googleService from '../services/googleService';
 import { USER_LOADED, SIGNIN_SUCCESS, SIGNIN_FAILED, SIGNUP_SUCCESS, SIGNUP_FAILED, SIGNOUT } from './config';
 
 /**
@@ -22,6 +23,25 @@ export const loadUser = () => async dispatch => {
 export const signin = (formData) => dispatch => {
     return new Promise((resolve, reject) => {
         authService.signin(formData)
+            .then((data) => {
+                dispatch({ type: SIGNIN_SUCCESS, data });
+                resolve()
+            })
+            .catch((err) => {
+                err = err?.response?.data;
+                dispatch({ type: SIGNIN_FAILED, err });
+                reject()
+            })
+    })
+}
+
+/**
+ * @description
+ *  Sign in the user by google account.
+ */
+export const signinGoogle = (data) => dispatch => {
+    return new Promise((resolve, reject) => {
+        authService.signinGoogle(data)
             .then((data) => {
                 dispatch({ type: SIGNIN_SUCCESS, data });
                 resolve()

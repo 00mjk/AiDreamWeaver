@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 
 import { validateLoginInput, validateRegisterInput } from '../../validations/clients/users.js';
+import User from '../../models/userModel.js'
+import { userInfo } from "os"
 
 dotenv.config()
 const SECRET = process.env.SECRET;
@@ -13,7 +15,6 @@ const PORT = process.env.SMTP_PORT
 const USER = process.env.SMTP_USER
 const PASS = process.env.SMTP_PASS
 
-import User from '../../models/userModel.js'
 
 export const getUser = async (req, res) => {
     try {
@@ -27,9 +28,9 @@ export const getUser = async (req, res) => {
 
 export const signin = async (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
-    if (!isValid) 
+    if (!isValid)
         return res.status(400).json(errors);
-        
+
     const { email, password } = req.body // Coming from formData
     try {
         const existingUser = await User.findOne({ email })
@@ -54,7 +55,7 @@ export const signup = async (req, res) => {
     if (!isValid)
         return res.status(400).json(errors)
 
-    const { email, password, confirmPassword, firstName, lastName } = req.body
+    const { email, password, firstName, lastName } = req.body
 
     try {
         const existingUser = await User.findOne({ email })
@@ -70,6 +71,27 @@ export const signup = async (req, res) => {
     }
 }
 
+export const signinGoogle = async (req, res) => {    const { sub, name, given_name, family_name, picture, email, email_verified, locate } = req.body;
+    try {
+        var existingUser = await User.findOne({ email })
+        if (!existingUser) {
+            const userInfo = {
+                name: name,
+                email: email
+            };
+
+            // Register new user.
+            existingUser = await User.create({ email, name });
+        }
+
+        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, SECRET, { expiresIn: "24h" })
+
+        // Then send the token to the client/frontend
+        res.status(200).json({ user: existingUser, token })
+    } catch (error) {
+        res.status(500).json({ error: error })
+    }
+}
 
 // export const updateProfile = async (req, res) => {
 //     const formData = req.body
@@ -81,9 +103,6 @@ export const signup = async (req, res) => {
 //     const updatedUser = await User.findByIdAndUpdate(_id, formData, {new: true})
 //     res.json(updatedUser)
 // }
-
-
-
 
 export const forgotPassword = (req, res) => {
 
@@ -101,7 +120,6 @@ export const forgotPassword = (req, res) => {
             rejectUnauthorized: false
         }
     })
-
 
     crypto.randomBytes(32, (err, buffer) => {
         if (err) {
@@ -134,8 +152,6 @@ export const forgotPassword = (req, res) => {
             })
     })
 }
-
-
 
 export const resetPassword = (req, res) => {
     const newPassword = req.body.password

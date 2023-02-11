@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ChevronLeftOutlinedIcon from '@mui/icons-material/ChevronLeftOutlined';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
 import SendIcon from '@mui/icons-material/Send';
-
+// require('dotenv').config();
 import { Button, CircularProgress, Alert, AlertTitle, Stack } from '@mui/material';
 
 import { createImg } from '../../actions/imgAction';

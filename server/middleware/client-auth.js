@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 const SECRET = process.env.SECRET;
 
-const auth = async (req, res, next) => {
+export const auth = async (req, res, next) => {
     try {
         const token = req.header('x-auth-token')
         if (token == undefined)

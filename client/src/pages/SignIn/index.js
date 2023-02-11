@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
+import { useGoogleLogin } from "@react-oauth/google";
+// import FacebookLogin from 'react-facebook-login';
 
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -8,13 +10,20 @@ import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { signin } from "../../actions/authAction"
+import googleService from '../../services/googleService';
+import { signin, signinGoogle } from "../../actions/authAction"
 import Copyright from '../../components/Copyright';
+import setAuthToken from "../../utils/setAuthToken";
 
 const theme = createTheme();
 
 export default function SignIn() {
+    // Use Navigate
     const navigate = useNavigate()
+
+    // Use Google Login
+
+    // Use Redux
     const dispatch = useDispatch()
     const auth = useSelector(state => state.auth)
 
@@ -22,10 +31,12 @@ export default function SignIn() {
     const initialState = { email: '', password: '' };
     const [formData, setFormData] = useState(initialState);
 
+    // Form update by user
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
+    // Do login action by user.
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -34,6 +45,34 @@ export default function SignIn() {
             navigate("/create");
         });
     }
+
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: tokenResponse => {
+            console.log("tokenResponse", tokenResponse);
+            const token = tokenResponse.token_type + tokenResponse.access_token;
+            console.log("token", token);
+
+            googleService.getUserInfo(tokenResponse.access_token).then((res) => {
+                const data = res.data;
+
+                dispatch(signinGoogle(data)).then((res) => {
+                    console.log("signinGoogle-then", res);
+                    navigate("/create");
+                }).catch(err => {
+                    console.log("signinGoogle-catch", err)
+                });
+            }).catch((err) => {
+                console.log(err);
+            })
+            // dispatch(signinGoogle(tokenResponse)).then((res) => {
+            //     console.log("signinGoogle-then", res);
+            // }).catch(err => {
+            //     console.log("signinGoogle-catch", err)
+            // });
+            // setAuthToken(token);
+            // navigate("/create");
+        },
+    });
 
     return (
         <ThemeProvider theme={theme}>
@@ -120,10 +159,10 @@ export default function SignIn() {
                                     variant="outlined"
                                     color="secondary"
                                     endIcon={<GoogleIcon />}
+                                    onClick={() => loginWithGoogle()}
                                 >
                                     Continue with Google
                                 </Button >
-
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Button

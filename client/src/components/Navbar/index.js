@@ -150,7 +150,7 @@ export default function PrimarySearchAppBar() {
             <MenuItem onClick={handleMenuClose}><HelpIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Request Help</span></MenuItem>
             <MenuItem onClick={handleMenuClose}><DescriptionOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Terms of Service</span></MenuItem>
             <MenuItem onClick={handleMenuClose}><WorkOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Jobs</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><MoneyIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Pricing</span></MenuItem>
+            <MenuItem onClick={handleMenuClose}><Link to={`/pricing`}><MoneyIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Pricing</span></Link></MenuItem>
             {auth.isAuthenticated &&
                 <MenuItem onClick={() => {
                     handleMenuClose();

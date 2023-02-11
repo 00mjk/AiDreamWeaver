@@ -12,6 +12,7 @@ import HomePage from './pages/Homepage'
 import CreatePage from './pages/CreatePage'
 import MockupPage from './pages/MockupPage'
 import SuperResPage from './pages/SuperResPage'
+import PricingPage from './pages/PricingPage'
 
 import Navbar from './components/Navbar';
 
@@ -85,6 +86,7 @@ export default function App() {
                         <Route exact path="/create" element={<CreatePage />}></Route>
                         <Route exact path="/mockup" element={<MockupPage />}></Route>
                         <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
+                        <Route exact path="/pricing" element={<PricingPage />}></Route>
                     </Routes>
                 </div>
             </div>

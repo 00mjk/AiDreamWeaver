@@ -5,6 +5,7 @@ import aiReducer from './aiReducer'
 import mockupReducer from './mockupReducer'
 import superResReducer from './superResReducer'
 import toCreateReducer from './toCreateReducer';
+import pricingReducer from './pricingReducer';
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     mockupObj: mockupReducer,
     superResObj: superResReducer,
     toCreate: toCreateReducer,
+    pricingObj: pricingReducer
 })
 
 export default rootReducer;

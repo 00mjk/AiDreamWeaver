@@ -25,6 +25,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import { signout } from "../../actions/authAction";
 import { searchImgsByKey } from "../../actions/imgAction";
+import { getAllRoles } from '../../actions/pricingAction';
 import styles from './styles.module.css';
 import StartBtn from './StartBtn.js';
 
@@ -105,6 +106,7 @@ export default function PrimarySearchAppBar() {
     const dispatch = useDispatch()
     const auth = useSelector(state => state.auth)
     const img = useSelector(state => state.img);
+    const pricingObj = useSelector(state => state.pricingObj)
 
     // Standard
     const [searchKey, setSearchKey] = useState("");
@@ -125,6 +127,13 @@ export default function PrimarySearchAppBar() {
 
     const searchImages = () => {
         dispatch(searchImgsByKey(searchKey));
+    }
+
+    const handleToPricingPage = () => {
+        dispatch(getAllRoles()).then(res => {
+            handleMenuClose();
+            navigate('/pricing');
+        });
     }
 
     const menuId = 'primary-search-account-menu';
@@ -150,7 +159,9 @@ export default function PrimarySearchAppBar() {
             <MenuItem onClick={handleMenuClose}><HelpIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Request Help</span></MenuItem>
             <MenuItem onClick={handleMenuClose}><DescriptionOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Terms of Service</span></MenuItem>
             <MenuItem onClick={handleMenuClose}><WorkOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Jobs</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><Link to={`/pricing`}><MoneyIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Pricing</span></Link></MenuItem>
+            <MenuItem onClick={handleToPricingPage}>
+                <MoneyIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Pricing</span>
+            </MenuItem>
             {auth.isAuthenticated &&
                 <MenuItem onClick={() => {
                     handleMenuClose();

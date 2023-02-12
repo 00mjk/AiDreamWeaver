@@ -14,6 +14,9 @@ import {
     getImageById,
     followImgAuthor
 } from '../controllers/clients/image.js';
+import {
+    getAllRoles
+} from '../controllers/clients/role.js';
 import clientAuthMiddleware from '../middleware/client-auth.js';
 
 const router = express.Router()
@@ -30,5 +33,7 @@ router.post('/imgs/create', clientAuthMiddleware, createImage)
 router.post('/imgs/fav', clientAuthMiddleware, favouriteImg)
 router.post('/imgs/get_image_by_id', clientAuthMiddleware, getImageById)
 router.post('/imgs/follow_img_author', clientAuthMiddleware, followImgAuthor)
+
+router.post('/roles/get_all_roles', getAllRoles);
 
 export default router

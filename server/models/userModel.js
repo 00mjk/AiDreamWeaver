@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
     start_date: { type: Date },
     end_date: { type: Date },
     avatar: { type: String },
-    follow_cnt: { type: Number },
+    follow_cnt: { type: Number, default: 0 },
     created_at: { type: Date, default: new Date() },
     deleted_at: { type: Date },
     resetToken: String,

@@ -22,7 +22,6 @@ export const auth = async (req, res, next) => {
             decodeData = jwt.decode(token)
             req.userId = decodeData?.sub
         }
-        console.log(req.userId);
         next()
     } catch (error) {
         console.log(error)

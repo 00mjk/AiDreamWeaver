@@ -14,6 +14,7 @@ import CreatePage from './pages/CreatePage'
 import MockupPage from './pages/MockupPage'
 import SuperResPage from './pages/SuperResPage'
 import PricingPage from './pages/PricingPage'
+import CheckoutPage from './pages/PricingPage/checkout.js'
 
 import Navbar from './components/Navbar';
 
@@ -89,6 +90,7 @@ export default function App() {
                             <Route exact path="/mockup" element={<MockupPage />}></Route>
                             <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
                             <Route exact path="/pricing" element={<PricingPage />}></Route>
+                            <Route exact path="/checkout" element={<CheckoutPage />}></Route>
                         </Routes>
                     </div>
                 </div>

@@ -5,8 +5,9 @@ import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 
 import { validateLoginInput, validateRegisterInput } from '../../validations/clients/users.js';
+import { ROLE_IDX_FREE, ROLE_IDX_19, ROLE_IDX_29 } from "./role.js"
 import User from '../../models/userModel.js'
-import { userInfo } from "os"
+import Role from "../../models/RoleModel.js"
 
 dotenv.config()
 const SECRET = process.env.SECRET;
@@ -62,7 +63,17 @@ export const signup = async (req, res) => {
         if (existingUser) return res.status(400).json({ email: "User already exist." })
 
         const hashedPassword = await bcrypt.hash(password, 12)
-        const result = await User.create({ email, password: hashedPassword, name: `${firstName} ${lastName}` })
+        const role = await getRoleByIdx(ROLE_IDX_FREE);
+        const result = await User.create({
+            email: email,
+            password: hashedPassword,
+            name: `${firstName} ${lastName}`,
+            role_id: role._id,
+            role_idx: role.index,
+            remain_cnt: role.image_cnt,
+            start_date: new Date(),
+            end_date: new Date()
+        });
 
         const token = jwt.sign({ email: result.email, id: result._id }, SECRET, { expiresIn: "1h" })
         res.status(200).json({ user: result, token })
@@ -82,7 +93,17 @@ export const signinGoogle = async (req, res) => {
             };
 
             // Register new user.
-            existingUser = await User.create({ email, name });
+            const role = await getRoleByIdx(ROLE_IDX_FREE);
+            existingUser = await User.create({
+                email: email,
+                name: name,
+                role_id: role._id,
+                role_idx: role.index,
+                remain_cnt: role.image_cnt,
+                start_date: new Date(),
+                end_date: new Date(),
+                avatar: picture
+            });
         }
 
         const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, SECRET, { expiresIn: "24h" })
@@ -94,16 +115,16 @@ export const signinGoogle = async (req, res) => {
     }
 }
 
-// export const updateProfile = async (req, res) => {
-//     const formData = req.body
-//     const { id: _id } = req.params
-//     console.log(formData)
+const getRoleByIdx = async (idx) => {
+    try {
+        var role = await Role.findOne({ index: idx }).exec();
+        return role;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 
-//     if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No user with this id found')
-
-//     const updatedUser = await User.findByIdAndUpdate(_id, formData, {new: true})
-//     res.json(updatedUser)
-// }
 
 export const forgotPassword = (req, res) => {
 

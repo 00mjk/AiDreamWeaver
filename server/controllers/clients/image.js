@@ -1,12 +1,7 @@
-import express from 'express';
-import mongoose from 'mongoose';
-
 import ImageModel from '../../models/ImageModel.js';
 import UserModel from '../../models/userModel.js'
 import FavModel from '../../models/FavouriteModel.js';
 import FollowModel from '../../models/FollowModel.js';
-
-const router = express.Router();
 
 /**
  * @description
@@ -45,7 +40,6 @@ export const createImage = async (req, res) => {
                 track_id: settings.track_id
             });
             await newImage.save();
-            console.log(newImage);
             newImages[i] = newImage;
         }
         res.status(200).json(newImages);
@@ -124,7 +118,7 @@ export const getImageById = async (req, res) => {
 export const followImgAuthor = async (req, res) => {
     let { authorId, isFollow } = req.body;
     let userId = req.userId;
-    console.log(isFollow);
+    
     try {
         if (isFollow)
             await FollowModel.create({ user_id: authorId, follower_id: userId });

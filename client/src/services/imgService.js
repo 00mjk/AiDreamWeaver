@@ -6,7 +6,7 @@ class ImgService {
     constructor() {
         this.service = axios.create({
             // baseURL: `${process.env.SERVER_URL}/users`
-            baseURL: `http://localhost:5001/imgs`,
+            baseURL: `http://localhost:5001`,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -29,14 +29,13 @@ class ImgService {
      */
     searchImgsByKey = (keyword) => {
         return new Promise((resolve, reject) => {
-            this.service.post('/search', {
+            this.service.post('/imgs/search', {
                 keyword: keyword
+            }).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err);
             })
-                .then(res => {
-                    resolve(res.data);
-                }).catch(err => {
-                    reject(err);
-                })
         })
     }
 
@@ -46,12 +45,11 @@ class ImgService {
      */
     createImg = (imgData) => {
         return new Promise((resolve, reject) => {
-            this.service.post('/create', imgData)
-                .then(res => {
-                    resolve(res.data)
-                }).catch(err => {
-                    reject(err);
-                })
+            this.service.post('/imgs/create', imgData).then(res => {
+                resolve(res.data)
+            }).catch(err => {
+                reject(err);
+            })
         })
     }
 
@@ -61,13 +59,11 @@ class ImgService {
      */
     addFavourite = (data) => {
         return new Promise((resolve, reject) => {
-            this.service.post('/fav', data)
-                .then(res => {
-                    resolve(res.data);
-                })
-                .catch(err => {
-                    reject(err);
-                })
+            this.service.post('/imgs/fav', data).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err);
+            })
         })
     }
 
@@ -77,13 +73,11 @@ class ImgService {
      */
     getImageById = (data) => {
         return new Promise((resolve, reject) => {
-            this.service.post('/get_image_by_id', data)
-                .then(res => {
-                    resolve(res.data);
-                })
-                .catch(err => {
-                    reject(err);
-                })
+            this.service.post('/imgs/get_image_by_id', data).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err);
+            })
         })
     }
 
@@ -93,13 +87,25 @@ class ImgService {
      */
     followImgAuthor = (data) => {
         return new Promise((resolve, reject) => {
-            this.service.post('/follow_img_author', data)
-                .then(res => {
-                    resolve(res.data);
-                })
-                .catch(err => {
-                    reject(err);
-                })
+            this.service.post('/imgs/follow_img_author', data).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err);
+            })
+        })
+    }
+
+    /**
+     * @description
+     *  Get roles
+     */
+    getAllRoles = () => {
+        return new Promise((resolve, reject) => {
+            this.service.post('/roles/get_all_roles').then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err);
+            })
         })
     }
 

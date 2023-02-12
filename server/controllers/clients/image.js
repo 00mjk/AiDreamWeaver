@@ -118,7 +118,7 @@ export const getImageById = async (req, res) => {
 export const followImgAuthor = async (req, res) => {
     let { authorId, isFollow } = req.body;
     let userId = req.userId;
-    
+
     try {
         if (isFollow)
             await FollowModel.create({ user_id: authorId, follower_id: userId });

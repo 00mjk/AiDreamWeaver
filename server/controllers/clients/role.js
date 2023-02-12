@@ -12,3 +12,14 @@ export const getAllRoles = async (req, res) => {
         res.status(500).json({ err });
     }
 }
+
+export const changeUserRole = async (req, res) => {
+    const userId = req.userId;
+    const roleId = req.body._id;
+    const roleIdx = req.body.index;
+    try {
+        
+    } catch (err) {
+
+    }
+}

@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import RevolutCheckout from '@revolut/checkout'
 
 import DoneOutlineOutlinedIcon from '@mui/icons-material/DoneOutlineOutlined';
+
+import revolutService from '../../services/revolutService';
+import apiService from '../../services/imgService';
 
 const PricingPage = () => {
     // Use Redux
@@ -20,8 +24,37 @@ const PricingPage = () => {
         setRoles(pricingObj.roles);
     }, [pricingObj.roles])
 
-    const checkout = (price) => {
-        navigate('/checkout?price=' + price);
+    const checkout = async (role) => {
+
+        apiService.purchaseRole(role).then(res => {
+            console.log("purchaseRole-then", res);
+        }).catch(err => {
+            console.log("purchaseRole-err", err);
+        });
+        // revolutService.createOrder({
+        //     amount: price * 100,
+        //     currency: "USD"
+        // }).then(res => {
+        //     const publicId = res.data.public_id;
+        //     RevolutCheckout(publicId).then((RC) => {
+        //         RC.payWithPopup({
+        //             onSuccess() {
+
+        //             },
+        //             onError(message) {
+        //                 console.log(message);
+        //                 window.alert("Oh no :(");
+        //             },
+        //             onCancel() {
+
+        //             },
+        //         });
+        //     });
+
+        // }).catch(err => {
+        //     console.log("rev-err", err);
+        // });
+
     }
 
     return <>
@@ -41,7 +74,7 @@ const PricingPage = () => {
                                     <span className="text-left font-semibold" />
                                     {
                                         role?.contents.map((content, key) =>
-                                            <li className="text-base font-medium leading-[1.5] flex ">
+                                            <li className="text-base font-medium leading-[1.5] flex " key={key}>
                                                 <span className="text-pai-blue h-full w-7 pt-1 scale-125 flex">
                                                     <DoneOutlineOutlinedIcon fontSize='string' />
                                                 </span>
@@ -53,7 +86,7 @@ const PricingPage = () => {
                                     (role?.index <= authObj?.user?.role_idx) ?
                                         <button className="bg-pai-blue hover:bg-[#899CFF] transition-all rounded-xl py-3 px-2 font-semibold text-white block w-full" onClick={() => navigate('/create')}>Create</button>
                                         :
-                                        <button className="bg-pai-blue hover:bg-[#899CFF] transition-all rounded-xl py-3 px-2 font-semibold text-white block w-full" onClick={() => checkout(role.price)}>Buy</button>
+                                        <button className="bg-pai-blue hover:bg-[#899CFF] transition-all rounded-xl py-3 px-2 font-semibold text-white block w-full" onClick={() => checkout(role)}>Buy</button>
                                 }
 
                             </div>

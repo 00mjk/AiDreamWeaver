@@ -1,11 +1,13 @@
 import express from 'express'
+
 import {
     getUser,
     signin,
     signup,
     signinGoogle,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    purchaseRole
 } from '../controllers/clients/user.js'
 import {
     createImage,
@@ -27,6 +29,7 @@ router.post('/users/signup', signup)
 router.post('/users/signin_google', signinGoogle);
 router.post('/users/forgot', forgotPassword);
 router.post('/users/reset', resetPassword);
+router.post('/users/purchase_role', clientAuthMiddleware, purchaseRole);
 
 router.post('/imgs/search', searchImageByKeyword)
 router.post('/imgs/create', clientAuthMiddleware, createImage)

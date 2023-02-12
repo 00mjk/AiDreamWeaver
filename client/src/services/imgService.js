@@ -109,6 +109,20 @@ class ImgService {
         })
     }
 
+    /**
+     * @description
+     *  Change user's role
+     */
+    purchaseRole = (role) => {
+        return new Promise((resolve, reject) => {
+            this.service.post("/users/purchase_role", role).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err);
+            })
+        });
+    };
+
     setTokenInHeader = (token) => {
         this.service.defaults.headers.common['x-auth-token'] = token;
     }

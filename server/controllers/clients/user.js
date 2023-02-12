@@ -6,8 +6,9 @@ import dotenv from 'dotenv'
 
 import { validateLoginInput, validateRegisterInput } from '../../validations/clients/users.js';
 import { ROLE_IDX_FREE, ROLE_IDX_19, ROLE_IDX_29 } from "./role.js"
-import User from '../../models/userModel.js'
-import Role from "../../models/RoleModel.js"
+import UserModel from '../../models/userModel.js'
+import RoleModel from "../../models/RoleModel.js"
+import SaleModel from "../../models/SaleModel.js"
 
 dotenv.config()
 const SECRET = process.env.SECRET;
@@ -16,10 +17,9 @@ const PORT = process.env.SMTP_PORT
 const USER = process.env.SMTP_USER
 const PASS = process.env.SMTP_PASS
 
-
 export const getUser = async (req, res) => {
     try {
-        const user = await User.findById(req.userId);
+        const user = await UserModel.findById(req.userId);
         res.status(200).json({ user: user, token: req.header('x-auth-token') });
     } catch (err) {
         console.log(err);
@@ -34,7 +34,7 @@ export const signin = async (req, res) => {
 
     const { email, password } = req.body // Coming from formData
     try {
-        const existingUser = await User.findOne({ email })
+        const existingUser = await UserModel.findOne({ email })
         if (!existingUser) return res.status(400).json({ email: 'This email is not exist.' });
 
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
@@ -59,12 +59,12 @@ export const signup = async (req, res) => {
     const { email, password, firstName, lastName } = req.body
 
     try {
-        const existingUser = await User.findOne({ email })
+        const existingUser = await UserModel.findOne({ email })
         if (existingUser) return res.status(400).json({ email: "User already exist." })
 
         const hashedPassword = await bcrypt.hash(password, 12)
         const role = await getRoleByIdx(ROLE_IDX_FREE);
-        const result = await User.create({
+        const result = await UserModel.create({
             email: email,
             password: hashedPassword,
             name: `${firstName} ${lastName}`,
@@ -85,7 +85,7 @@ export const signup = async (req, res) => {
 export const signinGoogle = async (req, res) => {
     const { sub, name, given_name, family_name, picture, email, email_verified, locate } = req.body;
     try {
-        var existingUser = await User.findOne({ email })
+        var existingUser = await UserModel.findOne({ email })
         if (!existingUser) {
             const userInfo = {
                 name: name,
@@ -94,7 +94,7 @@ export const signinGoogle = async (req, res) => {
 
             // Register new user.
             const role = await getRoleByIdx(ROLE_IDX_FREE);
-            existingUser = await User.create({
+            existingUser = await UserModel.create({
                 email: email,
                 name: name,
                 role_id: role._id,
@@ -117,7 +117,7 @@ export const signinGoogle = async (req, res) => {
 
 const getRoleByIdx = async (idx) => {
     try {
-        var role = await Role.findOne({ index: idx }).exec();
+        var role = await RoleModel.findOne({ index: idx }).exec();
         return role;
     } catch (error) {
         console.log(error);
@@ -194,4 +194,62 @@ export const resetPassword = (req, res) => {
         }).catch(err => {
             console.log(err)
         })
+}
+
+/**
+ * @description
+ *  Save sale history in db and change user's role.
+ */
+export const purchaseRole = async (req, res) => {
+    const userId = req.userId;
+    const roleId = req.body._id;
+    const roleIdx = req.body.index;
+    const imageCnt = req.body.image_cnt;
+    const price = req.body.price;
+
+    try {
+        // const sale = await SaleModel.create({
+        //     user_id: userId,
+        //     price: price,
+        //     role_id: roleId,
+        //     role_idx: roleIdx
+        // });
+
+        const curUser = await changeUserRole(userId, roleId, roleIdx, imageCnt);
+        res.status(200).json({ user: curUser })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: err })
+    }
+}
+
+const changeUserRole = async (userId, roleId, roleIdx, imageCnt) => {
+    try {
+        // const user = await UserModel.findById(userId).exec();
+        const curDate = new Date();
+        const endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + 1);
+        
+        // user.role_id = roleId;
+        // user.role_idx = roleIdx;
+        // user.remain_cnt = imageCnt;
+        // user.start_date = curDate;
+        // user.end_date = curDate.setMonth(curDate.getMonth() + 1);
+        // user = await user.save();
+
+        const user = await UserModel.findOneAndUpdate({
+            _id: userId
+        }, {
+            role_id: roleId,
+            role_idx: roleIdx,
+            remain_cnt: imageCnt,
+            start_date: curDate,
+            end_date: endDate
+        });
+
+        return user;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
 }

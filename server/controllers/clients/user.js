@@ -9,6 +9,7 @@ import { ROLE_IDX_FREE, ROLE_IDX_19, ROLE_IDX_29 } from "./role.js"
 import UserModel from '../../models/userModel.js'
 import RoleModel from "../../models/RoleModel.js"
 import SaleModel from "../../models/SaleModel.js"
+import { addMonths } from "../../utils/date.js"
 
 dotenv.config()
 const SECRET = process.env.SECRET;
@@ -72,7 +73,7 @@ export const signup = async (req, res) => {
             role_idx: role.index,
             remain_cnt: role.image_cnt,
             start_date: new Date(),
-            end_date: new Date()
+            end_date: addMonths(new Date(), 1)
         });
 
         const token = jwt.sign({ email: result.email, id: result._id }, SECRET, { expiresIn: "1h" })
@@ -101,7 +102,7 @@ export const signinGoogle = async (req, res) => {
                 role_idx: role.index,
                 remain_cnt: role.image_cnt,
                 start_date: new Date(),
-                end_date: new Date(),
+                end_date: addMonths(new Date(), 1),
                 avatar: picture
             });
         }
@@ -208,12 +209,12 @@ export const purchaseRole = async (req, res) => {
     const price = req.body.price;
 
     try {
-        // const sale = await SaleModel.create({
-        //     user_id: userId,
-        //     price: price,
-        //     role_id: roleId,
-        //     role_idx: roleIdx
-        // });
+        const sale = await SaleModel.create({
+            user_id: userId,
+            price: price,
+            role_id: roleId,
+            role_idx: roleIdx
+        });
 
         const curUser = await changeUserRole(userId, roleId, roleIdx, imageCnt);
         res.status(200).json({ user: curUser })
@@ -225,17 +226,8 @@ export const purchaseRole = async (req, res) => {
 
 const changeUserRole = async (userId, roleId, roleIdx, imageCnt) => {
     try {
-        // const user = await UserModel.findById(userId).exec();
         const curDate = new Date();
-        const endDate = new Date();
-        endDate.setMonth(endDate.getMonth() + 1);
-        
-        // user.role_id = roleId;
-        // user.role_idx = roleIdx;
-        // user.remain_cnt = imageCnt;
-        // user.start_date = curDate;
-        // user.end_date = curDate.setMonth(curDate.getMonth() + 1);
-        // user = await user.save();
+        const endDate = addMonths(new Date(), 1);
 
         const user = await UserModel.findOneAndUpdate({
             _id: userId

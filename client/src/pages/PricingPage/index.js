@@ -7,6 +7,7 @@ import DoneOutlineOutlinedIcon from '@mui/icons-material/DoneOutlineOutlined';
 
 import revolutService from '../../services/revolutService';
 import apiService from '../../services/imgService';
+import { loadUser } from '../../actions/authAction';
 
 const PricingPage = () => {
     // Use Redux
@@ -17,44 +18,58 @@ const PricingPage = () => {
     // Redirect Module
     const navigate = useNavigate()
 
+    // Initial state
+    const loadingInitState = { nineteen: false, twentynine: false };
+
     // States
     const [roles, setRoles] = useState([]);
+    const [loading, setLoading] = useState(loadingInitState);
 
     useEffect(() => {
         setRoles(pricingObj.roles);
     }, [pricingObj.roles])
 
     const checkout = async (role) => {
+        if (role.role_idx === 1)
+            setLoading({ ...loading, nineteen: true });
+        else if (role.role_idx === 2)
+            setLoading({ ...loading, twentynine: true });
 
-        apiService.purchaseRole(role).then(res => {
-            console.log("purchaseRole-then", res);
+        revolutService.createOrder({
+            amount: role.price * 100,
+            currency: "USD"
+        }).then(res => {
+            const publicId = res.data.public_id;
+            RevolutCheckout(publicId).then((RC) => {
+                RC.payWithPopup({
+                    onSuccess() {
+                        apiService.purchaseRole(role).then(res => {
+                            console.log("purchaseRole-then", res.user);
+                            setLoading(loadingInitState);
+                            dispatch(loadUser());
+                        }).catch(err => {
+                            console.log("purchaseRole-err", err);
+                            setLoading(loadingInitState);
+                        });
+                    },
+                    onError(message) {
+                        console.log(message);
+                        setLoading(loadingInitState);
+                        window.alert("Oh no :(");
+                    },
+                    onCancel() {
+                        console.log("Canceled");
+                        setLoading(loadingInitState);
+                    },
+                });
+            }).catch(err => {
+                console.log(err);
+                setLoading(loadingInitState);
+            });
+
         }).catch(err => {
-            console.log("purchaseRole-err", err);
+            console.log("rev-err", err);
         });
-        // revolutService.createOrder({
-        //     amount: price * 100,
-        //     currency: "USD"
-        // }).then(res => {
-        //     const publicId = res.data.public_id;
-        //     RevolutCheckout(publicId).then((RC) => {
-        //         RC.payWithPopup({
-        //             onSuccess() {
-
-        //             },
-        //             onError(message) {
-        //                 console.log(message);
-        //                 window.alert("Oh no :(");
-        //             },
-        //             onCancel() {
-
-        //             },
-        //         });
-        //     });
-
-        // }).catch(err => {
-        //     console.log("rev-err", err);
-        // });
-
     }
 
     return <>

@@ -7,13 +7,11 @@ import { USER_LOADED, SIGNIN_SUCCESS, SIGNIN_FAILED, SIGNUP_SUCCESS, SIGNUP_FAIL
  *  Get user info with token from server.
  */
 export const loadUser = () => async dispatch => {
-    await authService.loadUser()
-        .then((data) => {
-            dispatch({ type: USER_LOADED, data })
-        })
-        .catch((err) => {
-            dispatch({ type: SIGNOUT })
-        })
+    await authService.loadUser().then((data) => {
+        dispatch({ type: USER_LOADED, data })
+    }).catch((err) => {
+        dispatch({ type: SIGNOUT })
+    })
 }
 
 /**
@@ -22,16 +20,14 @@ export const loadUser = () => async dispatch => {
  */
 export const signin = (formData) => dispatch => {
     return new Promise((resolve, reject) => {
-        authService.signin(formData)
-            .then((data) => {
-                dispatch({ type: SIGNIN_SUCCESS, data });
-                resolve()
-            })
-            .catch((err) => {
-                err = err?.response?.data;
-                dispatch({ type: SIGNIN_FAILED, err });
-                reject()
-            })
+        authService.signin(formData).then((data) => {
+            dispatch({ type: SIGNIN_SUCCESS, data });
+            resolve()
+        }).catch((err) => {
+            err = err?.response?.data;
+            dispatch({ type: SIGNIN_FAILED, err });
+            reject()
+        })
     })
 }
 
@@ -41,16 +37,14 @@ export const signin = (formData) => dispatch => {
  */
 export const signinGoogle = (data) => dispatch => {
     return new Promise((resolve, reject) => {
-        authService.signinGoogle(data)
-            .then((data) => {
-                dispatch({ type: SIGNIN_SUCCESS, data });
-                resolve()
-            })
-            .catch((err) => {
-                err = err?.response?.data;
-                dispatch({ type: SIGNIN_FAILED, err });
-                reject()
-            })
+        authService.signinGoogle(data).then((data) => {
+            dispatch({ type: SIGNIN_SUCCESS, data });
+            resolve()
+        }).catch((err) => {
+            err = err?.response?.data;
+            dispatch({ type: SIGNIN_FAILED, err });
+            reject()
+        })
     })
 }
 
@@ -60,18 +54,16 @@ export const signinGoogle = (data) => dispatch => {
  */
 export const signup = (formData) => dispatch => {
     return new Promise((resolve, reject) => {
-        authService.signup(formData)
-            .then((data) => {
-                console.log(data);
-                dispatch({ type: SIGNUP_SUCCESS, data })
-                resolve();
-            })
-            .catch((err) => {
-                err = err?.response?.data
-                console.log(err);
-                dispatch({ type: SIGNUP_FAILED, err });
-                reject();
-            })
+        authService.signup(formData).then((data) => {
+            console.log(data);
+            dispatch({ type: SIGNUP_SUCCESS, data })
+            resolve();
+        }).catch((err) => {
+            err = err?.response?.data
+            console.log(err);
+            dispatch({ type: SIGNUP_FAILED, err });
+            reject();
+        })
     })
 }
 

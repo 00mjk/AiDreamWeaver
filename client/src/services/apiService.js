@@ -2,7 +2,7 @@ import axios from 'axios';
 import { SIGNOUT } from '../actions/config';
 import store from '../store';
 
-class ImgService {
+class ApiService {
     constructor() {
         this.service = axios.create({
             // baseURL: `${process.env.SERVER_URL}/users`
@@ -132,6 +132,6 @@ class ImgService {
     }
 }
 
-const service = new ImgService();
+const service = new ApiService();
 
 export default service;

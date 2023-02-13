@@ -77,24 +77,24 @@ export default function App() {
 
     return (
         <GoogleOAuthProvider clientId="679986983043-3c6ac9rv5c2quhqvhumqq351dc48un0u.apps.googleusercontent.com">
-            <ThemeProvider theme={darkModeTheme}>
-                <div className='App'>
-                    <Navbar />
-                    <div className='router'>
-                        <Routes>
-                            <Route exact path="/" element={<HomePage />}></Route>
-                            <Route exact path="/search/:q" element={<HomePage />}></Route>
-                            <Route exact path="/signin" element={<SignIn />}></Route>
-                            <Route exact path="/signup" element={<SignUp />}></Route>
-                            <Route exact path="/create" element={<CreatePage />}></Route>
-                            <Route exact path="/mockup" element={<MockupPage />}></Route>
-                            <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
-                            <Route exact path="/pricing" element={<PricingPage />}></Route>
-                            <Route exact path="/checkout" element={<CheckoutPage />}></Route>
-                        </Routes>
-                    </div>
+            {/* <ThemeProvider theme={darkModeTheme}> */}
+            <div className='App'>
+                <Navbar />
+                <div className='router'>
+                    <Routes>
+                        <Route exact path="/" element={<HomePage />}></Route>
+                        <Route exact path="/search/:q" element={<HomePage />}></Route>
+                        <Route exact path="/signin" element={<SignIn />}></Route>
+                        <Route exact path="/signup" element={<SignUp />}></Route>
+                        <Route exact path="/create" element={<CreatePage />}></Route>
+                        <Route exact path="/mockup" element={<MockupPage />}></Route>
+                        <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
+                        <Route exact path="/pricing" element={<PricingPage />}></Route>
+                        <Route exact path="/checkout" element={<CheckoutPage />}></Route>
+                    </Routes>
                 </div>
-            </ThemeProvider>
+            </div>
+            {/* </ThemeProvider> */}
         </GoogleOAuthProvider>
     );
 }

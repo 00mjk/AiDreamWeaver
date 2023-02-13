@@ -6,7 +6,7 @@ import RevolutCheckout from '@revolut/checkout'
 import DoneOutlineOutlinedIcon from '@mui/icons-material/DoneOutlineOutlined';
 
 import revolutService from '../../services/revolutService';
-import apiService from '../../services/imgService';
+import apiService from '../../services/apiService';
 import { loadUser } from '../../actions/authAction';
 
 const PricingPage = () => {

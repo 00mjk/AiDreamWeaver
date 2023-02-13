@@ -1,4 +1,4 @@
-import imgService from '../services/imgService.js';
+import apiService from '../services/apiService.js';
 
 import {
     ROLE_GET_ALL_START,
@@ -13,7 +13,7 @@ import {
 export const getAllRoles = () => dispatch => {
     return new Promise((resolve, reject) => {
         dispatch({ type: ROLE_GET_ALL_START });
-        imgService.getAllRoles().then((data) => {
+        apiService.getAllRoles().then((data) => {
             dispatch({ type: ROLE_GET_ALL_SUCCESS, data });
             resolve()
         }).catch((err) => {

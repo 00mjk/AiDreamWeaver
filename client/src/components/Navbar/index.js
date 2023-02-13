@@ -225,38 +225,39 @@ export default function PrimarySearchAppBar() {
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
-                <Toolbar>
-                    <BugReportIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-                    <Link to={`/`}><img alt="" src={`http://localhost:3000/assets/images/logo.png`} width="157px" height="32px" /></Link>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                            value={searchKey}
-                            onChange={(e) => setSearchKey(e.target.value)}
-                            onKeyDown={(e) => { e.key === 'Enter' && searchImages(searchKey) }}
-                        />
-                    </Search>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
-                        <StyledBadge
-                            overlap="circular"
-                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                            variant="dot"
-                            onClick={handleProfileMenuOpen} sx={{ p: 0 }}
-                        >
-                            <Avatar alt="" src={`http://localhost:3000/testAvatar.png`} />
-                        </StyledBadge>
-                    </Box>
-                    {genNavBtn()}
-                </Toolbar>
-            </AppBar>
-            {renderMenu}
-        </Box>
+        <>
+            {/* <Box sx={{ flexGrow: 1 }}> */}
+                <AppBar position="static">
+                    <Toolbar>
+                        <Link to={`/`}><img alt="" src={`http://localhost:3000/assets/images/logo.png`} width="157px" height="32px" /></Link>
+                        <Search>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder="Search…"
+                                inputProps={{ 'aria-label': 'search' }}
+                                value={searchKey}
+                                onChange={(e) => setSearchKey(e.target.value)}
+                                onKeyDown={(e) => { e.key === 'Enter' && searchImages(searchKey) }}
+                            />
+                        </Search>
+                        <Box sx={{ flexGrow: 1 }} />
+                        <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
+                            <StyledBadge
+                                overlap="circular"
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                variant="dot"
+                                onClick={handleProfileMenuOpen} sx={{ p: 0 }}
+                            >
+                                <Avatar alt="" src={`http://localhost:3000/testAvatar.png`} />
+                            </StyledBadge>
+                        </Box>
+                        {genNavBtn()}
+                    </Toolbar>
+                </AppBar>
+                {renderMenu}
+            {/* </Box> */}
+        </>
     );
 }

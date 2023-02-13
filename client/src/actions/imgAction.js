@@ -1,4 +1,4 @@
-import imgService from '../services/imgService.js';
+import imgService from '../services/apiService.js';
 
 import {
     IMG_SEARCH_SUCCESS,

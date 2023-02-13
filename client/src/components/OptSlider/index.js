@@ -3,9 +3,11 @@ import './optslider.scss';
 
 const OptSlider = (props) => {
     return <>
-        <fieldset className="create-fieldset" id="opt-slider">
+        {/* <fieldset className="create-fieldset" id="opt-slider"> */}
+        <fieldset id="opt-slider">
             <label>{props.label} </label>
-            <div id="slider-undefined" className="flex items-center gap-x-4 slider-container">
+            {/* <div id="slider-undefined" className="flex items-center gap-x-4 slider-container"> */}
+            <div className="opt-slider-container">
                 <Slider
                     size="small"
                     aria-label="Small"

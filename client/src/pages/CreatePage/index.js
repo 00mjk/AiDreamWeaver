@@ -10,7 +10,7 @@ import { Button, CircularProgress, Alert, AlertTitle, Stack } from '@mui/materia
 import { createImg } from '../../actions/imgAction';
 import { makeAiImage } from '../../actions/aiAction';
 
-import OptPrompt from '../../components/OptPrompt';
+import OptTextarea from '../../components/OptTextarea';
 import OptNegPrompt from '../../components/OptNegPrompt';
 import OptFilter from '../../components/OptFilter';
 import OptImgToImg from '../../components/OptImgToImg';
@@ -172,9 +172,9 @@ const CreatePage = () => {
             <div className={`grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 text-white bg-[#05020E] h-[calc(100vh-62px)] border-t border-white/10 2xl:border-t-0 mx-auto 2xl:border-${!rightSidebar ? "x" : "r"}`}>
                 <aside id="left-sidebar" className="flex flex-col divide-y divide-white/10 pt-6 space-y-6 lg:overflow-y-auto">
                     <div className="px-6 space-y-6">
-                        <OptPrompt value={prompt} onChange={(value) => setPrompt(value)} />
-                        <OptNegPrompt value={negPrompt} onChange={(value) => setNegPrompt(value)} />
-                        <OptFilter />
+                        <OptTextarea labelfor={`prompt-textarea`} label={`Prompt`} placeholder={`Text to Image`} value={prompt} onChange={(value) => setPrompt(value)} />
+                        <OptTextarea labelfor={`negative-prompt-textarea`} label={`Remove From Image`} placeholder={`goldfish, pink, blurry`} value={negPrompt} onChange={(value) => setNegPrompt(value)} />
+                        {/* <OptFilter /> */}
                         <OptImgToImg
                             img={initImg}
                             strength={strength}

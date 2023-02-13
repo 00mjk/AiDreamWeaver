@@ -1,0 +1,28 @@
+#opt-textarea {
+    display: flex;
+    flex-direction: column;
+    row-gap: .25rem;
+
+    label {
+        font-weight: 700;
+    }
+
+    .opt-textarea-input {
+        margin-top: .25rem;
+        border-radius: .5rem;
+        border-width: 1px;
+        border-color: hsla(0, 0%, 100%, .1);
+        background-color: #110F1A;
+        padding: .75rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        color: #F4F4F5;
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+
+        max-height: 500px;
+        resize: none;
+        height: 0px;
+        min-height: 100px;
+    }
+}

@@ -2,12 +2,8 @@ import axios from "axios";
 
 export default class AiService {
     constructor() {
-        this.txtService = axios.create({
+        this.service = axios.create({
             baseURL: `https://cors-anywhere.herokuapp.com/https://stablediffusionapi.com/api/v3/dreambooth`
-        });
-
-        this.imgService = axios.create({
-            baseURL: `https://cors-anywhere.herokuapp.com/https://stablediffusionapi.com/api/v3/dreambooth/img2img`
         });
 
         this.supResSvc = axios.create({
@@ -18,22 +14,26 @@ export default class AiService {
     /**
      * @description
      *  Generate image by ai (both txt2txt and img2txt)
+     * @params
+     *  type(String): txt2img or img2img flag
+     *  settings(Arr):  api parameters
      */
-    makeImg = (settings) => {
+    makeImg = (type, settings) => {
         return new Promise((resolve, reject) => {
-            console.log("IMG_A");
-            if (typeof settings.init_image === 'string' && settings.init_image === "") {
-                this.txtService.post('', settings).then(res => {
-                    console.log("IMG_CREATED");
+            if (type === "txt2img") {
+                this.service.post('', settings).then(res => {
+                    console.log("TXT2IMG_CREATED");
                     resolve(res.data)
                 }).catch(err => {
-                    console.log("IMG_FAILED");
+                    console.log("TXT2IMG_FAILED");
                     reject(err)
                 });
             } else {
-                this.imgService.post('', settings).then(res => {
+                this.service.post('/img2img', settings).then(res => {
+                    console.log("IMG2IMG_CREATED");
                     resolve(res.data)
                 }).catch(err => {
+                    console.log("IMG2IMG_FAILED");
                     reject(err)
                 });
             }

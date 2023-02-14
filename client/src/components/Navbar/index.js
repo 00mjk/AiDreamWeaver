@@ -226,11 +226,13 @@ export default function PrimarySearchAppBar() {
 
     return (
         <>
-            {/* <Box sx={{ flexGrow: 1 }}> */}
-                <AppBar position="static">
-                    <Toolbar>
-                        <Link to={`/`}><img alt="" src={`http://localhost:3000/assets/images/logo.png`} width="157px" height="32px" /></Link>
-                        <Search>
+            <Box sx={{ flexGrow: 1 }}>
+                <AppBar position="static" enableColorOnDark={true} sx={{ backgroundColor: '#2A2C36' }}>
+                    <Toolbar sx={{ height: '80px' }}>
+                        <Link to={`/`}>
+                            <img alt="" src={`http://localhost:3000/assets/images/123.png`} style={{ width: '250px', height: '80px' }} />
+                        </Link>
+                        {/* <Search>
                             <SearchIconWrapper>
                                 <SearchIcon />
                             </SearchIconWrapper>
@@ -241,23 +243,20 @@ export default function PrimarySearchAppBar() {
                                 onChange={(e) => setSearchKey(e.target.value)}
                                 onKeyDown={(e) => { e.key === 'Enter' && searchImages(searchKey) }}
                             />
-                        </Search>
+                        </Search> */}
                         <Box sx={{ flexGrow: 1 }} />
                         <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
-                            <StyledBadge
-                                overlap="circular"
-                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                                variant="dot"
-                                onClick={handleProfileMenuOpen} sx={{ p: 0 }}
-                            >
-                                <Avatar alt="" src={`http://localhost:3000/testAvatar.png`} />
-                            </StyledBadge>
+                            <Avatar
+                                alt=""
+                                src={`http://localhost:3000/testAvatar.png`}
+                                variant="rounded"
+                                onClick={handleProfileMenuOpen} />
                         </Box>
                         {genNavBtn()}
                     </Toolbar>
                 </AppBar>
                 {renderMenu}
-            {/* </Box> */}
+            </Box>
         </>
     );
 }

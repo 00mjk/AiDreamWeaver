@@ -15,6 +15,7 @@ import MockupPage from './pages/MockupPage'
 import SuperResPage from './pages/SuperResPage'
 import PricingPage from './pages/PricingPage'
 import CheckoutPage from './pages/PricingPage/checkout.js'
+import StudioPage from "./pages/StudioPage";
 
 import Navbar from './components/Navbar';
 
@@ -24,36 +25,36 @@ import { loadUser } from "./actions/authAction";
 import setAuthToken from "./utils/setAuthToken";
 import { bgColor } from "./stylesheets/colors";
 
-const getDesignTokens = (mode) => ({
-    palette: {
-        mode,
-        primary: {
-            ...amber,
-            ...(mode === 'dark' && {
-                main: amber[300],
-            }),
-        },
-        ...(mode === 'dark' && {
-            background: {
-                default: bgColor,
-                paper: bgColor,
-            },
-        }),
-        text: {
-            ...(mode === 'light'
-                ? {
-                    primary: grey[900],
-                    secondary: grey[800],
-                }
-                : {
-                    primary: '#fff',
-                    secondary: grey[500],
-                }),
-        },
-    },
-});
+// const getDesignTokens = (mode) => ({
+//     palette: {
+//         mode,
+//         primary: {
+//             ...amber,
+//             ...(mode === 'dark' && {
+//                 main: amber[300],
+//             }),
+//         },
+//         ...(mode === 'dark' && {
+//             background: {
+//                 default: bgColor,
+//                 paper: bgColor,
+//             },
+//         }),
+//         text: {
+//             ...(mode === 'light'
+//                 ? {
+//                     primary: grey[900],
+//                     secondary: grey[800],
+//                 }
+//                 : {
+//                     primary: '#fff',
+//                     secondary: grey[500],
+//                 }),
+//         },
+//     },
+// });
 
-const darkModeTheme = createTheme(getDesignTokens('dark'));
+// const darkModeTheme = createTheme(getDesignTokens('dark'));
 
 export default function App() {
     useEffect(() => {
@@ -91,6 +92,7 @@ export default function App() {
                         <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
                         <Route exact path="/pricing" element={<PricingPage />}></Route>
                         <Route exact path="/checkout" element={<CheckoutPage />}></Route>
+                        <Route exact path="/studio" element={<StudioPage />}></Route>
                     </Routes>
                 </div>
             </div>

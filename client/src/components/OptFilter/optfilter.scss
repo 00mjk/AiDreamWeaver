@@ -1,0 +1,35 @@
+.filter-box {
+
+    .popup-box {
+        // max-height: 80vh;
+        left: 280.4px;
+        // top: min(730.8px - min(1547.06px, 80vh), 92.8px);
+        width: 1024px;
+        flex-direction: column;
+        display: flex;
+        bottom: 0.5rem;
+        position: absolute;
+
+        .scrollbar {
+            border: 1px solid hsla(0, 0%, 100%, .08);
+            transition-duration: 50ms;
+            transition-property: transform, opacity;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+            // --tw-shadow: 0 25px 50px -12px rgba(0, 0, 0, .25);
+            // --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+            // box-shadow: var(0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), 0 25px 50px -12px rgba(0, 0, 0, .25);
+            opacity: 1;
+            --tw-bg-opacity: 1;
+            background-color: rgb(17, 15, 26);
+            border-radius: 0.5rem;
+            z-index: 50;
+            overflow-x: auto;
+            width: 80%;
+
+            .grid-column {
+                display: inline-flex;
+                gap: 1px;
+            }
+        }
+    }
+}

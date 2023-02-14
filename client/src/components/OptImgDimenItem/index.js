@@ -1,19 +1,20 @@
+import './optdimenitem.scss'
+
 const ImgDimension = (props) => {
     return <>
         <div
-            id={`image-dim-${props.dimen.id}`}
-            className="flex flex-row flex-wrap"
+            className="opt-img-dimen-item"
             onClick={() => props.onChange()}>
             <input
                 type="radio"
                 className="radio-input"
-                checked={props.dimen.active}
+                checked={props.active}
                 onChange={() => { }} />
             <label
-                htmlFor={`image-dim-${props.dimen.id}`}
+                htmlFor={`image-dim-${props.id}`}
                 className="!text-[11px]"
                 style={{ width: '98px' }}>
-                {props.dimen.width} × {props.dimen.height}
+                {props.width} × {props.height}
             </label>
         </div>
     </>

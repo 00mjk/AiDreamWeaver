@@ -1,18 +1,20 @@
 import './opttextarea.scss';
 
-const OptPrompt = (props) => {
+const OptTextarea = (props) => {
     return <>
-        {/* <fieldset className="create-fieldset"> */}
         <fieldset id="opt-textarea">
-            <label htmlFor={props.labelfor}>{props.label}</label>
-            <textarea id={props.labelfor}
+            {props.label && <label htmlFor={props.labelfor}>{props.label}</label>}
+            {props.description && <p>{props.description}</p>}
+            <textarea
+                id={props.labelfor}
                 placeholder={props.placeholder}
-                // className="max-h-[500px] resize-none"
                 className="opt-textarea-input"
+                style={{ minHeight: `${props.minHeight}px` }}
+                value={props.value}
                 onChange={(e) => props.onChange(e.target.value)}
-                value={props.value} />
+            />
         </fieldset>
     </>
 }
 
-export default OptPrompt;
+export default OptTextarea;

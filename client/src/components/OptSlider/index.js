@@ -1,27 +1,53 @@
+import { red } from '@mui/material/colors';
 import Slider from '@mui/material/Slider';
+import { styled } from '@mui/material/styles';
 import './optslider.scss';
+
+const StyledSlider = styled((props) => (
+    <Slider
+        {...props}
+    />
+))({
+    '& .css-14pt78w-MuiSlider-rail': {
+        backgroundColor: '#656468',
+        height: '3px'
+    },
+    '& .css-1n40zqk-MuiSlider-track': {
+        backgroundColor: '#8d72fc',
+        height: '3px'
+    },
+    '& .css-14gf62f-MuiSlider-thumb': {
+        backgroundColor: '#fcfcfc',
+        border: '2px solid #8d72fc',
+        width: '15px',
+        height: '15px'
+    },
+    '& .css-14gf62f-MuiSlider-thumb:hover': {
+        boxShadow: '0px 0px 0px 8px #8d72fc64'
+    },
+    '& .css-14gf62f-MuiSlider-thumb.Mui-active': {
+        boxShadow: '0px 0px 0px 8px #8d72fc64'
+    }
+});
 
 const OptSlider = (props) => {
     return <>
-        {/* <fieldset className="create-fieldset" id="opt-slider"> */}
         <fieldset id="opt-slider">
-            <label>{props.label} </label>
-            {/* <div id="slider-undefined" className="flex items-center gap-x-4 slider-container"> */}
+            {props.label && <label>{props.label} </label>}
+            {props.description && <p>{props.description}</p>}
             <div className="opt-slider-container">
-                <Slider
+                <StyledSlider
                     size="small"
                     aria-label="Small"
                     valueLabelDisplay="auto"
                     max={props.max}
                     min={props.min}
-                    color={props.color}
                     value={props.value}
                     disabled={!props.disabled ? false : true}
                     onChange={(e) => props.onChange(e.target.value)}
                 />
                 <input
-                    type="number"
-                    // className="w-12 rounded-full bg-gray-90 text-xs text-center py-1 text-gray-200 "
+                    type="text"
                     className="slider-input"
                     value={props.value}
                     max={props.max}

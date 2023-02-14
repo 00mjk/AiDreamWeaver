@@ -82,17 +82,24 @@ const OptImgToImg = (props) => {
                                     </div>
                                 </div>
                                 <div className="flex gap-1">
-                                    <div className="relative"><button className="flex gap-[1px] rounded-md p-1 pl-2 text-white"><svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M14.61 8C14.61 12.0332 11.4788 15.25 7.68 15.25C3.88123 15.25 0.75 12.0332 0.75 8C0.75 3.96679 3.88123 0.75 7.68 0.75C11.4788 0.75 14.61 3.96679 14.61 8Z" stroke="currentColor" strokeWidth="1.5" />
-                                        <mask id="mask0_2_26" maskUnits="userSpaceOnUse" x={0} y={0} width={16} height={16} style={{ maskType: 'alpha' }}>
-                                            <ellipse cx="8.32001" cy={8} rx="7.68" ry={8} fill="currentColor" />
-                                        </mask>
-                                        <g mask="url(#mask0_2_26)">
-                                            <ellipse cx="1.91999" cy={8} rx="7.68" ry={8} fill="currentColor" />
-                                        </g>
-                                    </svg> <svg data-testid="geist-icon" fill="none" height={16} shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width={24} className="text-gray-50">
-                                            <path d="M6 9l6 6 6-6" />
-                                        </svg> <span className="sr-only">Open dropdown</span></button></div><button className="flex flex-row place-items-center gap-2 font-medium hover:text-gray-300 disabled:opacity-50 [&>svg]:inline [&>svg]:align-sub" style={{ fontSize: '0.9rem' }}>Edit with Mask</button>
+                                    <div className="relative">
+                                        <button className="flex gap-[1px] rounded-md p-1 pl-2 text-white">
+                                            <svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M14.61 8C14.61 12.0332 11.4788 15.25 7.68 15.25C3.88123 15.25 0.75 12.0332 0.75 8C0.75 3.96679 3.88123 0.75 7.68 0.75C11.4788 0.75 14.61 3.96679 14.61 8Z" stroke="currentColor" strokeWidth="1.5" />
+                                                <mask id="mask0_2_26" maskUnits="userSpaceOnUse" x={0} y={0} width={16} height={16} style={{ maskType: 'alpha' }}>
+                                                    <ellipse cx="8.32001" cy={8} rx="7.68" ry={8} fill="currentColor" />
+                                                </mask>
+                                                <g mask="url(#mask0_2_26)">
+                                                    <ellipse cx="1.91999" cy={8} rx="7.68" ry={8} fill="currentColor" />
+                                                </g>
+                                            </svg>
+                                            <svg data-testid="geist-icon" fill="none" height={16} shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width={24} className="text-gray-50">
+                                                <path d="M6 9l6 6 6-6" />
+                                            </svg>
+                                            <span className="sr-only">Open dropdown</span>
+                                        </button>
+                                    </div>
+                                    <button className="flex flex-row place-items-center gap-2 font-medium hover:text-gray-300 disabled:opacity-50 [&>svg]:inline [&>svg]:align-sub" style={{ fontSize: '0.9rem' }}>Edit with Mask</button>
                                 </div>
                             </>
                     }

@@ -4,24 +4,23 @@ import {
     AI_MAKE_IMG_FAILED,
     AI_MAKE_IMG_START,
     AI_MAKE_IMG_SUCCESS,
-    AI_MAKE_IMG_ERROR
+    AI_MAKE_IMG_ERROR,
+    AI_SET_SETTING
 } from './config.js';
 
 /**
  * @description
  *  Call aiService to generate image. 
  */
-export const makeAiImage = (settings) => dispatch => {
+export const makeAiImage = (aiType, settings) => dispatch => {
     return new Promise((resolve, reject) => {
         const aiService = new AiService();
         dispatch({
             type: AI_MAKE_IMG_START,
-            data: {
-                settings: settings
-            }
+            data: {}
         });
 
-        aiService.makeImg(settings).then((res) => {
+        aiService.makeImg(aiType, settings).then((res) => {
             if (res.status === 'success') {
                 dispatch({
                     type: AI_MAKE_IMG_SUCCESS,
@@ -37,17 +36,27 @@ export const makeAiImage = (settings) => dispatch => {
             dispatch({
                 type: AI_MAKE_IMG_FAILED,
                 data: {
-                    res: res,
-                    err: res?.messege
+                    res: res
                 }
             })
             reject(res);
         }).catch(err => {
             dispatch({
                 type: AI_MAKE_IMG_ERROR,
-                err: err
+                errMsg: err
             });
             reject(err);
         });
+    });
+}
+
+/**
+ * @description
+ *  Change setting variables of store
+ */
+export const setSetting = (setting) => dispatch => {
+    dispatch({
+        type: AI_SET_SETTING,
+        data: { setting }
     });
 }

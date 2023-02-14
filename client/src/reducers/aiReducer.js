@@ -75,11 +75,11 @@ const initialState = {
     }, {
         name: "Colorpop",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/elizaport_style.png",
-        prompt: ""
+        prompt: "Colorpop"
     }, {
         name: "Instaport",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/instaport_style.png",
-        prompt: ""
+        prompt: "123"
     }, {
         name: "Playtoon",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/pltn-style.png",
@@ -112,14 +112,12 @@ const initialState = {
 export default function aiReducer(state = initialState, action) {
     switch (action.type) {
         case AI_SET_SETTING:
-            const key = action.data.setting.key;
-            const value = action.data.setting.value;
+            const settingStr = JSON.stringify(state.settings);
+            const settingObj = JSON.parse(settingStr);
+            settingObj[action.data.setting.key] = action.data.setting.value;
             return {
                 ...state,
-                settings: {
-                    ...state.settings,
-                    prompt: value
-                }
+                settings: settingObj
             }
         case AI_MAKE_IMG_START:
             console.log("AI_MAKE_IMG_START");

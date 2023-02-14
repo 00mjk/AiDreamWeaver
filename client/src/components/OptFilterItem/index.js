@@ -3,7 +3,11 @@ import './optfilteritem.scss';
 
 const OptFilterItem = (props) => {
     return <>
-        <button className='btn-filter-item' style={{ borderColor: `#93C5FD` }}>
+        <button
+            className='btn-filter-item'
+            style={{ borderColor: `${props.active === true && '#93C5FD'}`, width: `${props.width ? props.width : 90}px` }}
+            onClick={() => props.handleClick()}
+        >
             <span className='img-container'>
                 <img
                     alt={props.title}
@@ -12,7 +16,7 @@ const OptFilterItem = (props) => {
                     data-nimg="fill"
                 />
             </span>
-            <div className="title">
+            <div className="title" style={{ width: `${props.width ? props.width : 90}px` }}>
                 {props.title}
             </div>
             {

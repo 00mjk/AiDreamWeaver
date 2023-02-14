@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
+import { Grid } from '@mui/material';
+
 import { createImg } from '../../actions/imgAction';
 import { makeAiImage, setSetting } from '../../actions/aiAction';
 import OptTextarea from '../../components/OptTextarea';
@@ -37,7 +39,9 @@ const TabPromptPage = (props) => {
     // const [seed, setSeed] = useState(null);
     // const [webhook, setWebhook] = useState(null);
     // const [trackId, setTrackerId] = useState(null);
-    const [images, setImages] = useState([]);                   // Generated Image Objects
+    const [images, setImages] = useState(null);                   // Generated Image Objects
+    const [styleState, setStyleState] = useState(false);            // Style Option State
+    const [styleBoxState, setStyleBoxState] = useState(false);      // Style Box State
 
     // Effect
     useEffect(() => {
@@ -46,6 +50,7 @@ const TabPromptPage = (props) => {
         setNegPrompt(aiObj.settings.negative_prompt);
         setFilter(aiObj.settings.filter);
         setImages(aiObj.results);
+
         // setModelId(aiObj.settings.model_id);
         // setInitImg(aiObj.settings.init_image);
         // setMaskImg(aiObj.settings.mask_image);
@@ -66,55 +71,42 @@ const TabPromptPage = (props) => {
      */
     const handleGenerateImg = () => {
         console.log("--- handleGenerateImg --- ", prompt, negPrompt);
+        console.log("filter", filter?.prompt);
+        // try {
+        //     const settings = {
+        //         "key": aiObj.settings.key,
+        //         "prompt": prompt,
+        //         "model_id": aiObj.settings.model_id,
+        //         "samples": aiObj.settings.samples,
+        //         "negative_prompt": negPrompt,
+        //         "init_image": aiObj.settings.init_image,
+        //         "mask_image": aiObj.settings.mask_image,
+        //         "width": aiObj.settings.width,
+        //         "height": aiObj.settings.height,
+        //         "prompt_strength": aiObj.settings.strength,
+        //         "num_inference_steps": aiObj.settings.num_inference_steps,
+        //         "guidance_scale": aiObj.settings.guidance_scale,
+        //         "safety_checker": aiObj.settings.safety_checker,
+        //         "seed": aiObj.settings.seed,
+        //         "webhook": aiObj.settings.webhook,
+        //         "track_id": aiObj.settings.track_id
+        //     };
 
-        try {
-            const settings = {
-                "key": aiObj.settings.key,
-                "prompt": prompt,
-                "model_id": aiObj.settings.model_id,
-                "samples": aiObj.settings.samples,
-                "negative_prompt": negPrompt,
-                "init_image": aiObj.settings.init_image,
-                "mask_image": aiObj.settings.mask_image,
-                "width": aiObj.settings.width,
-                "height": aiObj.settings.height,
-                "prompt_strength": aiObj.settings.strength,
-                "num_inference_steps": aiObj.settings.num_inference_steps,
-                "guidance_scale": aiObj.settings.guidance_scale,
-                "safety_checker": aiObj.settings.safety_checker,
-                "seed": aiObj.settings.seed,
-                "webhook": aiObj.settings.webhook,
-                "track_id": aiObj.settings.track_id
-            };
-
-            dispatch(makeAiImage("txt2img", settings)).then(res => {
-                // Save data in serer.
-                const imgData = {
-                    images: res.output,
-                    settings: settings
-                };
-                dispatch(createImg(imgData)).then(() => {
-                    console.log("Image created in db.");
-                });
-            }).catch(err => {
-                console.log("makeAiImage - Error", err);
-            });
-        } catch (err) {
-            console.log("handleGeneratedImg - Err", err);
-        }
-    }
-
-    /**
-     * @description
-     *  Set prompt to state and store.
-     * @param {String} prompt 
-     */
-    const handlechgPrompt = (value) => {
-        setPrompt(value);
-        dispatch(setSetting({
-            key: "prompt",
-            value: value
-        }));
+        //     dispatch(makeAiImage("txt2img", settings)).then(res => {
+        //         // Save data in serer.
+        //         const imgData = {
+        //             images: res.output,
+        //             settings: settings
+        //         };
+        //         dispatch(createImg(imgData)).then(() => {
+        //             console.log("Image created in db.");
+        //         });
+        //     }).catch(err => {
+        //         console.log("makeAiImage - Error", err);
+        //     });
+        // } catch (err) {
+        //     console.log("handleGeneratedImg - Err", err);
+        // }
     }
 
     return <>
@@ -122,12 +114,22 @@ const TabPromptPage = (props) => {
             <aside className="left-sidebar">
                 <div className="px-6 space-y-6">
                     <fieldset style={{ display: 'flex' }}>
-                        <div style={{ flexGrow: 1 }} >
-                            <TopLabelSwitch />
-                        </div>
-                        <div style={{ flexGrow: 1 }}>
-                            <OptFilter />
-                        </div>
+                        <Grid container spacing={2}>
+                            <Grid item xs={4}>
+                                <TopLabelSwitch checked={styleState} onChecked={checked => setStyleState(checked)} />
+                            </Grid>
+                            <Grid item xs={8}>
+                                {
+                                    styleState &&
+                                    <OptFilter
+                                        title={`None`}
+                                        img={`https://storage.googleapis.com/pai-marketing/filters/ominous_escape.png`}
+                                        opened={styleBoxState}
+                                        handleClick={(opened) => setStyleBoxState(opened)}
+                                    />
+                                }
+                            </Grid>
+                        </Grid>
                     </fieldset>
                     <OptTextarea
                         labelfor={`prompt-textarea`}
@@ -136,7 +138,7 @@ const TabPromptPage = (props) => {
                         description={`What do you want to see? You can use a single word or a full sentence.`}
                         minHeight={100}
                         value={prompt}
-                        onChange={(value) => handlechgPrompt(value)}
+                        onChange={(value) => dispatch(setSetting({ key: "prompt", value: value }))}
                     />
                     <OptTextarea
                         labelfor={`negative-prompt-textarea`}
@@ -145,7 +147,7 @@ const TabPromptPage = (props) => {
                         description={`Describe details you don't want in your image like color, objects, or a scenery.`}
                         minHeight={100}
                         value={negPrompt}
-                        onChange={(value) => setNegPrompt(value)}
+                        onChange={(value) => dispatch(setSetting({ key: "negative_prompt", value: value }))}
                     />
                 </div>
                 <div className="field-button">
@@ -155,20 +157,23 @@ const TabPromptPage = (props) => {
             <main className='main-content'>
                 <div className="draggable-bounds">
                     <div className="top-toolbar">
-                        <div className='filter-box'>
-                            <div className='scroll-bar'>
-                                {
-                                    filters.map((filter, key) => (
-                                        <OptFilterItem
-                                            title={filter.title}
-                                            active={filter.state}
-                                            img={filter.image}
-                                            key={key}
-                                            onClick={() => window.alert(key)} />
-                                    ))
-                                }
+                        {
+                            styleState && styleBoxState &&
+                            <div className='filter-box'>
+                                <div className='scroll-bar'>
+                                    {
+                                        aiObj.styles.map((filter, key) => (
+                                            <OptFilterItem
+                                                title={filter.name}
+                                                active={filter.state}
+                                                img={filter.avatar}
+                                                key={key}
+                                                handleClick={() => setFilter(filter)} />
+                                        ))
+                                    }
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
                     <div className="scroll-container">
                         <div className='scroll-container-outbox'>

@@ -1,35 +1,46 @@
 import { useState } from "react";
 
 import { IconButton } from '@mui/material';
-import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
-import SearchIcon from '@mui/icons-material/Search';
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
-
-import OptFilterItem from "../OptFilterItem";
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import "./optfilter.scss";
 
 const OptFilter = (props) => {
-    const [showFilterBox, setShowFilterBox] = useState(false);
-    const [curFilter, setCurFilter] = useState(filters[0]);
-
-    const handleChoseFilter = (idx) => {
-        console.log(idx, "handleChoseFilter");
-        // const len = filters.length;
-        // for (var i = 0; i < len; i++)
-        //     filters[i].state = false;
-
-        // filters[idx].state = true;
-        // setCurFilter(filters[idx]);
-    }
+    const [clicked, setClicked] = useState(false);
 
     return <>
         <div className="filter-box">
-            <div className="chose-box"
-                onClick={() => setShowFilterBox(!showFilterBox)}>
-                <OptFilterItem active={true} />
-                <IconButton aria-label="delete">
-                    <PlayArrowOutlinedIcon />
+            <div className="chose-box">
+                <button className='btn-filter-item' onClick={() => props.handleClick(!props.opened)}>
+                    <span className='img-container'>
+                        <img
+                            alt={props.title}
+                            src={props.img}
+                            decoding="async"
+                            data-nimg="fill"
+                        />
+                    </span>
+                    <div className="title">
+                        {props.title}
+                    </div>
+                    {
+                        props.active &&
+                        <div className="img-option">
+                            <ExpandMoreOutlinedIcon fontSize='small' />
+                        </div>
+                    }
+                </button>
+                <IconButton size="small" onClick={() => props.handleClick(!props.opened)}>
+                    {
+                        props.opened ?
+                            <VisibilityOffIcon size="small" sx={{ color: 'white' }} />
+                            :
+                            <VisibilityIcon size="small" sx={{ color: 'white' }} />
+                    }
+
                 </IconButton>
             </div>
             {/* <div className="popup-box">

@@ -12,6 +12,7 @@ import "./studiopage.scss";
 
 const StyledTabs = styled((props) => (
     <Tabs
+        onChange={() => console.log('tab change')}
         {...props}
         TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
     />

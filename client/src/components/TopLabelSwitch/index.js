@@ -53,12 +53,13 @@ const IOSSwitch = styled((props) => (
     },
 }));
 
-const TopLabelSwitch = () => {
+const TopLabelSwitch = (props) => {
     return <>
         <FormControlLabel
-            control={<IOSSwitch sx={{ m: 1 }} defaultChecked />}
+            control={<IOSSwitch sx={{ m: 1 }} defaultChecked={props.checked} />}
             label="Style"
             labelPlacement="top"
+            onChange={(e) => props.onChecked(e.target.checked)}
         />
     </>
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Grid } from '@mui/material';
@@ -10,25 +10,30 @@ import ColorButton from '../../components/ColorButton';
 import OptFilter from '../../components/OptFilter';
 import ResultImgItem from '../../components/ResultImgItem';
 import OptSlider from '../../components/OptSlider';
-import { primaryBtnColor } from '../../stylesheets/colors';
-import "./tabimage.scss";
 import TopLabelSwitch from '../../components/TopLabelSwitch';
 import OptFilterItem from '../../components/OptFilterItem';
+import PendingImgItem from '../../components/PendingImgItem';
+import { primaryBtnColor } from '../../stylesheets/colors';
+import "./tabimage.scss";
 
 const TabImagePage = (props) => {
     // Props
-    const { setting, setSetting } = props;
+    const { setting, setSetting, loading, setLoading } = props;
 
     // Use Redux
     const dispatch = useDispatch();
     const aiObj = useSelector(state => state.aiObj);
     const authObj = useSelector(state => state.auth);
+    const imgObj = useSelector(state => state.img);
 
-    // Flags
-    // const [loading, setLoading] = useState(false);
-    // const [images, setImages] = useState(null);                   // Generated Image Objects
+    // States
+    const [recentImages, setRecentImages] = useState([]);                   // Generated Image Objects
     const [styleState, setStyleState] = useState(false);            // Style Option State
     const [styleBoxState, setStyleBoxState] = useState(false);      // Style Box State
+
+    useEffect(() => {
+        setRecentImages(imgObj.recentImages);
+    }, [imgObj.recentImages]);
 
     /**
      * @description
@@ -162,12 +167,13 @@ const TabImagePage = (props) => {
                         <div className='scroll-container-outbox'>
                             <div className='scroll-container-inbox'>
                                 <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
-                                    <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} />
-                                    <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} />
                                     {
-
-                                        // images.map((url, key) => <ResultImgItem key={key} url={url} />)
+                                        loading && <PendingImgItem />
                                     }
+                                    {
+                                        recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} key={key} />)
+                                    }
+                                    {/* <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} /> */}
                                 </div>
                             </div>
                         </div>

@@ -1,26 +1,33 @@
-// import { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+
+import { Divider } from '@mui/material';
 
 import ResultImgItem from '../../components/ResultImgItem';
 import OptSlider from '../../components/OptSlider';
 import OptSelect from '../../components/OptSelect';
 import OptImgDimenItem from '../../components/OptImgDimenItem';
+import PendingImgItem from '../../components/PendingImgItem';
 import { primaryBtnColor } from '../../stylesheets/colors';
 import "./tabsetting.scss";
-import { Divider } from '@mui/material';
 
 const TabSettingPage = (props) => {
     // Props
-    const { setting, setSetting } = props;
+    const { setting, setSetting, loading, setLoading } = props;
 
     // Use Redux
     // const dispatch = useDispatch();
     // const toCreate = useSelector(state => state.toCreate)
     const aiObj = useSelector(state => state.aiObj)
     const auth = useSelector(state => state.auth);
+    const imgObj = useSelector(state => state.img);
 
-    // Flags
-    // const [images, setImages] = useState([]);                   // Generated Images
+    // States
+    const [recentImages, setRecentImages] = useState([]);                   // Generated Image Objects
+
+    useEffect(() => {
+        setRecentImages(imgObj.recentImages);
+    }, [imgObj.recentImages]);
 
     return <>
         <div id="setting-studio-container">
@@ -122,11 +129,11 @@ const TabSettingPage = (props) => {
                         <div className='scroll-container-outbox'>
                             <div className='scroll-container-inbox'>
                                 <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
-                                    <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} />
-                                    <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} />
                                     {
-
-                                        // images.map((url, key) => <ResultImgItem key={key} url={url} />)
+                                        loading && <PendingImgItem />
+                                    }
+                                    {
+                                        recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} key={key} />)
                                     }
                                 </div>
                             </div>

@@ -11,11 +11,12 @@ import OptFilter from '../../components/OptFilter';
 import OptFilterItem from '../../components/OptFilterItem';
 import ResultImgItem from '../../components/ResultImgItem';
 import TopLabelSwitch from '../../components/TopLabelSwitch';
+import PendingImgItem from '../../components/PendingImgItem';
 import "./tabprompt.scss";
 
 const TabPromptPage = (props) => {
     // Props
-    const { setting, setSetting } = props;
+    const { setting, setSetting, loading, setLoading } = props;
 
     // Use Redux
     const dispatch = useDispatch();
@@ -29,7 +30,6 @@ const TabPromptPage = (props) => {
 
     useEffect(() => {
         setRecentImages(imgObj.recentImages);
-        console.log(imgObj.recentImages);
     }, [imgObj.recentImages]);
 
     /**
@@ -41,6 +41,8 @@ const TabPromptPage = (props) => {
         const newPrompt = styleState ? (setting.prompt + (setting.filter.prompt ? ', ' + setting.filter.prompt : '')) : setting.prompt;
 
         try {
+            setLoading(true);
+
             const settings = {
                 "key": setting.key,
                 "prompt": newPrompt,
@@ -69,11 +71,14 @@ const TabPromptPage = (props) => {
                 dispatch(createImg(imgData)).then(() => {
                     console.log("Image created in db.");
                 });
+                setLoading(false);
             }).catch(err => {
                 console.log("makeAiImage - Error", err);
+                setLoading(false);
             });
         } catch (err) {
             console.log("handleGeneratedImg - Err", err);
+            setLoading(false);
         }
     }
 
@@ -148,6 +153,9 @@ const TabPromptPage = (props) => {
                         <div className='scroll-container-outbox'>
                             <div className='scroll-container-inbox'>
                                 <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
+                                    {
+                                        loading && <PendingImgItem />
+                                    }
                                     {
                                         recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} key={key} />)
                                     }

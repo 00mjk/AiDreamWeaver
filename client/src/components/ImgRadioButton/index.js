@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 
 const ImgRadioButton = (props) => {
     return <>
-        <Grid item xs={6}>
+        {/* <Grid item xs={6}> */}
             <label >
                 <input
                     type="radio"
@@ -16,7 +16,7 @@ const ImgRadioButton = (props) => {
                     className={styles.imgItem}
                     onClick={() => props?.onChange(props?.url)} />
             </label>
-        </Grid>
+        {/* </Grid> */}
     </>
 }
 

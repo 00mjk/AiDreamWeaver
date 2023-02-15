@@ -118,6 +118,51 @@ const initialState = {
         name: "Black and white",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/haze.png",
         prompt: ""
+    }, {
+        _id: 123123,
+        name: "None",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/ominous_escape.png",
+        prompt: ""
+    }, {
+        _id: 4314123,
+        name: "Colorpop",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/elizaport_style.png",
+        prompt: "Colorpop"
+    }, {
+        _id: 5192931,
+        name: "Instaport",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/instaport_style.png",
+        prompt: "123"
+    }, {
+        _id: 612341234,
+        name: "Playtoon",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/pltn-style.png",
+        prompt: ""
+    }, {
+        _id: 5192432,
+        name: "Woolitize",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/woolitize.jpeg",
+        prompt: ""
+    }, {
+        _id: 72563546,
+        name: "App Icons",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/appicon-style.jpg",
+        prompt: ""
+    }, {
+        _id: 52123412,
+        name: "Retro Futurism",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/retrofuturism.png",
+        prompt: ""
+    }, {
+        _id: 654465,
+        name: "Origamip",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/origami.png",
+        prompt: ""
+    }, {
+        _id: 2734563456,
+        name: "Black and white",
+        avatar: "https://storage.googleapis.com/pai-marketing/filters/haze.png",
+        prompt: ""
     }],                         // Styles (_id, avatar, name, prompt)
     result: null,                      // AI Image Generator Result (Image Objects) 
     error: "",                          // Error Message

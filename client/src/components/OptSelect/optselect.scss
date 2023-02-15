@@ -11,6 +11,7 @@
     label {
         font-weight: 700;
         text-align: left;
+        color: #FFFFFFFF;
     }
 
     .opt-select-container {
@@ -44,7 +45,8 @@
             text-transform: none;
             width: 100%;
             background-color: transparent;
-            padding: .75rem 1rem;
+            // padding: .75rem 1rem;
+            padding: 8px 16px;
             outline: 2px solid transparent;
             outline-offset: 2px;
             -webkit-appearance: none;
@@ -61,7 +63,7 @@
             pointer-events: none;
             position: absolute;
             right: .75rem;
-            top: .875rem;
+            top: 9px;
             color: #71717A;
         }
     }

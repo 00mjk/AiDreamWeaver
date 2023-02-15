@@ -74,6 +74,7 @@ TabPanel.propTypes = {
 const StudioPage = () => {
     // States
     const [tabIndex, setTabIndex] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [setting, setSetting] = useState({
         key: "iIjvdXCYHvVOuemfFgGH9JXSsVwl3grN7ZPtGGGAxY1g32kayxq1SVB3s08A",            // Your API Key
         columns: 1,                     // Avatar Display nums.
@@ -136,6 +137,8 @@ const StudioPage = () => {
                 <TabPromptPage
                     setting={setting}
                     setSetting={handleSetSetting}
+                    loading={loading}
+                    setLoading={setLoading}
                 />
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>

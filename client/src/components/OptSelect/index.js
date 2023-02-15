@@ -11,7 +11,7 @@ const OptSelect = (props) => {
             <div className="opt-select-container">
                 <select name={htmlfor} id={htmlfor} onChange={e => onChange(e.target.value)} value={value}>
                     {
-                        options.map((option, key) => <option value={option.value} key={key}>{option.name}</option>)
+                        options?.map((option, key) => <option value={option.value} key={key}>{option.name}</option>)
                     }
                 </select>
                 <ExpandMoreOutlinedIcon fontSize='small' />

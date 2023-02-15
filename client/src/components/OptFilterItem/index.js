@@ -5,7 +5,7 @@ const OptFilterItem = (props) => {
     return <>
         <button
             className='btn-filter-item'
-            style={{ borderColor: `${props.active === true && '#93C5FD'}`, width: `${props.width ? props.width : 90}px` }}
+            style={{ borderColor: `${props.active === true ? '#93C5FD' : 'transparent'}` }}
             onClick={() => props.handleClick()}
         >
             <span className='img-container'>

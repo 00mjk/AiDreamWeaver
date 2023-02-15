@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
+import { Grid } from '@mui/material';
+
 import { createImg } from '../../actions/imgAction';
-import { makeAiImage } from '../../actions/aiAction';
+import { makeAiImage, setSetting } from '../../actions/aiAction';
 import OptTextarea from '../../components/OptTextarea';
 import ColorButton from '../../components/ColorButton';
 import OptFilter from '../../components/OptFilter';
@@ -14,63 +16,49 @@ import TopLabelSwitch from '../../components/TopLabelSwitch';
 import OptFilterItem from '../../components/OptFilterItem';
 
 const TabImagePage = (props) => {
+    // Props
+    const { setting, setSetting } = props;
+
     // Use Redux
     const dispatch = useDispatch();
-    const toCreate = useSelector(state => state.toCreate)
-    const aiObj = useSelector(state => state.aiObj)
-    const auth = useSelector(state => state.auth);
+    const aiObj = useSelector(state => state.aiObj);
+    const authObj = useSelector(state => state.auth);
 
     // Flags
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState("init");
-    const [rightSidebar, setRightSidebar] = useState(false);    // Right sidebar state
-    const [columns, setColumns] = useState(1);                  // Colum count to show image.
-
-    const [images, setImages] = useState([]);                   // Generated Images
-    const [modelId, setModelId] = useState("stable-diffu");     // Model Id
-    const [prompt, setPrompt] = useState("");                   // Prompt
-    const [negPrompt, setNegPrompt] = useState("");             // Remove From Image
-    const [initImg, setInitImg] = useState("");                 // Init Image (Link of initial image)
-    const [superRes, setSuperRes] = useState(0);                // Super Resolution
-    const [maskImg, setMaskImg] = useState(0);                  // Mask Image (Link of mask image for inpainting)
-    const [strength, setStrength] = useState(70);               // Prompt Strength (Prompt strength when using init image)
-    const [width, setWidth] = useState(512);                    // Image Dimensions - Width
-    const [height, setHeight] = useState(512);                  // Image Dimensions - Height
-    const [genVariants, setGenVariants] = useState(25);         // Quality & Details
-    const [guidanceScale, setGuidanceScale] = useState(9);      // Prmpt Guidance
-    const [imgNum, setImgNum] = useState(1);                    // Number of Images
-    const [seed, setSeed] = useState(null);
-    const [webhook, setWebhook] = useState(null);
-    const [trackId, setTrackerId] = useState(null);
+    const [images, setImages] = useState(null);                   // Generated Image Objects
+    const [styleState, setStyleState] = useState(false);            // Style Option State
+    const [styleBoxState, setStyleBoxState] = useState(false);      // Style Box State
 
     /**
      * @description
      *  Generate image using api (prompt, batchId, width, height ...)
      */
     const handleGenerateImg = () => {
-        console.log("--- handleGenerateImg --- ", prompt);
+        console.log("--- handleGenerateImg --- ", setting.prompt, setting.negative_prompt);
+        const newPrompt = styleState ? (setting.prompt + (setting.filter.prompt ? ', ' + setting.filter.prompt : '')) : setting.prompt;
 
         try {
             const settings = {
-                "key": "iIjvdXCYHvVOuemfFgGH9JXSsVwl3grN7ZPtGGGAxY1g32kayxq1SVB3s08A",
-                "prompt": prompt,
-                "model_id": modelId,
-                "samples": imgNum,
-                "negative_prompt": negPrompt,
-                "init_image": initImg,
-                "mask_image": maskImg,
-                "width": width,
-                "height": height,
-                "prompt_strength": (strength / 100),
-                "num_inference_steps": genVariants,
-                "guidance_scale": guidanceScale,
-                "enhance_prompt": "yes",
-                "seed": seed,
-                "webhook": webhook,
-                "track_id": trackId
+                "key": setting.key,
+                "prompt": newPrompt,
+                "model_id": setting.model_id,
+                "samples": setting.samples,
+                "negative_prompt": setting.negative_prompt,
+                "init_image": setting.init_image,
+                "mask_image": setting.mask_image,
+                "width": setting.width,
+                "height": setting.height,
+                "prompt_strength": setting.strength,
+                "num_inference_steps": setting.num_inference_steps,
+                "guidance_scale": setting.guidance_scale,
+                "safety_checker": setting.safety_checker,
+                "seed": setting.seed,
+                "webhook": setting.webhook,
+                "track_id": setting.track_id
             };
 
-            dispatch(makeAiImage(settings)).then(res => {
+            dispatch(makeAiImage("img2img", settings)).then(res => {
                 // Save data in serer.
                 const imgData = {
                     images: res.output,
@@ -85,29 +73,39 @@ const TabImagePage = (props) => {
         } catch (err) {
             console.log("handleGeneratedImg - Err", err);
         }
-    }
+    };
 
     return <>
         <div id="image-studio-container">
             <aside className="left-sidebar">
                 <div className="px-6 space-y-6">
                     <fieldset style={{ display: 'flex' }}>
-                        <div style={{ flexGrow: 1 }} >
-                            <TopLabelSwitch />
-                        </div>
-                        <div style={{ flexGrow: 1 }}>
-                            <OptFilter />
-                        </div>
+                        <Grid container spacing={2}>
+                            <Grid item xs={4}>
+                                <TopLabelSwitch checked={styleState} onChecked={checked => setStyleState(checked)} />
+                            </Grid>
+                            <Grid item xs={8}>
+                                {
+                                    styleState &&
+                                    <OptFilter
+                                        title={setting.filter?.name}
+                                        img={setting.filter?.avatar}
+                                        opened={styleBoxState}
+                                        handleClick={(opened) => setStyleBoxState(opened)}
+                                    />
+                                }
+                            </Grid>
+                        </Grid>
                     </fieldset>
                     <OptSlider
                         min={1}
-                        max={30}
+                        max={100}
                         label={`Image Strength`}
                         description={``}
-                        value={guidanceScale}
+                        value={Math.round(setting.strength * 100)}
                         color={primaryBtnColor}
-                        disabled={(auth?.user?.role_idx == 1 || auth?.user?.role_idx == 2) ? false : true}
-                        onChange={(val) => setGuidanceScale(val)}
+                        disabled={(authObj?.user?.role_idx == 1 || authObj?.user?.role_idx == 2) ? false : true}
+                        onChange={(value) => setSetting({ key: "strength", value: (value / 100) })}
                     />
                     <OptTextarea
                         labelfor={`prompt-textarea`}
@@ -115,8 +113,8 @@ const TabImagePage = (props) => {
                         placeholder={`Text to Image`}
                         description={`What do you want to see? You can use a single word or a full sentence.`}
                         minHeight={100}
-                        value={prompt}
-                        onChange={(value) => setPrompt(value)}
+                        value={setting.prompt}
+                        onChange={(value) => setSetting({ key: "prompt", value: value })}
                     />
                     <OptTextarea
                         labelfor={`negative-prompt-textarea`}
@@ -124,8 +122,8 @@ const TabImagePage = (props) => {
                         placeholder={`goldfish, pink, blurry`}
                         description={`Describe details you don't want in your image like color, objects, or a scenery.`}
                         minHeight={100}
-                        value={negPrompt}
-                        onChange={(value) => setNegPrompt(value)}
+                        value={setting.negative_prompt}
+                        onChange={(value) => setSetting({ key: "negative_prompt", value: value })}
                     />
                     {/* <OptImgToImg
                             img={initImg}
@@ -134,21 +132,36 @@ const TabImagePage = (props) => {
                             onSetInitImg={(value) => setInitImg(value)}
                         /> */}
                 </div>
-                {/* <div className="px-6 sticky z-10 pt-4 pb-2 space-y-4 bottom-0 bg-[#05020E]"> */}
                 <div className="field-button">
-                    {/* <Button variant="contained" endIcon={<SendIcon />} onClick={handleGenerateImg}>Generate Image</Button> */}
-
                     <ColorButton variant="contained" name={`Genereate Image`} handle={() => handleGenerateImg()} />
                 </div>
             </aside>
             <main className='main-content'>
                 <div className="draggable-bounds">
                     <div className="top-toolbar">
+                        {
+                            styleState && styleBoxState &&
+                            <div className='filter-box'>
+                                <div className='scroll-bar'>
+                                    {
+                                        aiObj.styles.map((item, key) => (
+                                            <OptFilterItem
+                                                title={item.name}
+                                                active={setting.filter._id === item._id ? true : false}
+                                                img={item.avatar}
+                                                key={key}
+                                                handleClick={() => setSetting({ key: "filter", value: item })}
+                                            />
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
                     <div className="scroll-container">
                         <div className='scroll-container-outbox'>
                             <div className='scroll-container-inbox'>
-                                <div className="grid-box" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0px, 1fr))` }}>
+                                <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
                                     <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} />
                                     <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} />
                                     {

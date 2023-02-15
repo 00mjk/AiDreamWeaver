@@ -34,6 +34,7 @@
         border-right-width: 1px;
         border-color: hsla(0, 0%, 100%, .1);
         height: calc(100vh - 128px);
+        background-color: $primaryBackColor;
 
         .draggable-bounds {
             position: relative;

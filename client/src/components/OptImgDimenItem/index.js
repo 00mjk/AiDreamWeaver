@@ -4,7 +4,7 @@ const ImgDimension = (props) => {
     return <>
         <div
             className="opt-img-dimen-item"
-            onClick={() => props.onChange()}>
+            onClick={() => props.handleClick()}>
             <input
                 type="radio"
                 className="radio-input"

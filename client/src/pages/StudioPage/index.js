@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs, Tab } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -72,15 +72,56 @@ TabPanel.propTypes = {
 };
 
 const StudioPage = () => {
-    const [value, setValue] = React.useState(0);
+    // States
+    const [tabIndex, setTabIndex] = useState(0);
+    const [setting, setSetting] = useState({
+        key: "iIjvdXCYHvVOuemfFgGH9JXSsVwl3grN7ZPtGGGAxY1g32kayxq1SVB3s08A",            // Your API Key
+        columns: 1,                     // Avatar Display nums.
+        prompt: "",                     // Your Prompt
+        model_id: "stable-diffu",       // public or your trained Model id
+        samples: 1,                     // number of images you want in response
+        negative_prompt: "",            // Items you don't want in the image
+        filter: {
+            _id: 123123,
+            name: "None",
+            avatar: "https://storage.googleapis.com/pai-marketing/filters/ominous_escape.png",
+            prompt: ""
+        },                              // Style (None, Colorpop, Black&white ...), Fields(_id, avatar, name, prompt))
+        init_image: "",                 // link of Initial Image
+        mask_image: "",                 // link of mask image for inpainting
+        width: 512,                     // Width of output image. Maximum size is 1024x768 or 768x1024 because of memory limits
+        height: 512,                    // Height of output image. Maximum size is 1024x768 or 768x1024 because of memory limits
+        strength: 0.7,                  // Prompt strength when using init image. 1.0 corresponds to full destruction of information in init image
+        num_inference_steps: 30,        // Number of denoising steps (minimum: 1; maximum: 50)
+        guidance_scale: 7.5,            // Scale for classifier-free guidance (minimum: 1; maximum: 20)
+        safety_checker: "yes",          // Enhance prompts for better results, default : yes, option : yes/no
+        seed: null,                     // Random seed. Leave blank to randomize the seed
+        webhook: null,                  // webhook to call when image generation is completed
+        track_id: null                  // tracking id to track this api call
+    });
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    const handleTabChange = (event, idx) => {
+        setTabIndex(idx);
     };
+
+    const handleSetSetting = (item) => {
+        const settingStr = JSON.stringify(setting);
+        const settingObj = JSON.parse(settingStr);
+        if (item.length !== undefined) {
+            item.map((obj, key) => {
+                settingObj[obj.key] = obj.value;
+                setSetting(settingObj);
+            });
+        } else {
+            settingObj[item.key] = item.value;
+            setSetting(settingObj);
+        }
+    }
+
     return <>
         <Box className="root-box" sx={{ height: 'calc(100vh - 80px)', backgroundColor: '#1c1c27' }}>
             <Box sx={{ borderBottom: `1px solid #2A2C36` }}>
-                <StyledTabs value={value} onChange={handleChange}>
+                <StyledTabs value={tabIndex} onChange={handleTabChange}>
                     <StyledTab label="My Gallery" sx={{ marginRight: '200px' }} />
                     <StyledTab label="Prompt" />
                     <StyledTab label="+ Image" />
@@ -88,17 +129,26 @@ const StudioPage = () => {
                 </StyledTabs>
             </Box>
 
-            <TabPanel value={value} index={0}>
+            <TabPanel value={tabIndex} index={0}>
                 Item One
             </TabPanel>
-            <TabPanel value={value} index={1} sx={{ padding: 0 }}>
-                <TabPromptPage />
+            <TabPanel value={tabIndex} index={1} sx={{ padding: 0 }}>
+                <TabPromptPage
+                    setting={setting}
+                    setSetting={handleSetSetting}
+                />
             </TabPanel>
-            <TabPanel value={value} index={2}>
-                <TabImagePage />
+            <TabPanel value={tabIndex} index={2}>
+                <TabImagePage
+                    setting={setting}
+                    setSetting={handleSetSetting}
+                />
             </TabPanel>
-            <TabPanel value={value} index={3}>
-                <TabSettingPage />
+            <TabPanel value={tabIndex} index={3}>
+                <TabSettingPage
+                    setting={setting}
+                    setSetting={handleSetSetting}
+                />
             </TabPanel>
         </Box>
     </>

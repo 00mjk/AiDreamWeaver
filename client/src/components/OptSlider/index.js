@@ -27,6 +27,9 @@ const StyledSlider = styled((props) => (
     },
     '& .css-14gf62f-MuiSlider-thumb.Mui-active': {
         boxShadow: '0px 0px 0px 8px #8d72fc64'
+    },
+    '& .Mui-disabled': {
+        backgroundColor: '#434343'
     }
 });
 

@@ -10,6 +10,17 @@
     margin-right: auto;
     position: relative;
 
+    .sc-bcXHqe {
+        border: 2px solid #d9d6d669;
+        background: #b5d0eb69;
+    }
+
+    .sc-bcXHqe:hover,
+    .sc-bcXHqe:active,
+    .sc-bcXHqe:focus {
+        background-color: #8e72ff88;
+    }
+
     .btn-delete {
         display: none;
     }

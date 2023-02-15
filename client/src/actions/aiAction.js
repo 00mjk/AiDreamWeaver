@@ -54,9 +54,16 @@ export const makeAiImage = (aiType, settings) => dispatch => {
  * @description
  *  Change setting variables of store
  */
-export const setSetting = (setting) => dispatch => {
-    dispatch({
+// export const setSetting = (setting) => dispatch => {
+//     dispatch({
+//         type: AI_SET_SETTING,
+//         data: { setting }
+//     });
+// }
+
+export const setSetting = (payload) => {
+    return {
         type: AI_SET_SETTING,
-        data: { setting }
-    });
+        payload
+    }
 }

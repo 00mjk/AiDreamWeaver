@@ -15,7 +15,12 @@ const initialState = {
         model_id: "stable-diffu",       // public or your trained Model id
         samples: 1,                     // number of images you want in response
         negative_prompt: "",            // Items you don't want in the image
-        filter: null,                   // Style (None, Colorpop, Black&white ...), Fields(_id, avatar, name, prompt))
+        filter: {
+            _id: 123123,
+            name: "None",
+            avatar: "https://storage.googleapis.com/pai-marketing/filters/ominous_escape.png",
+            prompt: ""
+        },                              // Style (None, Colorpop, Black&white ...), Fields(_id, avatar, name, prompt))
         init_image: "",                 // link of Initial Image
         mask_image: "",                 // link of mask image for inpainting
         width: 512,                     // Width of output image. Maximum size is 1024x768 or 768x1024 because of memory limits
@@ -29,78 +34,87 @@ const initialState = {
         track_id: null                  // tracking id to track this api call
     },
     models: [{
-        model_name: 'Stable Diffusion v1.5',
-        model_value: 'stable-diffu'
+        name: 'Stable Diffusion v1.5',
+        value: 'stable-diffu'
     }, {
-        model_name: 'Stable Diffusion v2',
-        model_value: 'stable-diffu'
+        name: 'Stable Diffusion v2',
+        value: 'stable-diffu'
     }, {
-        model_name: 'Stable Diffusion v3',
-        model_value: 'stable-diffu'
+        name: 'Stable Diffusion v3',
+        value: 'stable-diffu'
     }, {
-        model_name: 'MidJourney v4',
-        model_value: 'midjourney'
+        name: 'MidJourney v4',
+        value: 'midjourney'
     }, {
-        model_name: 'Protogen x3.4',
-        model_value: 'protogen-3.4'
+        name: 'Protogen x3.4',
+        value: 'protogen-3.4'
     }, {
-        model_name: 'Realistic Vision v1.3',
-        model_value: 'realistic-vision-v13'
+        name: 'Realistic Vision v1.3',
+        value: 'realistic-vision-v13'
     }, {
-        model_name: 'Project Unreal Engine 5',
-        model_value: 'project-unreal-engin'
+        name: 'Project Unreal Engine 5',
+        value: 'project-unreal-engin'
     }, {
-        model_name: 'T-shirt print designs',
-        model_value: 't-shirt-prin'
+        name: 'T-shirt print designs',
+        value: 't-shirt-prin'
     }, {
-        model_name: 'Anything v4',
-        model_value: 'anything-v4'
+        name: 'Anything v4',
+        value: 'anything-v4'
     }, {
-        model_name: 'Dream Shaper',
-        model_value: 'dream-shaper-8797'
+        name: 'Dream Shaper',
+        value: 'dream-shaper-8797'
     }, {
-        model_name: 'Vintedois',
-        model_value: 'vintedois-diffusion'
+        name: 'Vintedois',
+        value: 'vintedois-diffusion'
     }, {
-        model_name: 'F222',
-        model_value: 'f222-diffusion'
+        name: 'F222',
+        value: 'f222-diffusion'
     }, {
-        model_name: 'animefull2',
-        model_value: 'animefull2'
+        name: 'animefull2',
+        value: 'animefull2'
     }],
     styles: [{
+        _id: 123123,
         name: "None",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/ominous_escape.png",
         prompt: ""
     }, {
+        _id: 4314123,
         name: "Colorpop",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/elizaport_style.png",
         prompt: "Colorpop"
     }, {
+        _id: 5192931,
         name: "Instaport",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/instaport_style.png",
         prompt: "123"
     }, {
+        _id: 612341234,
         name: "Playtoon",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/pltn-style.png",
         prompt: ""
     }, {
+        _id: 5192432,
         name: "Woolitize",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/woolitize.jpeg",
         prompt: ""
     }, {
+        _id: 72563546,
         name: "App Icons",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/appicon-style.jpg",
         prompt: ""
     }, {
+        _id: 52123412,
         name: "Retro Futurism",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/retrofuturism.png",
         prompt: ""
     }, {
+        _id: 654465,
         name: "Origamip",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/origami.png",
         prompt: ""
     }, {
+        _id: 2734563456,
         name: "Black and white",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/haze.png",
         prompt: ""
@@ -114,7 +128,7 @@ export default function aiReducer(state = initialState, action) {
         case AI_SET_SETTING:
             const settingStr = JSON.stringify(state.settings);
             const settingObj = JSON.parse(settingStr);
-            settingObj[action.data.setting.key] = action.data.setting.value;
+            settingObj[action.payload.key] = action.payload.value;
             return {
                 ...state,
                 settings: settingObj

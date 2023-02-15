@@ -1,116 +1,21 @@
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
-import { styled } from '@mui/material/styles';
-import AcUnitIcon from '@mui/icons-material/AcUnit';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import Flag from "react-flagkit";
+import MasksIcon from '@mui/icons-material/Masks';
+import NetworkLockedIcon from '@mui/icons-material/NetworkLocked';
+import ImageIcon from '@mui/icons-material/Image';
+import ScannerTwoToneIcon from '@mui/icons-material/ScannerTwoTone';
+import LocalPrintshopTwoToneIcon from '@mui/icons-material/LocalPrintshopTwoTone';
+
 import { CircleMenu, CircleMenuItem } from "react-circular-menu";
 import "./resultimgitem.scss"
 
-const menuItems = [
-    {
-        id: 'walk',
-        title: 'Walk',
-        icon: '#walk'
-    },
-    {
-        id: 'run',
-        title: 'Run',
-        icon: '#run'
-    },
-    {
-        id: 'drive',
-        title: 'Drive',
-        icon: '#drive'
-    },
-    {
-        id: 'figth',
-        title: 'Fight',
-        icon: '#fight'
-    },
-    {
-        id: 'more',
-        title: 'More...',
-        icon: '#more',
-        items: [
-            {
-                id: 'eat',
-                title: 'Eat',
-                icon: '#eat'
-            },
-            {
-                id: 'sleep',
-                title: 'Sleep',
-                icon: '#sleep'
-            },
-            {
-                id: 'shower',
-                title: 'Take Shower',
-                icon: '#shower'
-            },
-            {
-                id: 'workout',
-                icon: '#workout',
-                title: 'Work Out'
-            }
-        ]
-    },
-    {
-        id: 'weapon',
-        title: 'Weapon...',
-        icon: '#weapon',
-        items: [
-            {
-                id: 'firearm',
-                icon: '#firearm',
-                title: 'Firearm...',
-                items: [
-                    {
-                        id: 'glock',
-                        title: 'Glock 22'
-                    },
-                    {
-                        id: 'beretta',
-                        title: 'Beretta M9'
-                    },
-                    {
-                        id: 'tt',
-                        title: 'TT'
-                    },
-                    {
-                        id: 'm16',
-                        title: 'M16 A2'
-                    },
-                    {
-                        id: 'ak47',
-                        title: 'AK 47'
-                    }
-                ]
-            },
-            {
-                id: 'knife',
-                icon: '#knife',
-                title: 'Knife'
-            },
-            {
-                id: 'machete',
-                icon: '#machete',
-                title: 'Machete'
-            }, {
-                id: 'grenade',
-                icon: '#grenade',
-                title: 'Grenade'
-            }
-        ]
-    }
-];
-
 const ResultImgItem = (props) => {
+    const { image, url } = props;
     return <>
         <div className="create-image-card">
             <img
-                src={props.url}
+                src={url}
                 alt=""
                 style={{ maxWidth: 'min(512px, 100%)' }} />
             <button className="btn-delete">
@@ -127,26 +32,26 @@ const ResultImgItem = (props) => {
                     className={``}
                 >
                     <CircleMenuItem
+                        tooltip="Image Info"
+                        tooltipPlacement="top"
                         onClick={() => alert("Clicked the item")}
-                        tooltip="Email"
-                        tooltipPlacement="right"
                     >
-                        <AcUnitIcon />
+                        <ImageIcon />
                     </CircleMenuItem>
-                    <CircleMenuItem tooltip="Help">
-                        <AccountBalanceIcon />
+                    <CircleMenuItem tooltip="Create Variations">
+                        <ScannerTwoToneIcon />
                     </CircleMenuItem>
-                    <CircleMenuItem tooltip="Location" tooltipPlacement="top">
+                    <CircleMenuItem tooltip="Print to T-shirt" tooltipPlacement="top">
+                        <LocalPrintshopTwoToneIcon />
+                    </CircleMenuItem>
+                    <CircleMenuItem tooltip="Edit with mask">
+                        <MasksIcon />
+                    </CircleMenuItem>
+                    <CircleMenuItem tooltip="Enhance photo">
                         <AddAPhotoIcon />
                     </CircleMenuItem>
-                    <CircleMenuItem tooltip="Info">
-                        <AddAPhotoIcon />
-                    </CircleMenuItem>
-                    <CircleMenuItem tooltip="Info">
-                        <AddAPhotoIcon />
-                    </CircleMenuItem>
-                    <CircleMenuItem tooltip="Info">
-                        <AddAPhotoIcon />
+                    <CircleMenuItem tooltip="Make it private">
+                        <NetworkLockedIcon />
                     </CircleMenuItem>
                 </CircleMenu>
             </div>

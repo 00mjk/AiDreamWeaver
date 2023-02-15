@@ -87,12 +87,12 @@ export default function App() {
                         <Route exact path="/search/:q" element={<HomePage />}></Route>
                         <Route exact path="/signin" element={<SignIn />}></Route>
                         <Route exact path="/signup" element={<SignUp />}></Route>
-                        <Route exact path="/create" element={<CreatePage />}></Route>
+                        <Route exact path="/studio" element={<CreatePage />}></Route>
                         <Route exact path="/mockup" element={<MockupPage />}></Route>
                         <Route exact path="/super_resolution" element={<SuperResPage />}></Route>
                         <Route exact path="/pricing" element={<PricingPage />}></Route>
                         <Route exact path="/checkout" element={<CheckoutPage />}></Route>
-                        <Route exact path="/studio" element={<StudioPage />}></Route>
+                        <Route exact path="/create" element={<StudioPage />}></Route>
                     </Routes>
                 </div>
             </div>

@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Grid } from '@mui/material';
 
 import { createImg } from '../../actions/imgAction';
-import { makeAiImage, setSetting } from '../../actions/aiAction';
+import { makeAiImage } from '../../actions/aiAction';
 import OptTextarea from '../../components/OptTextarea';
 import ColorButton from '../../components/ColorButton';
 import OptFilter from '../../components/OptFilter';
 import ResultImgItem from '../../components/ResultImgItem';
 import OptSlider from '../../components/OptSlider';
-import { primaryBackColor, secondaryBackColor, primaryBtnColor } from '../../stylesheets/colors';
+import { primaryBtnColor } from '../../stylesheets/colors';
 import "./tabimage.scss";
 import TopLabelSwitch from '../../components/TopLabelSwitch';
 import OptFilterItem from '../../components/OptFilterItem';
@@ -25,8 +25,8 @@ const TabImagePage = (props) => {
     const authObj = useSelector(state => state.auth);
 
     // Flags
-    const [loading, setLoading] = useState(false);
-    const [images, setImages] = useState(null);                   // Generated Image Objects
+    // const [loading, setLoading] = useState(false);
+    // const [images, setImages] = useState(null);                   // Generated Image Objects
     const [styleState, setStyleState] = useState(false);            // Style Option State
     const [styleBoxState, setStyleBoxState] = useState(false);      // Style Box State
 

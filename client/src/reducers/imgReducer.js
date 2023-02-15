@@ -1,8 +1,9 @@
 import {
-    IMG_SEARCH_SUCCESS,
-    IMG_SEARCH_FAILED,
+    IMG_CREATE_START,
     IMG_CREATE_SUCCESS,
     IMG_CREATE_FAILED,
+    IMG_SEARCH_SUCCESS,
+    IMG_SEARCH_FAILED,
     IMG_FAV_SUCCESS,
     IMG_GET_BY_ID_SUCCESS,
     IMG_FOLLOW_AUTHOR
@@ -23,6 +24,23 @@ const initialState = {
 
 export default function imgReducer(state = initialState, action) {
     switch (action.type) {
+        case IMG_CREATE_START:
+            return {
+                ...state,
+                loading: true
+            }
+        case IMG_CREATE_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                recentImages: action?.images
+            }
+        case IMG_CREATE_FAILED:
+            return {
+                ...state,
+                loading: false,
+            }
         case IMG_SEARCH_SUCCESS:
             return {
                 ...state,
@@ -39,17 +57,6 @@ export default function imgReducer(state = initialState, action) {
                 images: null,
                 error: action?.data?.error
             };
-        case IMG_CREATE_SUCCESS:
-            return {
-                ...state,
-                loading: false,
-                error: null,
-                recentImages: action?.images
-            }
-        case IMG_CREATE_FAILED:
-            return {
-                ...state
-            }
         case IMG_GET_BY_ID_SUCCESS:
             return {
                 ...state,

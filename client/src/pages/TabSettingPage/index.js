@@ -1,13 +1,11 @@
-import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+// import { useState } from 'react'
+import { useSelector } from 'react-redux';
 
-import { createImg } from '../../actions/imgAction';
-import { makeAiImage } from '../../actions/aiAction';
 import ResultImgItem from '../../components/ResultImgItem';
 import OptSlider from '../../components/OptSlider';
 import OptSelect from '../../components/OptSelect';
 import OptImgDimenItem from '../../components/OptImgDimenItem';
-import { primaryBackColor, secondaryBackColor, primaryBtnColor } from '../../stylesheets/colors';
+import { primaryBtnColor } from '../../stylesheets/colors';
 import "./tabsetting.scss";
 import { Divider } from '@mui/material';
 
@@ -16,13 +14,13 @@ const TabSettingPage = (props) => {
     const { setting, setSetting } = props;
 
     // Use Redux
-    const dispatch = useDispatch();
-    const toCreate = useSelector(state => state.toCreate)
+    // const dispatch = useDispatch();
+    // const toCreate = useSelector(state => state.toCreate)
     const aiObj = useSelector(state => state.aiObj)
     const auth = useSelector(state => state.auth);
 
     // Flags
-    const [images, setImages] = useState([]);                   // Generated Images
+    // const [images, setImages] = useState([]);                   // Generated Images
 
     return <>
         <div id="setting-studio-container">
@@ -41,6 +39,7 @@ const TabSettingPage = (props) => {
                         htmlfor={`model-type`}
                         labelstr={`Model`}
                         options={aiObj.models}
+                        value={setting.model_id}
                         onChange={(modelId) => setSetting({ key: "model_id", value: modelId })}
                     />
                     <OptSlider
@@ -138,10 +137,5 @@ const TabSettingPage = (props) => {
         </div>
     </>
 }
-
-const stdModels = [{
-    name: 'Stable Diffusion v1.5',
-    value: 'stable-diffu'
-}];
 
 export default TabSettingPage;

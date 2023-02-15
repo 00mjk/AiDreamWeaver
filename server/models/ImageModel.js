@@ -68,6 +68,10 @@ const imageSchema = Schema({
         type: Number,
         default: 0
     },
+    is_private: {
+        type: Schema.Types.Boolean,
+        default: false
+    },
     created_at: {
         type: Date,
         default: new Date()

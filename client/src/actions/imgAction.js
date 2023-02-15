@@ -1,10 +1,11 @@
 import imgService from '../services/apiService.js';
 
 import {
-    IMG_SEARCH_SUCCESS,
-    IMG_SEARCH_FAILED,
+    IMG_CREATE_START,
     IMG_CREATE_SUCCESS,
     IMG_CREATE_FAILED,
+    IMG_SEARCH_SUCCESS,
+    IMG_SEARCH_FAILED,
     IMG_FAV_SUCCESS,
     IMG_GET_BY_ID_SUCCESS,
     IMG_FOLLOW_AUTHOR
@@ -35,16 +36,16 @@ export const searchImgsByKey = (keyword) => dispatch => {
  *  Create image items.
  */
 export const createImg = (imgData) => dispatch => {
+    dispatch({ type: IMG_CREATE_START })
+
     return new Promise((resolve, reject) => {
-        imgService.createImg(imgData)
-            .then((images) => {
-                dispatch({ type: IMG_CREATE_SUCCESS, images });
-                resolve();
-            })
-            .catch((err) => {
-                dispatch({ type: IMG_CREATE_FAILED, err });
-                reject();
-            });
+        imgService.createImg(imgData).then((images) => {
+            dispatch({ type: IMG_CREATE_SUCCESS, images });
+            resolve();
+        }).catch((err) => {
+            dispatch({ type: IMG_CREATE_FAILED, err });
+            reject();
+        });
     });
 }
 

@@ -20,15 +20,17 @@ const TabPromptPage = (props) => {
     // Use Redux
     const dispatch = useDispatch();
     const aiObj = useSelector(state => state.aiObj);
+    const imgObj = useSelector(state => state.img);
 
     // States
-    const [result, setResult] = useState(null);                   // Generated Image Objects
+    const [recentImages, setRecentImages] = useState([]);                   // Generated Image Objects
     const [styleState, setStyleState] = useState(false);            // Style Option State
     const [styleBoxState, setStyleBoxState] = useState(false);      // Style Box State
 
     useEffect(() => {
-        setResult(aiObj.result);
-    }, [aiObj.result]);
+        setRecentImages(imgObj.recentImages);
+        console.log(imgObj.recentImages);
+    }, [imgObj.recentImages]);
 
     /**
      * @description
@@ -146,13 +148,8 @@ const TabPromptPage = (props) => {
                         <div className='scroll-container-outbox'>
                             <div className='scroll-container-inbox'>
                                 <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
-                                    <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} />
-                                    <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} />
                                     {
-                                        false &&
-                                        result?.output?.map((url, key) => {
-                                            <ResultImgItem url={url} key={key} />
-                                        })
+                                        recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} key={key} />)
                                     }
                                 </div>
                             </div>

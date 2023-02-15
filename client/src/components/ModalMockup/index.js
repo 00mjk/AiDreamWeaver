@@ -72,8 +72,8 @@ const MockupModal = (props) => {
         <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
-            open={props.open}
-            onClose={props.onClose}
+            open={open}
+            onClose={onClose}
             closeAfterTransition
             style={{ overflowY: 'auto' }}
             BackdropComponent={Backdrop}
@@ -81,7 +81,7 @@ const MockupModal = (props) => {
                 timeout: 500,
             }}
         >
-            <Fade in={props.open} >
+            <Fade in={open} >
                 <Box className="mockup-modal">
                     <Grid container spacing={2} alignItems="stretch">
                         <Grid className='left-bar' item xs={12} sm={6} md={4} lg={3}>

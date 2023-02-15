@@ -10,7 +10,8 @@ import ScannerTwoToneIcon from '@mui/icons-material/ScannerTwoTone';
 import LocalPrintshopTwoToneIcon from '@mui/icons-material/LocalPrintshopTwoTone';
 
 import ItemDetailModal from '../ItemDetailModal';
-import MockupModal from '../MockupModal';
+import ModalMockup from '../ModalMockup';
+import ModalEnhance from '../ModalEnhance';
 
 import "./resultimgitem.scss"
 
@@ -20,15 +21,8 @@ const ResultImgItem = (props) => {
 
     // States
     const [detailModalOpen, setDetailModalOpen] = useState(false);
-    const [mockupModalOpen, setMockupModalOpen] = useState(false);
-
-    const handleImageInfo = () => {
-        setDetailModalOpen(true);
-    }
-
-    const handlePrintModal = () => {
-        setMockupModalOpen(true);
-    }
+    const [modalMockupOpen, setModalMockupOpen] = useState(false);
+    const [modalEnhanceOpen, setModalEnhanceOpen] = useState(false);
 
     return <>
         <div className="create-image-card">
@@ -52,7 +46,7 @@ const ResultImgItem = (props) => {
                 >
                     <CircleMenuItem
                         tooltip="Image Info"
-                        onClick={handleImageInfo}
+                        onClick={() => setDetailModalOpen(true)}
                     >
                         <ImageIcon />
                     </CircleMenuItem>
@@ -65,7 +59,7 @@ const ResultImgItem = (props) => {
 
                     <CircleMenuItem
                         tooltip="Print to T-shirt"
-                        onClick={handlePrintModal}
+                        onClick={() => setModalMockupOpen(true)}
                     >
                         <LocalPrintshopTwoToneIcon />
                     </CircleMenuItem>
@@ -78,6 +72,7 @@ const ResultImgItem = (props) => {
 
                     <CircleMenuItem
                         tooltip="Enhance photo"
+                        onClick={() => setModalEnhanceOpen(true)}
                     >
                         <AddAPhotoIcon />
                     </CircleMenuItem>
@@ -91,7 +86,8 @@ const ResultImgItem = (props) => {
             </div>
         </div>
         <ItemDetailModal open={detailModalOpen} onClose={() => setDetailModalOpen(false)} item={image} />
-        <MockupModal open={mockupModalOpen} onClose={() => setMockupModalOpen(false)} item={image} />
+        <ModalMockup open={modalMockupOpen} onClose={() => setModalMockupOpen(false)} item={image} />
+        <ModalEnhance open={modalEnhanceOpen} onClose={() => setModalEnhanceOpen(false)} item={image} />
     </>
 }
 

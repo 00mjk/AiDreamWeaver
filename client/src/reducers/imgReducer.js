@@ -12,7 +12,7 @@ import {
 const initialState = {
     loading: false,
     imgSchKeyword: "",      // Search keyword
-    recentImages: [],       // Generate results
+    recentImages: [],       // Generated results
     images: [],             // Search results
     image: null,            // Chosen image
     imageIsFav: false,      // Chosen image favourite state.

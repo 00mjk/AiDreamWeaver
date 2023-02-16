@@ -14,7 +14,8 @@ import {
     searchImageByKeyword,
     favouriteImg,
     getImageById,
-    followImgAuthor
+    followImgAuthor,
+    makePrivate
 } from '../controllers/clients/image.js';
 import {
     getAllRoles
@@ -36,6 +37,7 @@ router.post('/imgs/create', clientAuthMiddleware, createImage)
 router.post('/imgs/fav', clientAuthMiddleware, favouriteImg)
 router.post('/imgs/get_image_by_id', clientAuthMiddleware, getImageById)
 router.post('/imgs/follow_img_author', clientAuthMiddleware, followImgAuthor)
+router.post('/imgs/make_private', clientAuthMiddleware, makePrivate)
 
 router.post('/roles/get_all_roles', getAllRoles);
 

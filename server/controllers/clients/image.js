@@ -116,8 +116,8 @@ export const getImageById = async (req, res) => {
  *  Follow image author
  */
 export const followImgAuthor = async (req, res) => {
-    let { authorId, isFollow } = req.body;
-    let userId = req.userId;
+    const { authorId, isFollow } = req.body;
+    const userId = req.userId;
 
     try {
         if (isFollow)
@@ -128,6 +128,26 @@ export const followImgAuthor = async (req, res) => {
         return res.status(200).json({
             isFollow: isFollow,
         });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+}
+
+/**
+ * @description
+ *  Make image for private or public.
+ */
+export const makePrivate = async (req, res) => {
+    const imageId = req.body._id;
+    const isPrivate = req.body.is_private === true ? false : true;
+
+    try {
+        await ImageModel.findOneAndUpdate({ _id: imageId }, {
+            is_private: isPrivate
+        });
+        const image = await ImageModel.findById(imageId);
+        res.status(200).json({ image });
     } catch (err) {
         console.log(err);
         res.status(500).json(err);

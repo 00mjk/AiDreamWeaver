@@ -32,6 +32,7 @@ const ModalEnhance = (props) => {
     const [scale, setScale] = useState(1);
     const [supResState, setSupResState] = useState(SUP_RESOLUTION_IMG_INITIAL);
     const [superImgUrl, setSuperImgUrl] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
         setSupResState(superResObj?.state);
@@ -57,9 +58,11 @@ const ModalEnhance = (props) => {
                 console.log("makeSuperResolution - Success", res);
             }).catch(err => {
                 console.log("makeSuperResolution - Err", err);
+                setErrorMsg(err);
             });
         } catch (err) {
-            console.log("handleSupResolution - Err", err)
+            console.log("handleSupResolution - Err", err);
+            setErrorMsg(err);
         };
     }
 
@@ -125,7 +128,10 @@ const ModalEnhance = (props) => {
                                     <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
                                         <Alert severity="error">
                                             <AlertTitle>Error</AlertTitle>
-                                            Making enhance image is failed. — <strong>Try it again!</strong>
+                                            Making enhance image is failed.
+                                            {errorMsg &&
+                                                <strong >- {errorMsg}</strong>
+                                            }
                                         </Alert>
                                     </Stack>
                                 }

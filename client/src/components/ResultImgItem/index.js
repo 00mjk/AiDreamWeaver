@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { CircleMenu, CircleMenuItem } from "react-circular-menu";
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import MasksIcon from '@mui/icons-material/Masks';
-import NetworkLockedIcon from '@mui/icons-material/NetworkLocked';
 import ImageIcon from '@mui/icons-material/Image';
 import ScannerTwoToneIcon from '@mui/icons-material/ScannerTwoTone';
 import LocalPrintshopTwoToneIcon from '@mui/icons-material/LocalPrintshopTwoTone';
+import PublicIcon from '@mui/icons-material/Public';
+import PublicOffIcon from '@mui/icons-material/PublicOff';
 
+import apiService from '../../services/apiService';
 import ItemDetailModal from '../ItemDetailModal';
 import ModalMockup from '../ModalMockup';
 import ModalEnhance from '../ModalEnhance';
@@ -17,12 +20,24 @@ import "./resultimgitem.scss"
 
 const ResultImgItem = (props) => {
     // Props
-    const { image, url } = props;
+    const { image, changeImg, url } = props;
 
     // States
     const [detailModalOpen, setDetailModalOpen] = useState(false);
     const [modalMockupOpen, setModalMockupOpen] = useState(false);
     const [modalEnhanceOpen, setModalEnhanceOpen] = useState(false);
+
+    /**
+     * @description
+     *  Make image for private or public
+     */
+    const handlePrivateImg = () => {
+        apiService.makeImgPrivOrPub(image).then(res => {
+            changeImg(res.image);
+        }).catch(err => {
+            console.log(err)
+        });
+    }
 
     return <>
         <div className="create-image-card">
@@ -79,8 +94,11 @@ const ResultImgItem = (props) => {
 
                     <CircleMenuItem
                         tooltip="Make it private"
+                        onClick={() => handlePrivateImg()}
                     >
-                        <NetworkLockedIcon />
+                        {
+                            image.is_private ? <PublicIcon /> : <PublicOffIcon />
+                        }
                     </CircleMenuItem>
                 </CircleMenu>
             </div>

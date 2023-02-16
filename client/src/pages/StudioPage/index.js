@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Tabs, Tab } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import { AI_MAKE_IMG_INIT } from '../../actions/config';
 import Box from '@mui/material/Box';
 import TabPromptPage from '../TabPromptPage';
 import TabImagePage from '../TabImagePage';
@@ -75,6 +76,7 @@ const StudioPage = () => {
     // States
     const [tabIndex, setTabIndex] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [aiState, setAiState] = useState(AI_MAKE_IMG_INIT);
     const [setting, setSetting] = useState({
         key: "iIjvdXCYHvVOuemfFgGH9JXSsVwl3grN7ZPtGGGAxY1g32kayxq1SVB3s08A",            // Your API Key
         columns: 1,                     // Avatar Display nums.
@@ -139,6 +141,8 @@ const StudioPage = () => {
                     setSetting={handleSetSetting}
                     loading={loading}
                     setLoading={setLoading}
+                    aiState={aiState}
+                    setAiState={setAiState}
                 />
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>

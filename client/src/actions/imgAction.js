@@ -1,4 +1,4 @@
-import imgService from '../services/apiService.js';
+import apiService from '../services/apiService.js';
 
 import {
     IMG_CREATE_START,
@@ -8,7 +8,8 @@ import {
     IMG_SEARCH_FAILED,
     IMG_FAV_SUCCESS,
     IMG_GET_BY_ID_SUCCESS,
-    IMG_FOLLOW_AUTHOR
+    IMG_FOLLOW_AUTHOR,
+    IMG_MAKE_PRIVATE_SUCCESS
 } from './config.js';
 
 /**
@@ -17,7 +18,7 @@ import {
  */
 export const searchImgsByKey = (keyword) => dispatch => {
     return new Promise((resolve, reject) => {
-        imgService.searchImgsByKey(keyword)
+        apiService.searchImgsByKey(keyword)
             .then((data) => {
                 data.keyword = keyword;
                 dispatch({ type: IMG_SEARCH_SUCCESS, data });
@@ -39,7 +40,7 @@ export const createImg = (imgData) => dispatch => {
     dispatch({ type: IMG_CREATE_START })
 
     return new Promise((resolve, reject) => {
-        imgService.createImg(imgData).then((images) => {
+        apiService.createImg(imgData).then((images) => {
             dispatch({ type: IMG_CREATE_SUCCESS, images });
             resolve();
         }).catch((err) => {
@@ -51,7 +52,7 @@ export const createImg = (imgData) => dispatch => {
 
 export const addFavourite = (data) => dispatch => {
     return new Promise((resolve, reject) => {
-        imgService.addFavourite(data)
+        apiService.addFavourite(data)
             .then(data => {
                 dispatch({ type: IMG_FAV_SUCCESS, data });
                 resolve();
@@ -64,7 +65,7 @@ export const addFavourite = (data) => dispatch => {
 
 export const getImageById = (data) => dispatch => {
     return new Promise((resolve, reject) => {
-        imgService.getImageById(data)
+        apiService.getImageById(data)
             .then(data => {
                 dispatch({ type: IMG_GET_BY_ID_SUCCESS, data });
                 resolve();
@@ -77,7 +78,7 @@ export const getImageById = (data) => dispatch => {
 
 export const followImgAuthor = (data) => dispatch => {
     return new Promise((resolve, reject) => {
-        imgService.followImgAuthor(data)
+        apiService.followImgAuthor(data)
             .then(data => {
                 dispatch({ type: IMG_FOLLOW_AUTHOR, data });
                 resolve();
@@ -86,4 +87,15 @@ export const followImgAuthor = (data) => dispatch => {
                 reject();
             });
     })
+}
+
+/**
+ * @description
+ *  Make image to private in recent images(store) 
+ */
+export const changeRecentImgs = (payload) => {
+    return {
+        type: IMG_MAKE_PRIVATE_SUCCESS,
+        payload
+    }
 }

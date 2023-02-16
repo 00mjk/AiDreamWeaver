@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Grid } from '@mui/material';
+import { Grid, Alert, Stack, AlertTitle } from '@mui/material';
 
 import { createImg } from '../../actions/imgAction';
 import { makeAiImage } from '../../actions/aiAction';
+import { AI_MAKE_IMG_START, AI_MAKE_IMG_SUCCESS, AI_MAKE_IMG_FAILED, AI_MAKE_IMG_ERROR, AI_MAKE_IMG_INIT } from '../../actions/config';
 import OptTextarea from '../../components/OptTextarea';
 import ColorButton from '../../components/ColorButton';
 import OptFilter from '../../components/OptFilter';
@@ -16,7 +17,7 @@ import "./tabprompt.scss";
 
 const TabPromptPage = (props) => {
     // Props
-    const { setting, setSetting, loading, setLoading } = props;
+    const { setting, setSetting, loading, setLoading, aiState, setAiState } = props;
 
     // Use Redux
     const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const TabPromptPage = (props) => {
 
     // States
     const [recentImages, setRecentImages] = useState([]);                   // Generated Image Objects
+    const [isRecentImgState, setisRecentImgState] = useState(false);
     const [styleState, setStyleState] = useState(false);            // Style Option State
     const [styleBoxState, setStyleBoxState] = useState(false);      // Style Box State
 
@@ -41,6 +43,7 @@ const TabPromptPage = (props) => {
         const newPrompt = styleState ? (setting.prompt + (setting.filter.prompt ? ', ' + setting.filter.prompt : '')) : setting.prompt;
 
         try {
+            setAiState(AI_MAKE_IMG_START);
             setLoading(true);
 
             const settings = {
@@ -70,16 +73,37 @@ const TabPromptPage = (props) => {
                 };
                 dispatch(createImg(imgData)).then(() => {
                     console.log("Image created in db.");
+                    setAiState(AI_MAKE_IMG_SUCCESS);
+                }).catch(err => {
+                    setAiState(AI_MAKE_IMG_FAILED);
                 });
                 setLoading(false);
             }).catch(err => {
                 console.log("makeAiImage - Error", err);
                 setLoading(false);
+                setAiState(AI_MAKE_IMG_FAILED);
             });
         } catch (err) {
             console.log("handleGeneratedImg - Err", err);
             setLoading(false);
+            setAiState(AI_MAKE_IMG_FAILED);
         }
+    }
+
+    /**
+     * @description
+     *  Change image state
+     */
+    const handleChgImage = (image) => {
+        var tmpRecentImgs = recentImages;
+        var len = tmpRecentImgs.length;
+
+        for (var i = 0; i < len; i++) {
+            if (tmpRecentImgs[i]._id === image._id)
+                tmpRecentImgs[i] = image;
+        }
+        setRecentImages(tmpRecentImgs);
+        setisRecentImgState(!isRecentImgState);
     }
 
     return <>
@@ -154,10 +178,29 @@ const TabPromptPage = (props) => {
                             <div className='scroll-container-inbox'>
                                 <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
                                     {
-                                        loading && <PendingImgItem />
+                                        aiState === AI_MAKE_IMG_INIT &&
+                                        <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                                            <Alert severity="info">
+                                                <AlertTitle>TEXT TO IMAGE</AlertTitle>
+                                                Press <strong>Generate</strong> button!
+                                            </Alert>
+                                        </Stack>
                                     }
                                     {
-                                        recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} key={key} />)
+                                        aiState === AI_MAKE_IMG_START && <PendingImgItem />
+                                    }
+                                    {
+                                        aiState === AI_MAKE_IMG_SUCCESS &&
+                                        recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} changeImg={image => handleChgImage(image)} key={key} />)
+                                    }
+                                    {
+                                        aiState === AI_MAKE_IMG_FAILED &&
+                                        <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                                            <Alert severity="error">
+                                                <AlertTitle>Error</AlertTitle>
+                                                Generating image is field. — <strong>Try it again!</strong>
+                                            </Alert>
+                                        </Stack>
                                     }
                                 </div>
                             </div>

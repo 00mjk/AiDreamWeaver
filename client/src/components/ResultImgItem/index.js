@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CircleMenu, CircleMenuItem } from "react-circular-menu";
 
@@ -22,6 +22,9 @@ const ResultImgItem = (props) => {
     // Props
     const { image, changeImg, url } = props;
 
+    // useRef
+    const snapbarRef = useRef();
+
     // States
     const [detailModalOpen, setDetailModalOpen] = useState(false);
     const [modalMockupOpen, setModalMockupOpen] = useState(false);
@@ -34,8 +37,18 @@ const ResultImgItem = (props) => {
     const handlePrivateImg = () => {
         apiService.makeImgPrivOrPub(image).then(res => {
             changeImg(res.image);
+            snapbarRef.current.showSnackbar({
+                show: true,
+                type: 'success',
+                message: 'Image privacy updated.'
+            });
         }).catch(err => {
             console.log(err)
+            snapbarRef.current.showSnackbar({
+                show: true,
+                type: 'error',
+                message: 'Image privacy update is failed.'
+            });
         });
     }
 

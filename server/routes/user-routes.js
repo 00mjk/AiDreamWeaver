@@ -1,25 +1,8 @@
 import express from 'express'
 
-import {
-    getUser,
-    signin,
-    signup,
-    signinGoogle,
-    forgotPassword,
-    resetPassword,
-    purchaseRole
-} from '../controllers/clients/user.js'
-import {
-    createImage,
-    searchImageByKeyword,
-    favouriteImg,
-    getImageById,
-    followImgAuthor,
-    makePrivate
-} from '../controllers/clients/image.js';
-import {
-    getAllRoles
-} from '../controllers/clients/role.js';
+import { getUser, signin, signup, signinGoogle, forgotPassword, resetPassword, purchaseRole } from '../controllers/clients/user.js'
+import { createImage, searchImageByKeyword, favouriteImg, getImageById, followImgAuthor, makePrivate } from '../controllers/clients/image.js';
+import { getAllRoles } from '../controllers/clients/role.js';
 import clientAuthMiddleware from '../middleware/client-auth.js';
 
 const router = express.Router()

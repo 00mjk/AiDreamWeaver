@@ -6,8 +6,8 @@ import dotenv from 'dotenv'
 
 import { validateLoginInput, validateRegisterInput } from '../../validations/clients/users.js';
 import { ROLE_IDX_FREE, ROLE_IDX_19, ROLE_IDX_29 } from "./role.js"
-import UserModel from '../../models/userModel.js'
 import RoleModel from "../../models/RoleModel.js"
+import UserModel from '../../models/userModel.js'
 import SaleModel from "../../models/SaleModel.js"
 import { addMonths } from "../../utils/date.js"
 

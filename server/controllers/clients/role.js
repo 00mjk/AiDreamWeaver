@@ -18,7 +18,7 @@ export const changeUserRole = async (req, res) => {
     const roleId = req.body._id;
     const roleIdx = req.body.index;
     try {
-        
+
     } catch (err) {
 
     }

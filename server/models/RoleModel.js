@@ -6,10 +6,7 @@ const roleSchema = mongoose.Schema({
     price: { type: Number, required: true },
     image_cnt: { type: Number, required: true },
     contents: [String],
-    created_at: {
-        type: Date,
-        default: new Date()
-    },
+    created_at: { type: Date, default: new Date() },
     deleted_at: { type: Date }
 })
 

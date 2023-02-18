@@ -3,7 +3,7 @@ export const createRevolutOrder = (req, res) => {
 
     try {
 
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         res.status(500).json({ err });
     }

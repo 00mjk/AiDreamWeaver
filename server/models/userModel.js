@@ -1,10 +1,7 @@
 import mongoose from 'mongoose'
-// const Schema = import ('mongoose').Schema;
+const Schema = mongoose.Schema;
 
-import pkg from 'mongoose';
-const { Schema } = pkg;
-
-const userSchema = mongoose.Schema({
+const userSchema = Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String },
@@ -21,5 +18,5 @@ const userSchema = mongoose.Schema({
     expireToken: Date
 })
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.models.User || mongoose.model('User', userSchema)
 export default User

@@ -7,6 +7,6 @@ const favSchema = Schema({
     image_id: { type: Schema.Types.ObjectId, required: true }
 });
 
-const FavModel = mongoose.model('Favourite', favSchema);
+const FavModel = mongoose.models.Favourite || mongoose.model('Favourite', favSchema);
 
 export default FavModel;

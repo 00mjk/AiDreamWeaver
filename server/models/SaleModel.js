@@ -15,5 +15,5 @@ const saleSchema = Schema({
 
 })
 
-const Sale = mongoose.model('Sale', saleSchema)
+const Sale = mongoose.models.Sale || mongoose.model('Sale', saleSchema)
 export default Sale

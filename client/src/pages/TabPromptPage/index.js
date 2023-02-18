@@ -17,7 +17,7 @@ import "./tabprompt.scss";
 
 const TabPromptPage = (props) => {
     // Props
-    const { setting, setSetting, loading, setLoading, aiState, setAiState } = props;
+    const { setting, setSetting, setLoading, aiState, setAiState } = props;
 
     // Use Redux
     const dispatch = useDispatch();

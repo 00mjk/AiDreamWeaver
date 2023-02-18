@@ -5,8 +5,7 @@ import store from '../store';
 class AuthService {
     constructor() {
         this.service = axios.create({
-            // baseURL: `${process.env.SERVER_URL}/users`
-            baseURL: `http://localhost:5001/users`,
+            baseURL: process.env.REACT_APP_LOCAL_SERVER_URL + `/users`,
             headers: {
                 'Content-Type': 'application/json'
             }

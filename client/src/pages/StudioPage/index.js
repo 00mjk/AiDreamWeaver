@@ -78,10 +78,10 @@ const StudioPage = () => {
     const [loading, setLoading] = useState(false);
     const [aiState, setAiState] = useState(AI_MAKE_IMG_INIT);
     const [setting, setSetting] = useState({
-        key: "iIjvdXCYHvVOuemfFgGH9JXSsVwl3grN7ZPtGGGAxY1g32kayxq1SVB3s08A",            // Your API Key
+        key: process.env.REACT_APP_STABLE_DIFFUSION_API_KEY,            // Your API Key
         columns: 1,                     // Avatar Display nums.
         prompt: "",                     // Your Prompt
-        model_id: "stable-diffu",       // public or your trained Model id
+        model_id: "f222-diffusion",       // public or your trained Model id
         samples: 1,                     // number of images you want in response
         negative_prompt: "",            // Items you don't want in the image
         filter: {
@@ -125,7 +125,7 @@ const StudioPage = () => {
         <Box className="root-box" sx={{ height: 'calc(100vh - 80px)', backgroundColor: '#1c1c27' }}>
             <Box sx={{ borderBottom: `1px solid #2A2C36` }}>
                 <StyledTabs value={tabIndex} onChange={handleTabChange}>
-                    <StyledTab label="My Gallery" sx={{ marginRight: '200px' }} />
+                    <StyledTab label="My Gallery" />
                     <StyledTab label="Prompt" />
                     <StyledTab label="+ Image" />
                     <StyledTab label="Setting" />

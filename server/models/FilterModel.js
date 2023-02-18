@@ -8,5 +8,5 @@ const filterSchema = mongoose.Schema({
     deleted_at: { type: Date },
 })
 
-const Filter = mongoose.model('Filter', filterSchema)
+const Filter = mongoose.models.Filter || mongoose.model('Filter', filterSchema)
 export default Filter

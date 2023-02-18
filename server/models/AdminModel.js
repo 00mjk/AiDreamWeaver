@@ -9,6 +9,6 @@ const adminSchema = mongoose.Schema({
     created_at: { type: Date, default: new Date() },
 })
 
-const Admin = mongoose.model('Admin', adminSchema)
+const Admin = mongoose.models.Admin || mongoose.model('Admin', adminSchema)
 
 export default Admin

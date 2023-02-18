@@ -5,8 +5,7 @@ import store from '../store';
 class ApiService {
     constructor() {
         this.service = axios.create({
-            // baseURL: `${process.env.SERVER_URL}/users`
-            baseURL: `http://localhost:5001`,
+            baseURL: process.env.REACT_APP_LOCAL_SERVER_URL,
             headers: {
                 'Content-Type': 'application/json'
             }

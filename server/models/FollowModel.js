@@ -7,6 +7,6 @@ const followSchema = Schema({
     follower_id: { type: Schema.Types.ObjectId, required: true }
 })
 
-const FollowModel = mongoose.model('Follow', followSchema);
+const FollowModel = mongoose.models.Follow || mongoose.model('Follow', followSchema);
 
 export default FollowModel;

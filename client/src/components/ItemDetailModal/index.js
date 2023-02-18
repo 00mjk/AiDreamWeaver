@@ -21,10 +21,12 @@ import { searchImgsByKey, addFavourite, followImgAuthor } from '../../actions/im
 import { remixPrompt, editItem } from '../../actions/toCreateAction';
 
 import download from '../../utils/downloadfile';
-import styles from './styles.module.css';
 import './itemdetailmodal.scss';
 
 function ItemDetailModal(props) {
+    // Use Props
+    const { item, open, onClose, changeImage } = props;
+
     // Redirect Module
     const navigate = useNavigate()
 
@@ -49,7 +51,7 @@ function ItemDetailModal(props) {
      */
     const searchImg = (keyword) => {
         dispatch(searchImgsByKey(keyword));
-        props.onClose();
+        onClose();
     }
 
     /**
@@ -58,7 +60,9 @@ function ItemDetailModal(props) {
      */
     const handleFavImg = () => {
         if (auth.isAuthenticated) {
-            dispatch(addFavourite({ imageId: props?.item?._id }));
+            dispatch(addFavourite({ imageId: item?._id })).then(res => {
+                console.log("handleFavImg", res);
+            }).catch(err => console.log("handleFavImg", err));
         } else {
             navigate('/signin');
         }
@@ -79,7 +83,7 @@ function ItemDetailModal(props) {
     const handleIsFollow = (isFollow) => {
         if (auth.isAuthenticated) {
             dispatch(followImgAuthor({
-                authorId: props?.item?.user_id,
+                authorId: item?.user_id,
                 isFollow: isFollow
             }));
         } else {
@@ -100,7 +104,7 @@ function ItemDetailModal(props) {
      *  Copy text to clipboard.
      */
     const handleCopyPrompt = () => {
-        navigator.clipboard.writeText(props?.item?.prompt).then(
+        navigator.clipboard.writeText(item?.prompt).then(
             () => {
                 setCopyPrompt(true);
                 setInterval(() => {
@@ -118,7 +122,7 @@ function ItemDetailModal(props) {
      */
     const handleRemix = () => {
         if (auth.isAuthenticated) {
-            dispatch(remixPrompt(props?.item?.prompt));
+            dispatch(remixPrompt(item?.prompt));
             navigate('/create');
         } else {
             navigate('/signin');
@@ -131,7 +135,7 @@ function ItemDetailModal(props) {
      */
     const handleEdit = () => {
         if (auth.isAuthenticated) {
-            dispatch(editItem(props?.item?.url));
+            dispatch(editItem(item?.url));
             navigate('/create');
         } else {
             navigate('/signin');
@@ -148,8 +152,8 @@ function ItemDetailModal(props) {
         <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
-            open={props.open}
-            onClose={props.onClose}
+            open={open}
+            onClose={onClose}
             closeAfterTransition
             style={{ overflowY: 'auto' }}
             BackdropComponent={Backdrop}
@@ -157,7 +161,7 @@ function ItemDetailModal(props) {
                 timeout: 500,
             }}
         >
-            <Fade in={props.open} >
+            <Fade in={open} >
                 <Box className="detail-modal">
 
                     <div className="item-detail">
@@ -190,7 +194,7 @@ function ItemDetailModal(props) {
                                     </div>
                                     <div className="btn-field">
                                         <Button variant="outlined" startIcon={<FileDownloadOutlinedIcon fontSize='string' />} size='string' onClick={() => download(props?.item?.url)}>
-                                            <span className={styles.smlBtnFont}>Download</span>
+                                            <span>Download</span>
                                         </Button>
                                         <Button
                                             variant="outlined"
@@ -200,7 +204,7 @@ function ItemDetailModal(props) {
                                             disabled={copyLink === "" ? false : true}
                                             disableFocusRipple={copyLink === "" ? false : true}
                                             disableRipple={copyLink === "" ? false : true}>
-                                            <span className={styles.smlBtnFont}>Copy link</span>
+                                            <span>Copy link</span>
                                         </Button>
 
                                         <IconButton size="small" onClick={handlePopOverClick}>
@@ -217,7 +221,7 @@ function ItemDetailModal(props) {
                                             }}
                                         >
                                             <Button variant="outlined" size='small'>
-                                                <CommentBankOutlinedIcon fontSize="string" />&nbsp;<span className={styles.smlBtnFont}>Report image</span>
+                                                <CommentBankOutlinedIcon fontSize="string" />&nbsp;<span>Report image</span>
                                             </Button>
                                         </Popover>
                                     </div>
@@ -237,11 +241,11 @@ function ItemDetailModal(props) {
 
                                                 {!isFollow ?
                                                     <Button variant="outlined" startIcon={<AddOutlinedIcon fontSize='string' />} size='string' onClick={() => handleIsFollow(true)}>
-                                                        <span className={styles.smlBtnFont}>Follow</span>
+                                                        <span>Follow</span>
                                                     </Button>
                                                     :
                                                     <Button variant="outlined" startIcon={<RemoveOutlinedIcon fontSize='string' />} size='string' color='error' onClick={() => handleIsFollow(false)}>
-                                                        <span className={styles.smlBtnFont}>Unfollow</span>
+                                                        <span>Unfollow</span>
                                                     </Button>
                                                 }
                                             </div>
@@ -264,13 +268,13 @@ function ItemDetailModal(props) {
                                                     startIcon={!copyPrompt ? <ContentCopyIcon fontSize='string' /> : <CheckIcon fontSize='string' />}
                                                     size='string'
                                                     onClick={() => handleCopyPrompt()}>
-                                                    <span className={styles.smlBtnFont}>&nbsp;Copy Prompt</span>
+                                                    <span>&nbsp;Copy Prompt</span>
                                                 </Button>
                                                 <Button variant="outlined" startIcon={<AutorenewIcon fontSize='string' />} size='string' onClick={() => handleRemix()}>
-                                                    <span className={styles.smlBtnFont}>&nbsp;Remix</span>
+                                                    <span>&nbsp;Remix</span>
                                                 </Button>
                                                 <Button variant="outlined" startIcon={<BorderColorIcon fontSize='string' />} size='string' onClick={() => handleEdit()}>
-                                                    <span className={styles.smlBtnFont}>&nbsp;Edit</span>
+                                                    <span>&nbsp;Edit</span>
                                                 </Button>
                                             </div>
                                             <hr className="!my-6 border-low" />

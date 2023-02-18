@@ -3,11 +3,11 @@ import axios from "axios";
 export default class AiService {
     constructor() {
         this.service = axios.create({
-            baseURL: `https://cors-anywhere.herokuapp.com/https://stablediffusionapi.com/api/v3/dreambooth`
+            baseURL: process.env.REACT_APP_CORS_HEADER + `https://stablediffusionapi.com/api/v3/dreambooth`
         });
 
         this.supResSvc = axios.create({
-            baseURL: `https://cors-anywhere.herokuapp.com/https://stablediffusionapi.com/api/v3/super_resolution`
+            baseURL: process.env.REACT_APP_CORS_HEADER + `https://stablediffusionapi.com/api/v3/super_resolution`
         });
     }
 

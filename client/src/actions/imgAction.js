@@ -55,7 +55,7 @@ export const addFavourite = (data) => dispatch => {
         apiService.addFavourite(data)
             .then(data => {
                 dispatch({ type: IMG_FAV_SUCCESS, data });
-                resolve();
+                resolve(data);
             })
             .catch(err => {
                 reject();

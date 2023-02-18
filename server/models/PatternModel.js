@@ -6,5 +6,5 @@ const patternSchema = mongoose.Schema({
     created_at: { type: Date, default: new Date() }
 })
 
-const Pattern = mongoose.model('Pattern', patternSchema)
+const Pattern = mongoose.models.Pattern || mongoose.model('Pattern', patternSchema)
 export default Pattern

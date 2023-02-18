@@ -27,6 +27,6 @@ const ImageSchema = Schema({
     created_at: { type: Date, default: new Date() }
 })
 
-const ImageModel = mongoose.model('Image', ImageSchema);
+const ImageModel = mongoose.models.Image || mongoose.model('Image', ImageSchema);
 
 export default ImageModel;

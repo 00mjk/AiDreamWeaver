@@ -2,9 +2,6 @@ import { useEffect } from "react";
 import { Route, Routes } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { amber, grey } from '@mui/material/colors';
-
 import './App.css';
 
 import SignIn from "./pages/SignIn";
@@ -23,38 +20,6 @@ import store from './store';
 import { SIGNOUT } from "./actions/config";
 import { loadUser } from "./actions/authAction";
 import setAuthToken from "./utils/setAuthToken";
-import { bgColor } from "./stylesheets/colors";
-
-// const getDesignTokens = (mode) => ({
-//     palette: {
-//         mode,
-//         primary: {
-//             ...amber,
-//             ...(mode === 'dark' && {
-//                 main: amber[300],
-//             }),
-//         },
-//         ...(mode === 'dark' && {
-//             background: {
-//                 default: bgColor,
-//                 paper: bgColor,
-//             },
-//         }),
-//         text: {
-//             ...(mode === 'light'
-//                 ? {
-//                     primary: grey[900],
-//                     secondary: grey[800],
-//                 }
-//                 : {
-//                     primary: '#fff',
-//                     secondary: grey[500],
-//                 }),
-//         },
-//     },
-// });
-
-// const darkModeTheme = createTheme(getDesignTokens('dark'));
 
 export default function App() {
     useEffect(() => {
@@ -77,8 +42,7 @@ export default function App() {
     }, [])
 
     return (
-        <GoogleOAuthProvider clientId="679986983043-3c6ac9rv5c2quhqvhumqq351dc48un0u.apps.googleusercontent.com">
-            {/* <ThemeProvider theme={darkModeTheme}> */}
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
             <div className='App'>
                 <Navbar />
                 <div className='router'>
@@ -96,7 +60,6 @@ export default function App() {
                     </Routes>
                 </div>
             </div>
-            {/* </ThemeProvider> */}
         </GoogleOAuthProvider>
     );
 }

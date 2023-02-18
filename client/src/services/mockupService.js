@@ -3,17 +3,17 @@ import axios from 'axios';
 export default class MockupService {
     constructor() {
         this.createSvc = axios.create({
-            baseURL: `https://cors-anywhere.herokuapp.com/https://api.printful.com/mockup-generator/create-task/`,
+            baseURL: process.env.REACT_APP_CORS_HEADER + process.env.REACT_APP_PRINTFUL_MOCK_GEN_CREATE_URL,
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-        this.createSvc.defaults.headers.common['Authorization'] = 'Bearer lK0x36vzVMZBbt3BlpDLtSAIy1ipACWxWCKqKbBC';
+        this.createSvc.defaults.headers.common['Authorization'] = process.env.REACT_APP_PRINTFUL_MOCK_GEN_TOKEN;
 
         this.getSvc = axios.create({
-            baseURL: `https://cors-anywhere.herokuapp.com/https://api.printful.com/mockup-generator/task`
+            baseURL: process.env.REACT_APP_CORS_HEADER + process.env.REACT_APP_PRINTFUL_MOCK_GEN_GET_URL
         });
-        this.getSvc.defaults.headers.common['Authorization'] = 'Bearer lK0x36vzVMZBbt3BlpDLtSAIy1ipACWxWCKqKbBC';
+        this.getSvc.defaults.headers.common['Authorization'] = process.env.REACT_APP_PRINTFUL_MOCK_GEN_TOKEN;
     }
 
     createTShirt = (mockupType, srcImg) => {

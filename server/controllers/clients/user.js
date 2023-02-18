@@ -18,16 +18,6 @@ const PORT = process.env.SMTP_PORT
 const USER = process.env.SMTP_USER
 const PASS = process.env.SMTP_PASS
 
-export const getUser = async (req, res) => {
-    try {
-        const user = await UserModel.findById(req.userId);
-        res.status(200).json({ user: user, token: req.header('x-auth-token') });
-    } catch (err) {
-        console.log(err);
-        res.status(401).json({ msg: 'Incorrect User' });
-    }
-}
-
 export const signin = async (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
     if (!isValid)
@@ -38,8 +28,10 @@ export const signin = async (req, res) => {
         const existingUser = await UserModel.findOne({ email })
         if (!existingUser) return res.status(400).json({ email: 'This email is not exist.' });
 
-        const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
-        if (!isPasswordCorrect) return res.status(400).json({ password: "Password is incorrect." })
+        if (existingUser.password) {
+            const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
+            if (!isPasswordCorrect) return res.status(400).json({ password: "Password is incorrect." })
+        }
 
         // If crednetials are valid, create a token for the user
         const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, SECRET, { expiresIn: "24h" })
@@ -48,6 +40,7 @@ export const signin = async (req, res) => {
         res.status(200).json({ user: existingUser, token })
 
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error })
     }
 }
@@ -80,6 +73,16 @@ export const signup = async (req, res) => {
         res.status(200).json({ user: result, token })
     } catch (error) {
         res.status(500).json({ error: error })
+    }
+}
+
+export const getUser = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId);
+        res.status(200).json({ user: user, token: req.header('x-auth-token') });
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({ msg: 'Incorrect User' });
     }
 }
 

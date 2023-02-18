@@ -11,8 +11,8 @@ import OptSelect from '../../components/OptSelect';
 import OptSlider from '../OptSlider';
 import ColorButton from '../ColorButton';
 import { primaryBtnColor } from '../../stylesheets/colors';
-import './mockupmodal.scss';
 import PendingImgItem from '../PendingImgItem';
+import './mockupmodal.scss';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#2a2f3538',

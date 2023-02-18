@@ -10,6 +10,6 @@ const roleSchema = mongoose.Schema({
     deleted_at: { type: Date }
 })
 
-const Role = mongoose.model('Role', roleSchema)
+const Role = mongoose.models.Role || mongoose.model('Role', roleSchema)
 
 export default Role

@@ -12,7 +12,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
 
 import apiService from '../../services/apiService';
-import ItemDetailModal from '../ItemDetailModal';
+import ModalAIItem from '../ModalAIItem';
 import ModalMockup from '../ModalMockup';
 import ModalEnhance from '../ModalEnhance';
 
@@ -21,7 +21,7 @@ import "./resultimgitem.scss"
 const ResultImgItem = (props) => {
     // Props
     const { image, changeImg, url } = props;
-
+    console.log("ResultImgItem", props);
     // useRef
     const snapbarRef = useRef();
 
@@ -116,7 +116,7 @@ const ResultImgItem = (props) => {
                 </CircleMenu>
             </div>
         </div>
-        <ItemDetailModal open={detailModalOpen} onClose={() => setDetailModalOpen(false)} item={image} />
+        <ModalAIItem open={detailModalOpen} onClose={() => setDetailModalOpen(false)} changeImage={changeImg} item={image} />
         <ModalMockup open={modalMockupOpen} onClose={() => setModalMockupOpen(false)} item={image} />
         <ModalEnhance open={modalEnhanceOpen} onClose={() => setModalEnhanceOpen(false)} item={image} />
     </>

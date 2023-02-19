@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Grid } from '@mui/material';
+import { Grid, Alert, Stack, AlertTitle } from '@mui/material';
 
 import { createImg } from '../../actions/imgAction';
 import { makeAiImage } from '../../actions/aiAction';
+import { AI_MAKE_IMG_START, AI_MAKE_IMG_SUCCESS, AI_MAKE_IMG_FAILED, AI_MAKE_IMG_INIT } from '../../actions/config';
 import OptTextarea from '../../components/OptTextarea';
 import ColorButton from '../../components/ColorButton';
 import OptFilter from '../../components/OptFilter';
@@ -13,21 +14,22 @@ import OptSlider from '../../components/OptSlider';
 import TopLabelSwitch from '../../components/TopLabelSwitch';
 import OptFilterItem from '../../components/OptFilterItem';
 import PendingImgItem from '../../components/PendingImgItem';
+import OptImgToImg from '../../components/OptImgToImg';
 import { primaryBtnColor } from '../../stylesheets/colors';
 import "./tabimage.scss";
 
 const TabImagePage = (props) => {
     // Props
-    const { setting, setSetting, loading, setLoading } = props;
+    const { setting, setSetting, setLoading, aiState, setAiState } = props;
 
     // Use Redux
     const dispatch = useDispatch();
     const aiObj = useSelector(state => state.aiObj);
-    const authObj = useSelector(state => state.auth);
     const imgObj = useSelector(state => state.img);
 
     // States
     const [recentImages, setRecentImages] = useState([]);                   // Generated Image Objects
+    const [isRecentImgState, setisRecentImgState] = useState(false);
     const [styleState, setStyleState] = useState(false);            // Style Option State
     const [styleBoxState, setStyleBoxState] = useState(false);      // Style Box State
 
@@ -44,6 +46,9 @@ const TabImagePage = (props) => {
         const newPrompt = styleState ? (setting.prompt + (setting.filter.prompt ? ', ' + setting.filter.prompt : '')) : setting.prompt;
 
         try {
+            setAiState(AI_MAKE_IMG_START);
+            setLoading(true);
+
             const settings = {
                 "key": setting.key,
                 "prompt": newPrompt,
@@ -71,14 +76,38 @@ const TabImagePage = (props) => {
                 };
                 dispatch(createImg(imgData)).then(() => {
                     console.log("Image created in db.");
+                    setAiState(AI_MAKE_IMG_SUCCESS);
+                }).catch(err => {
+                    setAiState(AI_MAKE_IMG_FAILED);
                 });
+                setLoading(false);
             }).catch(err => {
                 console.log("makeAiImage - Error", err);
+                setLoading(false);
+                setAiState(AI_MAKE_IMG_FAILED);
             });
         } catch (err) {
             console.log("handleGeneratedImg - Err", err);
+            setLoading(false);
+            setAiState(AI_MAKE_IMG_FAILED);
         }
     };
+
+    /**
+     * @description
+     *  Change image state
+     */
+    const handleChgImage = (image) => {
+        var tmpRecentImgs = recentImages;
+        var len = tmpRecentImgs.length;
+
+        for (var i = 0; i < len; i++) {
+            if (tmpRecentImgs[i]._id === image._id)
+                tmpRecentImgs[i] = image;
+        }
+        setRecentImages(tmpRecentImgs);
+        setisRecentImgState(!isRecentImgState);
+    }
 
     return <>
         <div id="image-studio-container">
@@ -102,6 +131,10 @@ const TabImagePage = (props) => {
                             </Grid>
                         </Grid>
                     </fieldset>
+                    <OptImgToImg
+                        img={setting.init_image}
+                        onSetInitImg={(url) => setSetting({ key: "init_image", value: url })}
+                    />
                     <OptSlider
                         min={1}
                         max={100}
@@ -109,7 +142,7 @@ const TabImagePage = (props) => {
                         description={``}
                         value={Math.round(setting.strength * 100)}
                         color={primaryBtnColor}
-                        disabled={(authObj?.user?.role_idx == 1 || authObj?.user?.role_idx == 2) ? false : true}
+                        // disabled={(authObj?.user?.role_idx == 1 || authObj?.user?.role_idx == 2) ? false : true}
                         onChange={(value) => setSetting({ key: "strength", value: (value / 100) })}
                     />
                     <OptTextarea
@@ -130,12 +163,6 @@ const TabImagePage = (props) => {
                         value={setting.negative_prompt}
                         onChange={(value) => setSetting({ key: "negative_prompt", value: value })}
                     />
-                    {/* <OptImgToImg
-                            img={initImg}
-                            strength={strength}
-                            onSetStrength={(value) => setStrength(value)}
-                            onSetInitImg={(value) => setInitImg(value)}
-                        /> */}
                 </div>
                 <div className="field-button">
                     <ColorButton variant="contained" name={`Genereate Image`} handle={() => handleGenerateImg()} />
@@ -166,14 +193,40 @@ const TabImagePage = (props) => {
                     <div className="scroll-container">
                         <div className='scroll-container-outbox'>
                             <div className='scroll-container-inbox'>
+                                {
+                                    aiState === AI_MAKE_IMG_INIT &&
+                                    <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                                        <Alert severity="info">
+                                            <AlertTitle>TEXT TO IMAGE</AlertTitle>
+                                            Press <strong>Generate</strong> button!
+                                        </Alert>
+                                    </Stack>
+                                }
+                                {
+                                    aiState === AI_MAKE_IMG_FAILED &&
+                                    <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                                        <Alert severity="error">
+                                            <AlertTitle>Error</AlertTitle>
+                                            Generating image is field. — <strong>Try it again!</strong>
+                                        </Alert>
+                                    </Stack>
+                                }
                                 <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
                                     {
-                                        loading && <PendingImgItem />
+                                        aiState === AI_MAKE_IMG_START && <PendingImgItem />
                                     }
                                     {
-                                        recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} key={key} />)
+                                        aiState === AI_MAKE_IMG_SUCCESS &&
+                                        recentImages.map((image, key) =>
+                                            <ResultImgItem
+                                                url={image.url}
+                                                image={image}
+                                                changeImg={image => handleChgImage(image)}
+                                                remixImg={prompt => setSetting({ key: "prompt", value: prompt })}
+                                                key={key}
+                                            />
+                                        )
                                     }
-                                    {/* <ResultImgItem url={`https://pub-8b49af329fae499aa563997f5d4068a4.r2.dev/generations/b503c36f-1aad-4e2c-a4ec-90c063c8691c-0.png?w=248&fit=crop&auto=format`} /> */}
                                 </div>
                             </div>
                         </div>

@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { getData } from "country-list";
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Box, Button, InputAdornment, FormControl, InputLabel, Input, Container, Select, MenuItem, TextField, Grid } from '@mui/material';
+import { Box, Button, InputAdornment, FormControl, InputLabel, Input, Container, MenuItem, TextField, Grid } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import revolutService from '../../services/revolutService';
@@ -19,9 +19,6 @@ const CheckoutPage = () => {
 
     // States
     const [price, setPrice] = useState(0);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
     const [billingAddr, setBillingAddr] = useState(initAddr);
     const [shippingAddr, setShippingAddr] = useState(initAddr);
 
@@ -37,7 +34,7 @@ const CheckoutPage = () => {
         }).then(res => {
             const publicId = res.data.public_id;
             RevolutCheckout(publicId).then((RC) => {
-                var popup = RC.payWithPopup({
+                RC.payWithPopup({
                     name: "",
                     email: "",
                     phone: "",

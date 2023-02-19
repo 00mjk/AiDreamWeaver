@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Tabs, Tab } from '@mui/material';
+
+import { Tabs, Tab, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { AI_MAKE_IMG_INIT } from '../../actions/config';
-import Box from '@mui/material/Box';
 import TabPromptPage from '../TabPromptPage';
 import TabImagePage from '../TabImagePage';
 import TabSettingPage from '../TabSettingPage';
@@ -81,7 +82,7 @@ const StudioPage = () => {
         key: process.env.REACT_APP_STABLE_DIFFUSION_API_KEY,            // Your API Key
         columns: 1,                     // Avatar Display nums.
         prompt: "",                     // Your Prompt
-        model_id: "f222-diffusion",       // public or your trained Model id
+        model_id: "realistic-vision-v13",       // public or your trained Model id
         samples: 1,                     // number of images you want in response
         negative_prompt: "",            // Items you don't want in the image
         filter: {
@@ -103,6 +104,14 @@ const StudioPage = () => {
         track_id: null                  // tracking id to track this api call
     });
 
+    // Redirect Module
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        handleSetSetting({ key: "prompt", value: params.get('prompt') });
+    }, [])
+
     const handleTabChange = (event, idx) => {
         setTabIndex(idx);
     };
@@ -110,8 +119,9 @@ const StudioPage = () => {
     const handleSetSetting = (item) => {
         const settingStr = JSON.stringify(setting);
         const settingObj = JSON.parse(settingStr);
+
         if (item.length !== undefined) {
-            item.map((obj, key) => {
+            item.map((obj) => {
                 settingObj[obj.key] = obj.value;
                 setSetting(settingObj);
             });
@@ -125,17 +135,14 @@ const StudioPage = () => {
         <Box className="root-box" sx={{ height: 'calc(100vh - 80px)', backgroundColor: '#1c1c27' }}>
             <Box sx={{ borderBottom: `1px solid #2A2C36` }}>
                 <StyledTabs value={tabIndex} onChange={handleTabChange}>
-                    <StyledTab label="My Gallery" />
                     <StyledTab label="Prompt" />
                     <StyledTab label="+ Image" />
                     <StyledTab label="Setting" />
+                    {/* <StyledTab label="My Gallery" /> */}
                 </StyledTabs>
             </Box>
 
-            <TabPanel value={tabIndex} index={0}>
-                Item One
-            </TabPanel>
-            <TabPanel value={tabIndex} index={1} sx={{ padding: 0 }}>
+            <TabPanel value={tabIndex} index={0} sx={{ padding: 0 }}>
                 <TabPromptPage
                     setting={setting}
                     setSetting={handleSetSetting}
@@ -145,18 +152,29 @@ const StudioPage = () => {
                     setAiState={setAiState}
                 />
             </TabPanel>
-            <TabPanel value={tabIndex} index={2}>
+            <TabPanel value={tabIndex} index={1}>
                 <TabImagePage
                     setting={setting}
                     setSetting={handleSetSetting}
+                    loading={loading}
+                    setLoading={setLoading}
+                    aiState={aiState}
+                    setAiState={setAiState}
                 />
             </TabPanel>
-            <TabPanel value={tabIndex} index={3}>
+            <TabPanel value={tabIndex} index={2}>
                 <TabSettingPage
                     setting={setting}
                     setSetting={handleSetSetting}
+                    loading={loading}
+                    setLoading={setLoading}
+                    aiState={aiState}
+                    setAiState={setAiState}
                 />
             </TabPanel>
+            {/* <TabPanel value={tabIndex} index={3}>
+                Item One
+            </TabPanel> */}
         </Box>
     </>
 }

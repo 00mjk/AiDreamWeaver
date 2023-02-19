@@ -17,7 +17,7 @@ const StyledSlider = styled((props) => (
         height: '3px'
     },
     '& .css-14gf62f-MuiSlider-thumb': {
-        backgroundColor: '#fcfcfc',
+        backgroundColor: '#8d72fc',
         border: '2px solid #8d72fc',
         width: '15px',
         height: '15px'

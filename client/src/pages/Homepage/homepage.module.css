@@ -4,7 +4,7 @@
     position: relative;
     z-index: 1;
     opacity: 1;
-    background: #180048;
+    background: rgb(28, 28, 39);
     color: rgb(52, 71, 103);
     border-radius: 0.5rem;
     transition: transform 300ms cubic-bezier(0.34, 1.61, 0.7, 1) 0s;
@@ -17,7 +17,7 @@
 }
 
 .imagelistitem:hover {
-    background-color: #180048;
+    background-color: rgb(28, 28, 39);
     opacity: 0.3;
     border-radius: 10px;
 }

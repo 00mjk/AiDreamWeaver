@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { useGoogleLogin } from "@react-oauth/google";
 // import FacebookLogin from 'react-facebook-login';
 
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -13,9 +13,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import googleService from '../../services/googleService';
 import { signin, signinGoogle } from "../../actions/authAction"
 import Copyright from '../../components/Copyright';
-import setAuthToken from "../../utils/setAuthToken";
+import './signin.scss';
 
-const theme = createTheme();
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
 
 export default function SignIn() {
     // Use Navigate
@@ -64,7 +68,17 @@ export default function SignIn() {
     });
 
     return (
-        <ThemeProvider theme={theme}>
+        // <div className="login-form">
+        //     <div className="login">
+        //         <h1>Login</h1>
+        //         <form method="post">
+        //             <input type="text" name="u" placeholder="Username" required="required" />
+        //             <input type="password" name="p" placeholder="Password" required="required" />
+        //             <button type="submit" className="btn btn-primary btn-block btn-large">Let me in.</button>
+        //         </form>
+        //     </div>
+        // </div>
+        <ThemeProvider theme={darkTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -116,10 +130,10 @@ export default function SignIn() {
                             (auth.error && auth.error.password) &&
                             <FormHelperText id="component-error-text" sx={{ color: 'red' }}>{auth.error.password}</FormHelperText>
                         }
-                        <FormControlLabel
+                        {/* <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
-                        />
+                        /> */}
                         <Button
                             type="submit"
                             fullWidth
@@ -135,13 +149,16 @@ export default function SignIn() {
                                 </Link>
                             </Grid>
                             <Grid item>
+                                &nbsp;
+                            </Grid>
+                            <Grid item>
                                 <Link to={`/signup`}>
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
                         </Grid>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={12}>
                                 <Button
                                     fullWidth
                                     sx={{ mt: 3, mb: 2 }}
@@ -153,7 +170,7 @@ export default function SignIn() {
                                     Continue with Google
                                 </Button >
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            {/* <Grid item xs={12} sm={6}>
                                 <Button
                                     fullWidth
                                     sx={{ mt: 3, mb: 2 }}
@@ -163,7 +180,7 @@ export default function SignIn() {
                                 >
                                     Continue with Facebook
                                 </Button >
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </Box>
                 </Box>

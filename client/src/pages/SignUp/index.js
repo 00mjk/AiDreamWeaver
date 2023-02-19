@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -9,7 +9,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { signup } from "../../actions/authAction"
 import Copyright from '../../components/Copyright';
 
-const theme = createTheme();
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
 const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
 
 export default function SignUp() {
@@ -34,7 +38,7 @@ export default function SignUp() {
     }
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={darkTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box

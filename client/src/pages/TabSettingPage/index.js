@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { Divider } from '@mui/material';
+import { Alert, Stack, AlertTitle, Divider } from '@mui/material';
 
+import { AI_MAKE_IMG_START, AI_MAKE_IMG_SUCCESS, AI_MAKE_IMG_FAILED, AI_MAKE_IMG_INIT } from '../../actions/config';
 import ResultImgItem from '../../components/ResultImgItem';
 import OptSlider from '../../components/OptSlider';
 import OptSelect from '../../components/OptSelect';
@@ -13,21 +14,36 @@ import "./tabsetting.scss";
 
 const TabSettingPage = (props) => {
     // Props
-    const { setting, setSetting, loading, setLoading } = props;
+    const { setting, setSetting, aiState } = props;
 
     // Use Redux
-    // const dispatch = useDispatch();
-    // const toCreate = useSelector(state => state.toCreate)
     const aiObj = useSelector(state => state.aiObj)
-    const auth = useSelector(state => state.auth);
     const imgObj = useSelector(state => state.img);
 
     // States
     const [recentImages, setRecentImages] = useState([]);                   // Generated Image Objects
+    const [isRecentImgState, setisRecentImgState] = useState(false);
 
     useEffect(() => {
         setRecentImages(imgObj.recentImages);
     }, [imgObj.recentImages]);
+
+
+    /**
+     * @description
+     *  Change image state
+     */
+    const handleChgImage = (image) => {
+        var tmpRecentImgs = recentImages;
+        var len = tmpRecentImgs.length;
+
+        for (var i = 0; i < len; i++) {
+            if (tmpRecentImgs[i]._id === image._id)
+                tmpRecentImgs[i] = image;
+        }
+        setRecentImages(tmpRecentImgs);
+        setisRecentImgState(!isRecentImgState);
+    }
 
     return <>
         <div id="setting-studio-container">
@@ -38,7 +54,7 @@ const TabSettingPage = (props) => {
                         max={6}
                         label={`Columns`}
                         color={primaryBtnColor}
-                        disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
+                        // disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
                         value={setting.columns}
                         onChange={(value) => setSetting({ key: "columns", value: value })}
                     />
@@ -55,7 +71,7 @@ const TabSettingPage = (props) => {
                         label={`Image Dimensions`}
                         description={`Width × Height of the finished image.`}
                         color={primaryBtnColor}
-                        disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
+                        // disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
                         value={setting.width}
                         onChange={(val) => {
                             setSetting({ key: "width", value: (Math.round(val / 8) * 8) });
@@ -65,7 +81,7 @@ const TabSettingPage = (props) => {
                         min={1}
                         max={1024}
                         color={primaryBtnColor}
-                        disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
+                        // disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
                         value={setting.height}
                         onChange={(val) => {
                             setSetting({ key: "height", value: (Math.round(val / 8) * 8) });
@@ -94,7 +110,7 @@ const TabSettingPage = (props) => {
                         label={`Prompt Guidance`}
                         description={`Higher guidance will make your image closer to your prompt.`}
                         color={primaryBtnColor}
-                        disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
+                        // disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
                         value={Math.round(setting.guidance_scale * 10)}
                         onChange={(val) => setSetting({ key: "guidance_scale", value: (val / 10) })}
                     />
@@ -104,7 +120,7 @@ const TabSettingPage = (props) => {
                         label={`Quality & Details`}
                         description={`More steps will result in a high quality image but will take longer.`}
                         color={primaryBtnColor}
-                        disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
+                        // disabled={(auth?.user?.role_idx === 1 || auth?.user?.role_idx === 2) ? false : true}
                         value={setting.num_inference_steps}
                         onChange={(val) => setSetting({ key: "num_inference_steps", value: val })}
                     />
@@ -128,12 +144,39 @@ const TabSettingPage = (props) => {
                     <div className="scroll-container">
                         <div className='scroll-container-outbox'>
                             <div className='scroll-container-inbox'>
+                                {
+                                    aiState === AI_MAKE_IMG_INIT &&
+                                    <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                                        <Alert severity="info">
+                                            <AlertTitle>TEXT TO IMAGE</AlertTitle>
+                                            Press <strong>Generate</strong> button!
+                                        </Alert>
+                                    </Stack>
+                                }
+                                {
+                                    aiState === AI_MAKE_IMG_FAILED &&
+                                    <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                                        <Alert severity="error">
+                                            <AlertTitle>Error</AlertTitle>
+                                            Generating image is field. — <strong>Try it again!</strong>
+                                        </Alert>
+                                    </Stack>
+                                }
                                 <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
                                     {
-                                        loading && <PendingImgItem />
+                                        aiState === AI_MAKE_IMG_START && <PendingImgItem />
                                     }
                                     {
-                                        recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} key={key} />)
+                                        aiState === AI_MAKE_IMG_SUCCESS &&
+                                        recentImages.map((image, key) =>
+                                            <ResultImgItem
+                                                url={image.url}
+                                                image={image}
+                                                changeImg={image => handleChgImage(image)}
+                                                remixImg={prompt => setSetting({ key: "prompt", value: prompt })}
+                                                key={key}
+                                            />
+                                        )
                                     }
                                 </div>
                             </div>

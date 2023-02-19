@@ -47,7 +47,7 @@ const ModalEnhance = (props) => {
         console.log("--------------- handleSupResolution --------------");
         try {
             const settings = {
-                "key": "iIjvdXCYHvVOuemfFgGH9JXSsVwl3grN7ZPtGGGAxY1g32kayxq1SVB3s08A",
+                "key": process.env.REACT_APP_STABLE_DIFFUSION_API_KEY,
                 "url": item.url,
                 "scale": scale,
                 "webhook": null,

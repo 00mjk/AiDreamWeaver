@@ -6,22 +6,10 @@ import { styled, alpha } from '@mui/material/styles';
 import { AppBar, Box, Toolbar, Badge, InputBase, MenuItem, Menu, Avatar, IconButton, Tooltip } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import MoneyIcon from '@mui/icons-material/Money';
-import HelpIcon from '@mui/icons-material/Help';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import QuizIcon from '@mui/icons-material/Quiz';
-import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
-import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import BugReportIcon from '@mui/icons-material/BugReport';
-import BrushIcon from '@mui/icons-material/Brush';
-import TagFacesIcon from '@mui/icons-material/TagFaces';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import PersonIcon from '@mui/icons-material/Person';
+import LoginIcon from '@mui/icons-material/Login';
 
 import { signout } from "../../actions/authAction";
 import { searchImgsByKey } from "../../actions/imgAction";
@@ -69,34 +57,34 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    '& .MuiBadge-badge': {
-        backgroundColor: '#44b700',
-        color: '#44b700',
-        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-        '&::after': {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            borderRadius: '50%',
-            animation: 'ripple 1.2s infinite ease-in-out',
-            border: '1px solid currentColor',
-            content: '""',
+function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+        const value = (hash >> (i * 8)) & 0xff;
+        color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+}
+
+function stringAvatar(name) {
+    return {
+        sx: {
+            bgcolor: stringToColor(name),
         },
-    },
-    '@keyframes ripple': {
-        '0%': {
-            transform: 'scale(.8)',
-            opacity: 1,
-        },
-        '100%': {
-            transform: 'scale(2.4)',
-            opacity: 0,
-        },
-    },
-}));
+        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    };
+}
 
 export default function PrimarySearchAppBar() {
     // Redirect Module
@@ -140,39 +128,30 @@ export default function PrimarySearchAppBar() {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }}
             id={menuId}
             keepMounted
-            transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             open={isMenuOpen}
             onClose={handleMenuClose}
-            sx={{
-            }}
         >
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><PersonOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Profile</span></MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><SettingsOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Settings</span></MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><ChatBubbleOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Join Discord</span></MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><NotificationsNoneOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Notifications</span></MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><TwitterIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Twitter</span></MenuItem>}
-            {auth.isAuthenticated && <MenuItem onClick={handleMenuClose}><QuizIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>FAQ</span></MenuItem>}
-            <MenuItem onClick={handleMenuClose}><ShieldOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Privacy Policy</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><HelpIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Request Help</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><DescriptionOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Terms of Service</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><WorkOutlineOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Jobs</span></MenuItem>
-            <MenuItem onClick={handleToPricingPage}>
+            {/* <MenuItem onClick={handleToPricingPage}>
                 <MoneyIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Pricing</span>
-            </MenuItem>
+            </MenuItem> */}
             {auth.isAuthenticated &&
                 <MenuItem onClick={() => {
                     handleMenuClose();
                     dispatch(signout()).then(() => navigate('/'))
-                }}><LogoutOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Log out</span></MenuItem>}
+                }}>
+                    <LogoutOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Log out</span>
+                </MenuItem>}
             {
                 !auth.isAuthenticated &&
-                <MenuItem onClick={handleMenuClose}>
-                    <Link to={`/signin`}>
-                        <LogoutOutlinedIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Log In</span>
-                    </Link>
+                <MenuItem onClick={() => {
+                    handleMenuClose();
+                    navigate('/signin');
+                }}>
+                    <LoginIcon fontSize='string' />&nbsp;&nbsp;&nbsp;<span className={styles.smlMenuItemSpan}>Log In</span>
                 </MenuItem>
             }
         </Menu >
@@ -186,7 +165,11 @@ export default function PrimarySearchAppBar() {
         if (!auth.isAuthenticated) {
             return (
                 <Link to='/signin'>
-                    <StartBtn btnName="Get Started" />
+                    <Tooltip title="Create">
+                        <IconButton>
+                            <AddCircleOutlineIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
                 </Link>
             )
         } else {
@@ -194,20 +177,6 @@ export default function PrimarySearchAppBar() {
             if (url.includes('/create')) {
                 return (
                     <>
-                        <Link to='/mockup'>
-                            <Tooltip title="Mockup">
-                                <IconButton>
-                                    <BrushIcon fontSize="inherit" />
-                                </IconButton>
-                            </Tooltip>
-                        </Link>
-                        <Link to='/super_resolution'>
-                            <Tooltip title="Super Resolution">
-                                <IconButton>
-                                    <TagFacesIcon fontSize="inherit" />
-                                </IconButton>
-                            </Tooltip>
-                        </Link>
                     </>
                 )
             } else {
@@ -232,7 +201,7 @@ export default function PrimarySearchAppBar() {
                         <Link to={`/`}>
                             <img alt="" src={`http://localhost:3000/assets/images/123.png`} style={{ width: '250px', height: '80px' }} />
                         </Link>
-                        {/* <Search>
+                        <Search>
                             <SearchIconWrapper>
                                 <SearchIcon />
                             </SearchIconWrapper>
@@ -243,14 +212,17 @@ export default function PrimarySearchAppBar() {
                                 onChange={(e) => setSearchKey(e.target.value)}
                                 onKeyDown={(e) => { e.key === 'Enter' && searchImages(searchKey) }}
                             />
-                        </Search> */}
+                        </Search>
                         <Box sx={{ flexGrow: 1 }} />
                         <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
-                            <Avatar
-                                alt=""
-                                src={`http://localhost:3000/testAvatar.png`}
-                                variant="rounded"
-                                onClick={handleProfileMenuOpen} />
+                            {
+                                auth.isAuthenticated ?
+                                    <Avatar {...stringAvatar(auth.user.name)} onClick={handleProfileMenuOpen} />
+                                    :
+                                    <Avatar onClick={handleProfileMenuOpen}>
+                                        <PersonIcon />
+                                    </Avatar>
+                            }
                         </Box>
                         {genNavBtn()}
                     </Toolbar>

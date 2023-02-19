@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { experimentalStyled as styled, alpha } from '@mui/material/styles';
-import { Modal, Backdrop, Box, Fade, Grid, Paper, Button, Popover } from '@mui/material';
+import { Modal, Backdrop, Box, Fade, Grid, Paper, Button, Popover, IconButton } from '@mui/material';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
@@ -14,8 +14,10 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import CheckIcon from '@mui/icons-material/Check';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 
-import { searchImgsByKey, addFavourite, followImgAuthor } from '../../actions/imgAction';
+import { searchImgsByKey, addFavourite, followImgAuthor, getImageById } from '../../actions/imgAction';
 import handleDownload from '../../utils/downloadfile';
 import './modalaiitem.scss';
 
@@ -33,16 +35,18 @@ const DarkPopover = styled(Popover)(({ theme }) => ({
 
 const ModalAIItem = (props) => {
     // Use Props
-    const { open, onClose, item, changeImage } = props;
+    const { open, onClose, item, changeImage, remixImage } = props;
 
     // Use Redux
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
-    const img = useSelector(state => state.img);
+    const imgObj = useSelector(state => state.img);
 
     // States
     const [copyPrompt, setCopyPrompt] = useState(false);
     const [isFav, setIsFav] = useState(false);
+    const [isFollow, setIsFollow] = useState(false);
+    const [image, setImage] = useState(item);
 
     // Redirect Module
     const navigate = useNavigate()
@@ -54,9 +58,16 @@ const ModalAIItem = (props) => {
     const handlePopoverClick = (event) => { setAnchorEl(event.currentTarget) };
     const handlePopoverClose = () => { setAnchorEl(null) };
 
-    const testFunc = (image) => {
-        changeImage(image)
-    }
+    useEffect(() => {
+        dispatch(getImageById({ imageId: item?._id }));
+    }, []);
+
+    useEffect(() => {
+        setIsFav(imgObj.imageIsFav);
+        setIsFollow(imgObj.imageIsFollow);
+        setImage(imgObj.image);
+    }, [imgObj]);
+
     /**
      * @description
      *  Copy prompt to clipboard.
@@ -82,11 +93,35 @@ const ModalAIItem = (props) => {
         if (auth.isAuthenticated) {
             dispatch(addFavourite({ imageId: item?._id })).then(res => {
                 setIsFav(res.isFav);
-                testFunc(res.image)
+                changeImage(res.image)
             }).catch(err => console.log("handleFavImg", err));
         } else {
             navigate('/signin');
         }
+    }
+
+    /**
+     * @description
+     *  Follow or unfollow user.
+     */
+    const handleFollowUser = (isFollow) => {
+        if (auth.isAuthenticated) {
+            dispatch(followImgAuthor({
+                authorId: item?.user_id,
+                isFollow: isFollow
+            }));
+        } else {
+            navigate('/signin');
+        }
+    }
+
+    /**
+     * @description
+     *  Remix image
+     */
+    const handleRemixImage = () => {
+        remixImage(item?.prompt);
+        onClose();
     }
 
     return <>
@@ -108,7 +143,7 @@ const ModalAIItem = (props) => {
                         <Grid className='left-bar' item xs={12} md={6}>
                             <Item>
                                 <div className='origin-image'>
-                                    <img src={item.url} />
+                                    <img src={item?.url} />
                                 </div>
                                 <div className='btn-util-container'>
                                     <div className='btn-fav-container'>
@@ -118,7 +153,7 @@ const ModalAIItem = (props) => {
                                             color='error'
                                             startIcon={isFav ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
                                             onClick={() => handleFavImg()} >
-                                            {item.fav_count}
+                                            {image?.fav_count}
                                         </Button>
                                         {/* <Button variant="outlined" startIcon={<FavoriteIcon />} size='small' color='error'>
                                             1
@@ -130,7 +165,7 @@ const ModalAIItem = (props) => {
                                             startIcon={<FileDownloadIcon />}
                                             size='small'
                                             color='warning'
-                                            onClick={() => handleDownload(item?.url)}>
+                                            onClick={() => handleDownload(image?.url)}>
                                             Download
                                         </Button>
                                         {
@@ -164,14 +199,15 @@ const ModalAIItem = (props) => {
                                 <div className='author-container'>
                                     <Link className='link-author' to={``}>
                                         <img src={`https://lh3.googleusercontent.com/a/ALm5wu30nE_WLSzLrZRj67GI-cF5CaueolzIQXCOSD74vg=s96-c`} />
-                                        <span>Kyle Witer</span>
+                                        <span>{image?.user_name}</span>
                                     </Link>
-                                    <button className='btn-follow'>
-                                        <span>Following</span>
-                                        {/* <span>UnFollow</span> */}
-                                    </button>
+                                    <IconButton size="small" color='warning' onClick={() => handleFollowUser(!isFollow)}>
+                                        {
+                                            isFollow ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize='small' />
+                                        }
+                                    </IconButton>
                                 </div>
-                                <h1 className='item-title'>Ice cube</h1>
+                                <h1 className='item-title'>{item?.prompt.split(",")[0]}</h1>
                                 <div className='item-action-container'>
                                     <label>Prompt</label>
                                     <div className='item-prompts'>
@@ -192,12 +228,21 @@ const ModalAIItem = (props) => {
                                             onClick={() => handleCopyPrompt()}>
                                             Copy Prompt
                                         </Button>
-                                        <Button variant="outlined" startIcon={<AutorenewIcon />} size='small' color='warning'>
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<AutorenewIcon />}
+                                            size='small'
+                                            color='warning'
+                                            onClick={() => handleRemixImage()}
+                                        >
                                             Remix
                                         </Button>
-                                        <Button variant="outlined" startIcon={<BorderColorIcon />} size='small' color='warning'>
-                                            Edit
-                                        </Button>
+                                        {
+                                            false &&
+                                            <Button variant="outlined" startIcon={<BorderColorIcon />} size='small' color='warning'>
+                                                Edit
+                                            </Button>
+                                        }
                                     </div>
                                 </div>
                             </Item>

@@ -1,12 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useRef } from 'react';
 import { CircleMenu, CircleMenuItem } from "react-circular-menu";
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import MasksIcon from '@mui/icons-material/Masks';
+// import MasksIcon from '@mui/icons-material/Masks';
 import ImageIcon from '@mui/icons-material/Image';
-import ScannerTwoToneIcon from '@mui/icons-material/ScannerTwoTone';
+// import ScannerTwoToneIcon from '@mui/icons-material/ScannerTwoTone';
 import LocalPrintshopTwoToneIcon from '@mui/icons-material/LocalPrintshopTwoTone';
 import PublicIcon from '@mui/icons-material/Public';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
@@ -15,13 +14,13 @@ import apiService from '../../services/apiService';
 import ModalAIItem from '../ModalAIItem';
 import ModalMockup from '../ModalMockup';
 import ModalEnhance from '../ModalEnhance';
+import CustomSnackbar from '../../components/CustomSnackbar';
 
 import "./resultimgitem.scss"
 
 const ResultImgItem = (props) => {
     // Props
-    const { image, changeImg, url } = props;
-    console.log("ResultImgItem", props);
+    const { image, changeImg, url, remixImg } = props;
     // useRef
     const snapbarRef = useRef();
 
@@ -79,11 +78,11 @@ const ResultImgItem = (props) => {
                         <ImageIcon />
                     </CircleMenuItem>
 
-                    <CircleMenuItem
+                    {/* <CircleMenuItem
                         tooltip="Create Variations"
                     >
                         <ScannerTwoToneIcon />
-                    </CircleMenuItem>
+                    </CircleMenuItem> */}
 
                     <CircleMenuItem
                         tooltip="Print to T-shirt"
@@ -92,11 +91,11 @@ const ResultImgItem = (props) => {
                         <LocalPrintshopTwoToneIcon />
                     </CircleMenuItem>
 
-                    <CircleMenuItem
+                    {/* <CircleMenuItem
                         tooltip="Edit with mask"
                     >
                         <MasksIcon />
-                    </CircleMenuItem>
+                    </CircleMenuItem> */}
 
                     <CircleMenuItem
                         tooltip="Enhance photo"
@@ -116,7 +115,8 @@ const ResultImgItem = (props) => {
                 </CircleMenu>
             </div>
         </div>
-        <ModalAIItem open={detailModalOpen} onClose={() => setDetailModalOpen(false)} changeImage={changeImg} item={image} />
+        <CustomSnackbar ref={snapbarRef} />
+        <ModalAIItem open={detailModalOpen} onClose={() => setDetailModalOpen(false)} changeImage={changeImg} remixImage={remixImg} item={image} />
         <ModalMockup open={modalMockupOpen} onClose={() => setModalMockupOpen(false)} item={image} />
         <ModalEnhance open={modalEnhanceOpen} onClose={() => setModalEnhanceOpen(false)} item={image} />
     </>

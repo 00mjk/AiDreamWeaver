@@ -5,7 +5,7 @@ import { Grid, Alert, Stack, AlertTitle } from '@mui/material';
 
 import { createImg } from '../../actions/imgAction';
 import { makeAiImage } from '../../actions/aiAction';
-import { AI_MAKE_IMG_START, AI_MAKE_IMG_SUCCESS, AI_MAKE_IMG_FAILED, AI_MAKE_IMG_ERROR, AI_MAKE_IMG_INIT } from '../../actions/config';
+import { AI_MAKE_IMG_START, AI_MAKE_IMG_SUCCESS, AI_MAKE_IMG_FAILED, AI_MAKE_IMG_INIT } from '../../actions/config';
 import OptTextarea from '../../components/OptTextarea';
 import ColorButton from '../../components/ColorButton';
 import OptFilter from '../../components/OptFilter';
@@ -176,31 +176,39 @@ const TabPromptPage = (props) => {
                     <div className="scroll-container">
                         <div className='scroll-container-outbox'>
                             <div className='scroll-container-inbox'>
+                                {
+                                    aiState === AI_MAKE_IMG_INIT &&
+                                    <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                                        <Alert severity="info">
+                                            <AlertTitle>TEXT TO IMAGE</AlertTitle>
+                                            Press <strong>Generate</strong> button!
+                                        </Alert>
+                                    </Stack>
+                                }
+                                {
+                                    aiState === AI_MAKE_IMG_FAILED &&
+                                    <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
+                                        <Alert severity="error">
+                                            <AlertTitle>Error</AlertTitle>
+                                            Generating image is field. — <strong>Try it again!</strong>
+                                        </Alert>
+                                    </Stack>
+                                }
                                 <div className="grid-box" style={{ gridTemplateColumns: `repeat(${setting.columns}, minmax(0px, 1fr))` }}>
-                                    {
-                                        aiState === AI_MAKE_IMG_INIT &&
-                                        <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
-                                            <Alert severity="info">
-                                                <AlertTitle>TEXT TO IMAGE</AlertTitle>
-                                                Press <strong>Generate</strong> button!
-                                            </Alert>
-                                        </Stack>
-                                    }
                                     {
                                         aiState === AI_MAKE_IMG_START && <PendingImgItem />
                                     }
                                     {
                                         aiState === AI_MAKE_IMG_SUCCESS &&
-                                        recentImages.map((image, key) => <ResultImgItem url={image.url} image={image} changeImg={image => handleChgImage(image)} key={key} />)
-                                    }
-                                    {
-                                        aiState === AI_MAKE_IMG_FAILED &&
-                                        <Stack sx={{ width: '70%', textAlign: 'left', marginLeft: '15%', marginTop: '5%' }}>
-                                            <Alert severity="error">
-                                                <AlertTitle>Error</AlertTitle>
-                                                Generating image is field. — <strong>Try it again!</strong>
-                                            </Alert>
-                                        </Stack>
+                                        recentImages.map((image, key) =>
+                                            <ResultImgItem
+                                                url={image.url}
+                                                image={image}
+                                                changeImg={image => handleChgImage(image)}
+                                                remixImg={prompt => setSetting({ key: "prompt", value: prompt })}
+                                                key={key}
+                                            />
+                                        )
                                     }
                                 </div>
                             </div>

@@ -33,92 +33,49 @@ const initialState = {
         webhook: null,                  // webhook to call when image generation is completed
         track_id: null                  // tracking id to track this api call
     },
-    models: [{
-        name: 'Stable Diffusion v1.5',
-        value: 'stable-diffu'
-    }, {
-        name: 'Stable Diffusion v2',
-        value: 'stable-diffu'
-    }, {
-        name: 'Stable Diffusion v3',
-        value: 'stable-diffu'
-    }, {
-        name: 'MidJourney v4',
-        value: 'midjourney'
-    }, {
-        name: 'Protogen x3.4',
-        value: 'protogen-3.4'
-    }, {
-        name: 'Realistic Vision v1.3',
-        value: 'realistic-vision-v13'
-    }, {
-        name: 'Project Unreal Engine 5',
-        value: 'project-unreal-engin'
-    }, {
-        name: 'T-shirt print designs',
-        value: 't-shirt-prin'
-    }, {
-        name: 'Anything v4',
-        value: 'anything-v4'
-    }, {
-        name: 'Dream Shaper',
-        value: 'dream-shaper-8797'
-    }, {
-        name: 'Vintedois',
-        value: 'vintedois-diffusion'
-    }, {
-        name: 'F222',
-        value: 'f222-diffusion'
-    }, {
-        name: 'animefull2',
-        value: 'animefull2'
-    }],
+    models: [
+        // {
+        //     name: 'Stable Diffusion v1.5',
+        //     value: 'stable-diffu'
+        // }, {
+        //     name: 'Stable Diffusion v2',
+        //     value: 'stable-diffu'
+        // }, {
+        //     name: 'Stable Diffusion v3',
+        //     value: 'stable-diffu'
+        // },
+        {
+            name: 'MidJourney v4',
+            value: 'midjourney'
+        }, {
+            name: 'Protogen x3.4',
+            value: 'protogen-3.4'
+        }, {
+            name: 'Realistic Vision v1.3',
+            value: 'realistic-vision-v13'
+        }, {
+            name: 'Project Unreal Engine 5',
+            value: 'project-unreal-engin'
+        }, {
+            name: 'T-shirt print designs',
+            value: 't-shirt-prin'
+        }, {
+            name: 'Anything v4',
+            value: 'anything-v4'
+        }, {
+            name: 'Dream Shaper',
+            value: 'dream-shaper-8797'
+        }, {
+            name: 'Vintedois',
+            value: 'vintedois-diffusion'
+        }, {
+            name: 'F222',
+            value: 'f222-diffusion'
+        }, {
+            name: 'animefull2',
+            value: 'animefull2'
+        }],
     styles: [{
-        _id: 123123,
-        name: "None",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/ominous_escape.png",
-        prompt: ""
-    }, {
-        _id: 4314123,
-        name: "Colorpop",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/elizaport_style.png",
-        prompt: "Colorpop"
-    }, {
-        _id: 5192931,
-        name: "Instaport",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/instaport_style.png",
-        prompt: "123"
-    }, {
-        _id: 612341234,
-        name: "Playtoon",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/pltn-style.png",
-        prompt: ""
-    }, {
-        _id: 5192432,
-        name: "Woolitize",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/woolitize.jpeg",
-        prompt: ""
-    }, {
-        _id: 72563546,
-        name: "App Icons",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/appicon-style.jpg",
-        prompt: ""
-    }, {
-        _id: 52123412,
-        name: "Retro Futurism",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/retrofuturism.png",
-        prompt: ""
-    }, {
-        _id: 654465,
-        name: "Origamip",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/origami.png",
-        prompt: ""
-    }, {
-        _id: 2734563456,
-        name: "Black and white",
-        avatar: "https://storage.googleapis.com/pai-marketing/filters/haze.png",
-        prompt: ""
-    }, {
         _id: 123123,
         name: "None",
         avatar: "https://storage.googleapis.com/pai-marketing/filters/ominous_escape.png",

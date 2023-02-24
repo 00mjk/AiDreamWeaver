@@ -1,3 +1,10 @@
+AI Dreamworks are creacted by React.js
+Used OpenSea AI, Stable Diffusion.
+Here we can use 11 models for generating IMAGE TO IMAGE, TEXT TO IMAGE.
+- TEXT TO IMAGE
+- IMAGE TO IMAGE
+- MOCKUP
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

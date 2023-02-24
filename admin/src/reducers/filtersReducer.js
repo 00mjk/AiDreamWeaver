@@ -13,7 +13,7 @@ export default function filtersReducer(state = initialState, action) {
 
         case END_LOADING:
             return { ...state, loading: false };
-            
+
         case FETCH_FILTERS:
             return {
                 ...state,
@@ -28,14 +28,14 @@ export default function filtersReducer(state = initialState, action) {
                 filters: [...state.filters, action.payload.newFilter],
             }
         case DELETE_FILTER:
-            return { 
-                ...state, 
+            return {
+                ...state,
                 refresh: !state.refresh,
-                filters: state.filters.filter((filter) => filter._id !== action.payload) 
+                filters: state.filters.filter((filter) => filter._id !== action.payload)
             };
         case UPDATE_FILTER:
-            return { 
-                ...state, 
+            return {
+                ...state,
                 refresh: !state.refresh,
                 filters: state.filters.map((filter) => (filter._id === action.payload._id ? action.payload : filter))
             };

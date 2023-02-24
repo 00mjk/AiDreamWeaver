@@ -43,7 +43,7 @@ class ModelApi {
                 })
         })
     }
-    
+
     addModel = (modelData) => {
         return new Promise((resolve, reject) => {
             this.api.post('/addModel', modelData)
@@ -58,7 +58,7 @@ class ModelApi {
     deleteModel = (id) => {
         return new Promise((resolve, reject) => {
             console.log(id)
-            this.api.post('/deleteModel', {modelId: id})
+            this.api.post('/deleteModel', { modelId: id })
                 .then(res => {
                     resolve(res.data)
                 }).catch(err => {

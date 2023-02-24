@@ -1,11 +1,11 @@
 import authApi from '../api/authApi';
-import { 
-    USER_LOADED, 
-    SIGNIN_SUCCESS, 
-    SIGNIN_FAILED, 
-    SIGNUP_SUCCESS, 
-    SIGNUP_FAILED, 
-    SIGNOUT 
+import {
+    USER_LOADED,
+    SIGNIN_SUCCESS,
+    SIGNIN_FAILED,
+    SIGNUP_SUCCESS,
+    SIGNUP_FAILED,
+    SIGNOUT
 } from './types';
 
 // import 
@@ -41,7 +41,7 @@ export const signin = (formData, snapbarRef) => dispatch => {
                 snapbarRef.current.showSnackbar({
                     show: true,
                     type: 'error',
-                    message: err?.response?.data?.msg                 
+                    message: err?.response?.data?.msg
                 });
                 reject()
             })
@@ -65,7 +65,7 @@ export const signup = (formData, snapbarRef) => dispatch => {
                 snapbarRef.current.showSnackbar({
                     show: true,
                     type: 'error',
-                    message: err?.response?.data?.msg                 
+                    message: err?.response?.data?.msg
                 });
                 reject();
             })

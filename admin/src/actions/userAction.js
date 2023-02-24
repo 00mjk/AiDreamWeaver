@@ -17,24 +17,24 @@ export const fetchUsers = (searchQuery) => async (dispatch) => {
     }
 }
 
-export const deleteUser =(id, snapbarRef) => async (dispatch) => {
+export const deleteUser = (id, snapbarRef) => async (dispatch) => {
     try {
         const result = await userApi.deleteUser(id)
         // dispatch({type: DELETE_USER, payload: id})
         snapbarRef.current.showSnackbar({
             show: true,
             type: 'success',
-            message: result.msg                 
+            message: result.msg
         });
 
-        setTimeout(() => dispatch({type: DELETE_USER, payload: id}),
-        1000)
+        setTimeout(() => dispatch({ type: DELETE_USER, payload: id }),
+            1000)
     } catch (error) {
         console.log(error)
     }
 }
 
-export const updateUser =(updateData, snapbarRef) => async (dispatch) => {
+export const updateUser = (updateData, snapbarRef) => async (dispatch) => {
     try {
         const result = await userApi.updateUser(updateData)
         // dispatch({type: UPDATE_USER, payload: result})
@@ -43,24 +43,24 @@ export const updateUser =(updateData, snapbarRef) => async (dispatch) => {
             type: 'success',
             message: "User updated successfully."
         });
-        setTimeout(() => dispatch({type: UPDATE_USER, payload: result}),
-        1000)
+        setTimeout(() => dispatch({ type: UPDATE_USER, payload: result }),
+            1000)
     } catch (error) {
         console.log(error)
     }
 }
 
-export const addUser =(userData, snapbarRef) => async (dispatch) => {
+export const addUser = (userData, snapbarRef) => async (dispatch) => {
     try {
         const result = await userApi.addUser(userData)
         // dispatch({ type: ADD_USER, payload: result })
         snapbarRef.current.showSnackbar({
             show: true,
             type: 'success',
-            message: "New user created successfully."             
+            message: "New user created successfully."
         });
         setTimeout(() => dispatch({ type: ADD_USER, payload: result }),
-        1000)
+            1000)
     } catch (error) {
         console.log(error);
     }

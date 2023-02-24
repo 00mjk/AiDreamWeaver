@@ -32,10 +32,10 @@ class SaleApi {
                 })
         })
     }
-    
+
     deleteSale = (id) => {
         return new Promise((resolve, reject) => {
-            this.api.post('/deleteSale', {_id: id})
+            this.api.post('/deleteSale', { _id: id })
                 .then(res => {
                     resolve(res.data)
                 }).catch(err => {

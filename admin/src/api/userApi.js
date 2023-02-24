@@ -32,7 +32,7 @@ class UserApi {
                 })
         })
     }
-    
+
     addUser = (userData) => {
         return new Promise((resolve, reject) => {
             this.api.post('/addUser', userData)
@@ -47,7 +47,7 @@ class UserApi {
     deleteUser = (id) => {
         return new Promise((resolve, reject) => {
             console.log(id)
-            this.api.post('/deleteUser', {userId: id})
+            this.api.post('/deleteUser', { userId: id })
                 .then(res => {
                     resolve(res.data)
                 }).catch(err => {

@@ -24,7 +24,7 @@ class RoleApi {
 
     fetchRoles = () => {
         return new Promise((resolve, reject) => {
-            this.api.post('/roles', )
+            this.api.post('/roles',)
                 .then(res => {
                     resolve(res.data)
                 }).catch(err => {

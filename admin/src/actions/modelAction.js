@@ -26,24 +26,24 @@ export const fetchModels = (searchQuery) => async (dispatch) => {
     }
 }
 
-export const deleteModel =(id, snapbarRef) => async (dispatch) => {
+export const deleteModel = (id, snapbarRef) => async (dispatch) => {
     try {
         const result = await modelApi.deleteModel(id)
         // dispatch({type: DELETE_MODEL, payload: id})
         snapbarRef.current.showSnackbar({
             show: true,
             type: 'success',
-            message: result.msg                 
+            message: result.msg
         });
 
-        setTimeout(() => dispatch({type: DELETE_MODEL, payload: id}),
-        1000)
+        setTimeout(() => dispatch({ type: DELETE_MODEL, payload: id }),
+            1000)
     } catch (error) {
         console.log(error)
     }
 }
 
-export const updateModel =(updateData, snapbarRef) => async (dispatch) => {
+export const updateModel = (updateData, snapbarRef) => async (dispatch) => {
     try {
         const result = await modelApi.updateModel(updateData)
         // dispatch({type: UPDATE_MODEL, payload: result})
@@ -52,14 +52,14 @@ export const updateModel =(updateData, snapbarRef) => async (dispatch) => {
             type: 'success',
             message: "New model updated successfully."
         });
-        setTimeout(() => dispatch({type: UPDATE_MODEL, payload: result}),
-        1000)
+        setTimeout(() => dispatch({ type: UPDATE_MODEL, payload: result }),
+            1000)
     } catch (error) {
         console.log(error)
     }
 }
 
-export const addModel =(modelData, snapbarRef) => async (dispatch) => {
+export const addModel = (modelData, snapbarRef) => async (dispatch) => {
     try {
         const result = await modelApi.addModel(modelData)
         console.log(result)
@@ -67,11 +67,11 @@ export const addModel =(modelData, snapbarRef) => async (dispatch) => {
         snapbarRef.current.showSnackbar({
             show: true,
             type: 'success',
-            message: "New model created successfully."             
+            message: "New model created successfully."
         });
-        
+
         setTimeout(() => dispatch({ type: ADD_MODEL, payload: result }),
-        1500)
+            1500)
     } catch (error) {
         console.log(error);
     }

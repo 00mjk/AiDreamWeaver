@@ -26,7 +26,7 @@ export const deleteSale = (id, snapbarRef) => async (dispatch) => {
             message: result.msg
         });
         setTimeout(() => dispatch({ type: DELETE_SALE, payload: id }),
-        1000)
+            1000)
 
     } catch (error) {
         console.log(error)

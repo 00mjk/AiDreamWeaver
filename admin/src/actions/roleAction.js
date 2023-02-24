@@ -16,19 +16,19 @@ export const fetchRoles = () => async (dispatch) => {
     }
 }
 
-export const updateRole =(updateData, snapbarRef) => async (dispatch) => {
+export const updateRole = (updateData, snapbarRef) => async (dispatch) => {
     try {
         const result = await roleApi.updateRole(updateData)
 
         console.log(result)
-        
+
         snapbarRef.current.showSnackbar({
             show: true,
             type: 'success',
             message: "New model updated successfully."
         });
-        setTimeout(() => dispatch({type: UPDATE_ROLE, payload: result}),
-        1000)
+        setTimeout(() => dispatch({ type: UPDATE_ROLE, payload: result }),
+            1000)
     } catch (error) {
         console.log(error)
     }

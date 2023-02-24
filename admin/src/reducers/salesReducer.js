@@ -13,7 +13,7 @@ export default function salesReducer(state = initialState, action) {
 
         case END_LOADING:
             return { ...state, loading: false };
-            
+
         case FETCH_SALES:
             return {
                 ...state,

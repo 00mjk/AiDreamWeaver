@@ -32,7 +32,7 @@ class FilterApi {
                 })
         })
     }
-    
+
     addFilter = (filterData) => {
         return new Promise((resolve, reject) => {
             this.api.post('/addFilter', filterData)
@@ -47,7 +47,7 @@ class FilterApi {
     deleteFilter = (id) => {
         return new Promise((resolve, reject) => {
             console.log(id)
-            this.api.post('/deleteFilter', {filterId: id})
+            this.api.post('/deleteFilter', { filterId: id })
                 .then(res => {
                     resolve(res.data)
                 }).catch(err => {

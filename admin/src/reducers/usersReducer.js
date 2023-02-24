@@ -11,7 +11,7 @@ export default function usersReducer(state = initialState, action) {
         case START_LOADING:
             return { ...state, loading: true };
 
-        case END_LOADING: 
+        case END_LOADING:
             return { ...state, loading: false }
 
         case FETCH_USERS:
@@ -28,14 +28,14 @@ export default function usersReducer(state = initialState, action) {
                 users: [...state.users, action.payload.newUser],
             }
         case DELETE_USER:
-            return { 
-                ...state, 
+            return {
+                ...state,
                 refresh: !state.refresh,
-                users: state.users.filter((user) => user._id !== action.payload) 
+                users: state.users.filter((user) => user._id !== action.payload)
             };
         case UPDATE_USER:
-            return { 
-                ...state, 
+            return {
+                ...state,
                 refresh: !state.refresh,
                 users: state.users.map((user) => (user._id === action.payload._id ? action.payload : user))
             };

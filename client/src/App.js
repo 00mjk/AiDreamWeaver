@@ -18,7 +18,7 @@ import { loadUser } from "./actions/authAction";
 import setAuthToken from "./utils/setAuthToken";
 
 export default function App() {
-    useEffect(() => {
+    useEffect(()=>{
         const token = localStorage.getItem('token');
 
         // Check for token in local storage when app first runs.
